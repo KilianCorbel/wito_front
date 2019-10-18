@@ -1,8 +1,20 @@
 import React, { Component } from 'react';
-import {Navbar} from './Components/Navbar/Navbar.js';
+import Navbar from '../Navbar/Navbar';
+import ModalMain from '../ModalMain/ModalMain';
 
 class MainWindow extends Component {
     render() {
-        <Navbar />
+        return(
+           <div>
+               <div>
+                    <Navbar/> 
+                </div>
+                <div>
+                    <ModalMain/> 
+                </div>
+           </div>
+        
+        );
     }
 }
+export default MainWindow;
