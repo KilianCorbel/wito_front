@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Navbar from '../Navbar/Navbar';
 import ModalMain from '../ModalMain/ModalMain';
+import TableMain from '../ModalMain/TableMain';
 
 class MainWindow extends Component {
     render() {
@@ -9,7 +10,11 @@ class MainWindow extends Component {
                <div>
                     <Navbar/> 
                 </div>
-                <div>
+                <br/>
+                <div align="center">
+                    <TableMain/>
+                </div>
+                <div align="center">
                     <ModalMain/> 
                 </div>
            </div>
