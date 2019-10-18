@@ -5,8 +5,8 @@ import { Route, Link, BrowserRouter as Router, Switch } from 'react-router-dom';
 import * as serviceWorker from './serviceWorker';
 import SignIn from './Components/Login/Connexion';
 import SignUp from './Components/Login/Inscription';
-//import truc from './Components/Main/MainWindow';
-import ModalMain from './Components/ModalMain/ModalMain';
+import truc from './Components/Main/MainWindow';
+//import ModalMain from './Components/ModalMain/ModalMain';
 
 const routing = (
     <Router>
@@ -14,7 +14,7 @@ const routing = (
         <Switch>
             <Route exact path="/" component={SignIn} />
             <Route path="/signup" component={SignUp} />
-            <Route path="/cours" component={ ModalMain}/>
+            <Route path="/cours" component={truc}/>
            
             />
         </Switch>

@@ -1,18 +1,20 @@
 import React, { Component } from 'react';
-import {Navbar} from './Components/Navbar/Navbar.js';
-import {ModalMain} from './Components/ModalMain/ModalMain.js';
-import {withRouter} from "react-router-dom";
+import Navbar from '../Navbar/Navbar';
+import ModalMain from '../ModalMain/ModalMain';
 
 class MainWindow extends Component {
     render() {
         return(
-            <Navbar> 
-             <ModalMain/>
-            </Navbar>
-            
-           
-
+           <div>
+               <div>
+                    <Navbar/> 
+                </div>
+                <div>
+                    <ModalMain/> 
+                </div>
+           </div>
+        
         );
     }
 }
-export default withRouter(MainWindow);
+export default MainWindow;

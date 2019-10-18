@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -28,8 +28,18 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function MaxWidthDialog() {
-  const classes = useStyles();
+export default function ModalMain() {
+    const [open, setOpen] = React.useState(false);
+    const handleClickOpen = () => {
+      setOpen(true);
+    };
+    return(
+      <React.Fragment>
+      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+        Ajouter un cours
+      </Button>
+      </React.Fragment>
+ /* const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [fullWidth, setFullWidth] = React.useState(true);
   const [maxWidth, setMaxWidth] = React.useState('sm');
@@ -65,8 +75,8 @@ export default function MaxWidthDialog() {
             autoFocus
             margin="dense"
             id="name"
-            label="Date"
-            type="text"
+            label=""
+            type="date"
             fullWidth
           />
           <TextField
@@ -128,6 +138,6 @@ export default function MaxWidthDialog() {
           </Button>
         </DialogActions>
       </Dialog>
-    </React.Fragment>
+    </React.Fragment>*/
   );
 }
