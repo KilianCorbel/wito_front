@@ -12,52 +12,50 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 
-const useStyles = makeStyles(theme => ({
-  form: {
-    display: 'flex',
-    flexDirection: 'column',
-    margin: 'auto',
-    width: 'fit-content',
-  },
-  formControl: {
-    marginTop: theme.spacing(2),
-    minWidth: 120,
-  },
-  formControlLabel: {
-    marginTop: theme.spacing(1),
-  },
-}));
+
 
 export default function ModalMain() {
+    const useStyles = makeStyles(theme => ({
+      form: {
+        display: 'flex',
+        flexDirection: 'column',
+        margin: 'auto',
+        width: 'fit-content',
+      },
+      formControl: {
+        marginTop: theme.spacing(2),
+        minWidth: 120,
+      },
+      formControlLabel: {
+        marginTop: theme.spacing(1),
+      },
+    }));
+    
+    const classes = useStyles();
     const [open, setOpen] = React.useState(false);
+    const [fullWidth, setFullWidth] = React.useState(true);
+    const [maxWidth, setMaxWidth] = React.useState('sm');
+    
     const handleClickOpen = () => {
       setOpen(true);
     };
+    
+    const handleClose = () => {
+      setOpen(false);
+    };
+    
+    const handleMaxWidthChange = event => {
+      setMaxWidth(event.target.value);
+    };
+
     return(
+      // <React.Fragment>
+        // <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+        //   Ajouter un cours
+        // </Button>
+      // </React.Fragment>
+
       <React.Fragment>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        Ajouter un cours
-      </Button>
-      </React.Fragment>
- /* const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-  const [fullWidth, setFullWidth] = React.useState(true);
-  const [maxWidth, setMaxWidth] = React.useState('sm');
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleMaxWidthChange = event => {
-    setMaxWidth(event.target.value);
-  };
-
-  return (
-    <React.Fragment>
       <Button variant="outlined" color="primary" onClick={handleClickOpen}>
         Ajouter un cours
       </Button>
@@ -138,6 +136,10 @@ export default function ModalMain() {
           </Button>
         </DialogActions>
       </Dialog>
-    </React.Fragment>*/
+      </React.Fragment>
+ /* 
+
+  return (
+    */
   );
 }
