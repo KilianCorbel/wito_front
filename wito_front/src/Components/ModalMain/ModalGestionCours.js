@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -13,8 +13,7 @@ import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 
 
-
-export default function ModalMain() {
+export default function ModalGestionCours() {
     const useStyles = makeStyles(theme => ({
       form: {
         display: 'flex',
@@ -49,15 +48,10 @@ export default function ModalMain() {
     };
 
     return(
-      // <React.Fragment>
-        // <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        //   Ajouter un cours
-        // </Button>
-      // </React.Fragment>
-
+   
       <React.Fragment>
       <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        Ajouter un cours
+      modifier
       </Button>
       <Dialog
         fullWidth={fullWidth}
@@ -132,14 +126,10 @@ export default function ModalMain() {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
-            Close
+            modifier Cours
           </Button>
         </DialogActions>
       </Dialog>
       </React.Fragment>
- /* 
-
-  return (
-    */
   );
 }
