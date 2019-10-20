@@ -6,6 +6,7 @@ import * as serviceWorker from './serviceWorker';
 import SignIn from './Components/Login/Connexion';
 import SignUp from './Components/Login/Inscription';
 import truc from './Components/Main/MainWindow';
+import gestionCours from './Components/Main/GestionCours';
 //import ModalMain from './Components/ModalMain/ModalMain';
 
 const routing = (
@@ -15,6 +16,7 @@ const routing = (
             <Route exact path="/" component={SignIn} />
             <Route path="/signup" component={SignUp} />
             <Route path="/cours" component={truc}/>
+            <Route path="/gestionCours" component={gestionCours}/>
            
             />
         </Switch>
