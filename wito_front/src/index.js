@@ -7,6 +7,7 @@ import SignIn from './Components/Login/Connexion';
 import SignUp from './Components/Login/Inscription';
 import truc from './Components/Main/MainWindow';
 import gestionCours from './Components/Main/GestionCours';
+import feuilleAppel from './Components/Main/FeuilleAppel';
 //import ModalMain from './Components/ModalMain/ModalMain';
 
 const routing = (
@@ -17,6 +18,7 @@ const routing = (
             <Route path="/signup" component={SignUp} />
             <Route path="/cours" component={truc}/>
             <Route path="/gestionCours" component={gestionCours}/>
+            <Route path="/feuilleAppel" component={feuilleAppel}/>
            
             />
         </Switch>
