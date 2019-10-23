@@ -52,6 +52,35 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function SignUp() {
+    let submit = function (){
+      let utilisateur = {
+        nom : document.getElementById('firstName').value,
+        prenom : document.getElementById('lastName').value,
+        mail : document.getElementById('email').value,
+        mdp : document.getElementById('password').value
+      }
+      console.log("utilisateur: " + JSON.stringify(utilisateur));
+
+      let url = "professeur";
+      if(document.getElementById('firstName').value) {
+        url = "etudiant";
+      }
+      fetch('http://localhost:3010/' + url + '/',{
+            method: 'POST',
+            body: JSON.stringify({
+                nom: utilisateur.nom,
+                prenom : utilisateur.prenom,
+                mail : utilisateur.mail,
+                mdp : utilisateur.mdp,
+        }),
+        headers: {"Content-Type": "application/json"}
+        })
+        .then(function(response){
+            console.log(response => response.json());
+            return response => response.json()
+        })
+    }
+
     const classes = useStyles();
 
     return (
@@ -124,6 +153,7 @@ export default function SignUp() {
               fullWidth
               variant="contained"
               color="primary"
+              onClick={submit}
               className={classes.submit}
             >
               Sign Up
