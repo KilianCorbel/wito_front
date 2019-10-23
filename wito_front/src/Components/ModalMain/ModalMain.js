@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import AddIcon from '@material-ui/icons/Add';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -11,8 +12,12 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
-
-
+import DateFnsUtils from '@date-io/date-fns';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
 
 export default function ModalMain() {
     const useStyles = makeStyles(theme => ({
@@ -48,6 +53,12 @@ export default function ModalMain() {
       setMaxWidth(event.target.value);
     };
 
+    const [selectedDate, setSelectedDate] = React.useState(new Date());
+
+  const handleDateChange = date => {
+    setSelectedDate(date);
+  };
+
     return(
       // <React.Fragment>
         // <Button variant="outlined" color="primary" onClick={handleClickOpen}>
@@ -56,8 +67,18 @@ export default function ModalMain() {
       // </React.Fragment>
 
       <React.Fragment>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+      {/* <Button variant="outlined" color="primary" onClick={handleClickOpen}>
         Ajouter un cours
+      </Button> */}
+      <Button
+        variant="contained"
+        color="primary"
+        size="large"
+        className={classes.button}
+        onClick={handleClickOpen}
+        startIcon={<AddIcon />}
+      >
+        Cours
       </Button>
       <Dialog
         fullWidth={fullWidth}
@@ -66,25 +87,35 @@ export default function ModalMain() {
         onClose={handleClose}
         aria-labelledby="max-width-dialog-title"
       >
-        <DialogTitle id="max-width-dialog-title">Ajouter cours</DialogTitle>
+        <DialogTitle id="max-width-dialog-title">Ajouter un cours</DialogTitle>
         <DialogContent>
           <DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label=""
-            type="date"
-            fullWidth
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="heureDebut"
-            label="Heure de début"
-            type="text"
-            fullWidth
-          />
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <KeyboardDatePicker
+              disableToolbar
+              variant="inline"
+              format="dd/MM/yyyy"
+              margin="normal"
+              id="date-picker-inline"
+              label="Date picker inline"
+              value={selectedDate}
+              onChange={handleDateChange}
+              KeyboardButtonProps={{
+                'aria-label': 'change date',
+              }}
+            />
+            
+            <KeyboardTimePicker
+              margin="normal"
+              id="time-picker"
+              label="Time picker"
+              value={selectedDate}
+              onChange={handleDateChange}
+              KeyboardButtonProps={{
+                'aria-label': 'change time',
+              }}
+            />
+          </MuiPickersUtilsProvider>
           <TextField
             autoFocus
             margin="dense"
