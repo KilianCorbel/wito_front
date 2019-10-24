@@ -67,110 +67,107 @@ export default function ModalMain() {
       // </React.Fragment>
 
       <React.Fragment>
-      {/* <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        Ajouter un cours
-      </Button> */}
-      <Button
-        variant="contained"
-        color="primary"
-        size="large"
-        className={classes.button}
-        onClick={handleClickOpen}
-        startIcon={<AddIcon />}
-      >
-        Cours
-      </Button>
-      <Dialog
-        fullWidth={fullWidth}
-        maxWidth={maxWidth}
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="max-width-dialog-title"
-      >
-        <DialogTitle id="max-width-dialog-title">Ajouter un cours</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <KeyboardDatePicker
-              disableToolbar
-              variant="inline"
-              format="dd/MM/yyyy"
-              margin="normal"
-              id="date-picker-inline"
-              label="Date picker inline"
-              value={selectedDate}
-              onChange={handleDateChange}
-              KeyboardButtonProps={{
-                'aria-label': 'change date',
-              }}
-            />
-            
-            <KeyboardTimePicker
-              margin="normal"
-              id="time-picker"
-              label="Time picker"
-              value={selectedDate}
-              onChange={handleDateChange}
-              KeyboardButtonProps={{
-                'aria-label': 'change time',
-              }}
-            />
-          </MuiPickersUtilsProvider>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Nom de la matière"
-            type="name"
-            fullWidth
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="salle"
-            label="salle"
-            type="name"
-            fullWidth
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="heureFin"
-            label="Heure de Fin"
-            type="text"
-            fullWidth
-          />
-          </DialogContentText>
-          <form className={classes.form} noValidate>
-            <FormControl className={classes.formControl}>
-              <InputLabel htmlFor="max-width">classe</InputLabel>
-              <Select
-                value={maxWidth}
-                onChange={handleMaxWidthChange}
-                inputProps={{
-                  name: 'max-width',
-                  id: 'max-width',
-                }}
-              >
-                <MenuItem value="xs">L3 MIAGE APPRENTISSAGE</MenuItem>
-                <MenuItem value="sm">M1 MIAGE APPRENTISSAGE</MenuItem>
-                <MenuItem value="md">M2 MIAGE APPRENTISSAGE</MenuItem>
-                <MenuItem value="lg">L3 MIAGE INITIAL</MenuItem>
-                <MenuItem value="xl">M1 MIAGE INITIAL</MenuItem>
-              </Select>
-            </FormControl>
-          </form>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
-      </React.Fragment>
- /* 
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          className={classes.button}
+          onClick={handleClickOpen}
+          startIcon={<AddIcon />}
+        >
+          Cours
+        </Button>
+        <Dialog
+          fullWidth={fullWidth}
+          maxWidth={maxWidth}
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="max-width-dialog-title"
+        >
+          <DialogTitle id="max-width-dialog-title">Ajouter un cours</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <KeyboardDatePicker
+                  disableToolbar
+                  variant="inline"
+                  format="dd/MM/yyyy"
+                  margin="normal"
+                  id="date-picker-inline"
+                  label="Date picker inline"
+                  value={selectedDate}
+                  onChange={handleDateChange}
+                  KeyboardButtonProps={{
+                    'aria-label': 'change date',
+                  }}
+                />
+                
+                <KeyboardTimePicker
+                  margin="normal"
+                  id="time-picker"
+                  label="Time picker"
+                  value={selectedDate}
+                  onChange={handleDateChange}
+                  KeyboardButtonProps={{
+                    'aria-label': 'change time',
+                  }}
+                />
+              </MuiPickersUtilsProvider>
 
-  return (
-    */
+              <TextField
+                autoFocus
+                margin="dense"
+                id="name"
+                label="Nom de la matière"
+                type="name"
+                fullWidth
+              />
+              
+              <TextField
+                autoFocus
+                margin="dense"
+                id="salle"
+                label="salle"
+                type="name"
+                fullWidth
+              />
+              
+              <TextField
+                autoFocus
+                margin="dense"
+                id="heureFin"
+                label="Heure de Fin"
+                type="text"
+                fullWidth
+              />
+
+            </DialogContentText>
+            <form className={classes.form} noValidate>
+              <FormControl className={classes.formControl}>
+                <InputLabel htmlFor="max-width">classe</InputLabel>
+                <Select
+                  value={maxWidth}
+                  onChange={handleMaxWidthChange}
+                  inputProps={{
+                    name: 'max-width',
+                    id: 'max-width',
+                  }}
+                >
+                  <MenuItem value="md">L3 MIAGE APPRENTISSAGE</MenuItem>
+                  <MenuItem value="md">M1 MIAGE APPRENTISSAGE</MenuItem>
+                  <MenuItem value="md">M2 MIAGE APPRENTISSAGE</MenuItem>
+                  <MenuItem value="md">L3 MIAGE INITIAL</MenuItem>
+                  <MenuItem value="md">M1 MIAGE INITIAL</MenuItem>
+                </Select>
+              </FormControl>
+            </form>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Fermer
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </React.Fragment>
   );
 }
