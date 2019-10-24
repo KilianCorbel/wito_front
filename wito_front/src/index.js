@@ -1,12 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
 import { Route, Link, BrowserRouter as Router, Switch } from 'react-router-dom';
 import * as serviceWorker from './serviceWorker';
 import SignIn from './Components/Login/Connexion';
 import SignUp from './Components/Login/Inscription';
-import NavBar from './Components/Navbar/Navbar';
+import truc from './Components/Main/MainWindow';
+import gestionCours from './Components/Main/GestionCours';
+import feuilleAppel from './Components/Main/FeuilleAppel';
+//import ModalMain from './Components/ModalMain/ModalMain';
 
 const routing = (
     <Router>
@@ -14,7 +16,11 @@ const routing = (
         <Switch>
             <Route exact path="/" component={SignIn} />
             <Route path="/signup" component={SignUp} />
-            <Route path="/cours" component={NavBar} />
+            <Route path="/cours" component={truc}/>
+            <Route path="/gestionCours" component={gestionCours}/>
+            <Route path="/feuilleAppel" component={feuilleAppel}/>
+           
+            />
         </Switch>
       </div>
     </Router>
