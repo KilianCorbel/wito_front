@@ -62,7 +62,7 @@ export default function SignUp() {
       console.log("utilisateur: " + JSON.stringify(utilisateur));
 
       let url = "professeur";
-      if(document.getElementById('firstName').value) {
+      if(document.getElementById('isStudent').value) {
         url = "etudiant";
       }
       fetch('http://localhost:3010/' + url + '/',{
