@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -65,7 +65,7 @@ export default function SignUp() {
       if(document.getElementById('isStudent').value) {
         url = "etudiant";
       }
-      fetch('http://localhost:3010/' + url + '/',{
+      fetch('http://localhost:3010/' + url + 's/',{
             method: 'POST',
             body: JSON.stringify({
                 nom: utilisateur.nom,
@@ -93,7 +93,7 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <form className={classes.form} noValidate>
+          <form className={classes.form} action='/' noValidate>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField

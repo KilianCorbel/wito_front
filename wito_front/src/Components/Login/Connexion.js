@@ -53,6 +53,53 @@ const useStyles = makeStyles(theme => ({
 
 
 export default function SignIn() {
+  let submit = function (){
+    let utilisateur = {
+      mail : document.getElementById('email').value,
+      mdp : document.getElementById('password').value
+    }
+    console.log("utilisateur: " + JSON.stringify(utilisateur));
+
+    fetch('http://localhost:3010/professeurs/auth',{
+        method: 'POST',
+        body: JSON.stringify({
+            mail : utilisateur.mail,
+            mdp : utilisateur.mdp,
+    }),
+    headers: {"Content-Type": "application/json"}
+    })
+    .then((resp) => resp.json())
+    .then(function(data) {
+        console.log("data - " + data.text);
+
+        if(data.text === "Erreur"){
+          console.log("data - " + data.text);
+          fetch('http://localhost:3010/etudiants/auth',{
+              method: 'POST',
+              body: JSON.stringify({
+                  mail : utilisateur.mail,
+                  mdp : utilisateur.mdp,
+          }),
+          headers: {"Content-Type": "application/json"}
+          })
+          .then((resp) => resp.json())
+          .then(function(data) {
+              console.log("data - " + data.text);
+
+              if(data.text === "Erreur"){
+                console.log("data - " + data.text);
+              
+                window.location.replace("/");
+              } else {
+                localStorage.setItem('user_token', data.token);  
+              }
+          });
+        } else {
+          localStorage.setItem('user_token', data.token);  
+        }
+    });
+  }
+
   const classes = useStyles();
   
   return (
@@ -97,6 +144,7 @@ export default function SignIn() {
               fullWidth
               variant="contained"
               color="primary"
+              onClick={submit}
               className={classes.submit}
             >
               Sign In
