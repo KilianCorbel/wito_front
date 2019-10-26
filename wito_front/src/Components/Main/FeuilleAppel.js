@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { QRCode } from 'react-qr-svg';
-import Navbar from '../Navbar/Navbar';
+import Navbar from '../Navbar/Menu';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid'
