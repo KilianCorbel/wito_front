@@ -111,7 +111,7 @@ export default function SignIn() {
           <Avatar alt="wito logo" src="https://i.imgur.com/smwWWgt.png" className={classes.avatar}>
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Connexion
           </Typography>
           <form className={classes.form} action='/cours' noValidate>
             <TextField
@@ -120,7 +120,7 @@ export default function SignIn() {
               required
               fullWidth
               id="email"
-              label="Email Address"
+              label="Adresse mail"
               name="email"
               autoComplete="email"
               autoFocus
@@ -131,14 +131,14 @@ export default function SignIn() {
               required
               fullWidth
               name="password"
-              label="Password"
+              label="Mot de passe"
               type="password"
               id="password"
               autoComplete="current-password"
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
+              label="Se souvenir de moi."
             />
             <Button
               type="submit"
@@ -148,17 +148,17 @@ export default function SignIn() {
               onClick={submit}
               className={classes.submit}
             >
-              Sign In
+              Connexion
             </Button>
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
-                  Forgot password?
+                  Mot de passe oublié ?
                 </Link>
               </Grid>
               <Grid item>
                 <Link href="/signup" variant="body2">
-                  {"Don't have an account? Sign Up"}
+                  {"Pas de compte ? S'inscrire."}
                 </Link>
               </Grid>
             </Grid>

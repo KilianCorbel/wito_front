@@ -33,13 +33,16 @@ const useStyles = makeStyles(theme => ({
     },
   },
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(12),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
   },
   avatar: {
-    margin: theme.spacing(1),
+    margin: theme.spacing(0),
+    objectFit: "fill",
+    height:100,
+    width: 100,
   },
   form: {
     width: '100%', // Fix IE 11 issue.
@@ -89,7 +92,7 @@ export default function SignUp() {
           <Avatar alt="wito logo" src="https://i.imgur.com/smwWWgt.png" className={classes.avatar}>
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign up
+            Inscription
           </Typography>
           <form className={classes.form} action='/' noValidate>
             <Grid container spacing={2}>
@@ -101,7 +104,7 @@ export default function SignUp() {
                   required
                   fullWidth
                   id="firstName"
-                  label="First Name"
+                  label="Prénom"
                   autoFocus
                 />
               </Grid>
@@ -111,7 +114,7 @@ export default function SignUp() {
                   required
                   fullWidth
                   id="lastName"
-                  label="Last Name"
+                  label="Nom"
                   name="lastName"
                   autoComplete="lname"
                 />
@@ -122,7 +125,7 @@ export default function SignUp() {
                   required
                   fullWidth
                   id="email"
-                  label="Email Address"
+                  label="Adresse mail"
                   name="email"
                   autoComplete="email"
                 />
@@ -133,7 +136,7 @@ export default function SignUp() {
                   required
                   fullWidth
                   name="password"
-                  label="Password"
+                  label="Mot de passe"
                   type="password"
                   id="password"
                   autoComplete="current-password"
@@ -142,7 +145,7 @@ export default function SignUp() {
               <Grid item xs={12}>
                 <FormControlLabel
                   control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
+                  label="Je suis étudiant."
                 />
               </Grid>
             </Grid>
@@ -154,12 +157,12 @@ export default function SignUp() {
               onClick={submit}
               className={classes.submit}
             >
-              Sign Up
+              Inscription
             </Button>
             <Grid container justify="flex-end">
               <Grid item>
                 <Link href="/" variant="body2">
-                  Already have an account? Sign in
+                  Déjà un compte ? Connectez-vous.
                 </Link>
               </Grid>
             </Grid>
