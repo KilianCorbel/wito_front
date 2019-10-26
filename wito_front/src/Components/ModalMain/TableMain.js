@@ -38,25 +38,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function createData(name, calories, fat, carbs,fin) {
-  return { name, calories, fat, carbs, fin };
-}
-
-const rows = [
-  createData('AOS', '11/09/2019', 118, '16h30', '18h00'),
-  createData('AOS', '18/10/2019', 5, '13h00','8h30' ),
-  createData('GESO', '12/10/2019', 116, '8h30','11h45'),
-  createData('DLL', '18/09/2019', 113, '13h00', '16h15'),
-  createData('ARSI', '15/10/2019', 'petit amphi', '8h30','11h45'),
-];
-
 export default function TableMain() {
   const classes = useStyles();
 
   return (
-<div className={classes.root}>
-      <Grid container spacing={3}>
-        
+    <div className={classes.root}>
+      <Grid container spacing={3}>        
         <Grid container spacing={3} className={classes.row}>
           <Grid item xs={2}></Grid>
           <Grid item md={8}>
@@ -79,8 +66,7 @@ export default function TableMain() {
             <Paper className={classes.paper}>xs=8</Paper>
           </Grid>
           <Grid item xs={2}></Grid>
-        </Grid>
-        
+        </Grid>        
       </Grid>
     </div>
 
