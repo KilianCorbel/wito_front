@@ -93,11 +93,15 @@ export default function SignIn() {
               
                 window.location.replace("/");
               } else {
-                localStorage.setItem('user_token', data.token);  
+                localStorage.setItem('user_id', data.id); 
+                localStorage.setItem('user_token', data.token);
+                localStorage.setItem('user_role', data.role);
               }
           });
         } else {
-          localStorage.setItem('user_token', data.token);  
+          localStorage.setItem('user_id', data.id); 
+          localStorage.setItem('user_token', data.token);
+          localStorage.setItem('user_role', data.role); 
         }
     });
   }

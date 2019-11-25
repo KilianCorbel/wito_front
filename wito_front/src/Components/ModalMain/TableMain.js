@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
@@ -29,13 +29,16 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 
-const useStyles = makeStyles(theme => ({
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/styles';
+
+const styles = theme => ({
   root: {
     flexGrow: 1,
-    margin: theme.spacing(5),
+    //smargin: theme.spacing(5),
   },
   paper: {
-    padding: theme.spacing(2),
+    //padding: theme.spacing(2),
   },
   row: {
     margin: 0,
@@ -47,7 +50,7 @@ const useStyles = makeStyles(theme => ({
   },
   typo: {
     textAlign: 'left',
-    paddingLeft: theme.spacing(2),
+    //paddingLeft: theme.spacing(2),
   },
   name: {
     textAlign: 'right',
@@ -59,14 +62,48 @@ const useStyles = makeStyles(theme => ({
 
   },
   formControl: {
-    marginTop: theme.spacing(1),
+    //marginTop: theme.spacing(1),
     display: 'flex',
     minWidth: 120,
-  },
-}));
+  }
+});
 
-export default function TableMain() {
-  const classes = useStyles();
+//export default function TableMain() {
+class TableMain extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+        getCours : [],
+        open : false,
+        fullWidth : true,
+        maxWidth : 'sm',
+        values : {
+          promo: '',
+        },
+        selectedDate : new Date(),
+        selectedTimeS : new Date(),
+        selectedTimeE : new Date()
+      }
+  }
+
+  componentDidMount() {
+    let currentComponent = this;
+
+    fetch('http://localhost:3010/cours/')
+      .then((resp) => resp.json())
+      .then(function(data) {
+        // console.log("data get: "+ data);
+        var list = [];
+        data.forEach(function(cours) {
+          // console.log("data cours: "+ JSON.stringify(cours));
+          list.push(cours)
+        });
+        console.log(list);
+        currentComponent.setState({getCours : list});
+      })
+  }
+  
+  /*const classes = useStyles();
 
   const [open, setOpen] = React.useState(false);
   const [fullWidth, setFullWidth] = React.useState(true);
@@ -77,409 +114,246 @@ export default function TableMain() {
   });
   const [selectedDate, setSelectedDate] = React.useState(new Date());
   const [selectedTimeS, setSelectedTimeS] = React.useState(new Date());
-  const [selectedTimeE, setSelectedTimeE] = React.useState(new Date());
+  const [selectedTimeE, setSelectedTimeE] = React.useState(new Date());*/
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  handleClickOpen = (id) => {
+    console.log("modiiiiiifiiiiiiier-" + id)
+    this.setState({open : true});
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  handleClose = () => {
+    this.setState({open : false});
   };
 
-  const handleChange = event => {
-    setValues(oldValues => ({
+  handleChange = event => {
+    this.setState({values : oldValues => ({
       ...oldValues,
       [event.target.name]: event.target.value,
-    }));
+    })});
   };
 
-  const handleDateChange = date => {
-    setSelectedDate(date);
+  handleDateChange = date => {
+    this.setState({selectedDate : date});
   };
 
-  const handleTimeChangeS = time => {
-    setSelectedTimeS(time);
+  handleTimeChangeS = time => {
+    this.setState({selectedTimeS : time});
   };
 
-  const handleTimeChangeE = time => {
-    setSelectedTimeE(time);
+  handleTimeChangeE = time => {
+    this.setState({selectedTimeE : time});
   };
 
-  return (
-    <div className={classes.root}>
-      <Grid container spacing={3}>        
-        <Grid container spacing={3} className={classes.row}>
-          <Grid item xs={2}></Grid>
-          <Grid item md={8}>
-          <Card className={classes.card}>
-            <CardActionArea href='/feuilleAppel'> 
-                <CardContent>
-                  {/* <Typography gutterBottom variant="h5" component="h2">
-                    ARSI
-                  </Typography>
-                  <Typography variant="body2" color="textSecondary" component="p">
-                    Cours du : 26/10/2019
-                  </Typography> */}
-                  <Grid container spacing={3}>
-                    <Grid item xs={3}>
-                    <Typography gutterBottom className={classes.typo} variant="h5" component="h2">
-                      GESO
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" className={classes.typo} component="p">
-                        Mansour EL-GHOUL
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                      
-                    </Grid>
-                    <Grid item xs={6} className={classes.fab}>
-                      {/* <Fab color="primary" aria-label="add" href="/feuilleAppel">
-                        <LaunchIcon />
-                      </Fab> */}
-                    </Grid>
-                  </Grid>
-                  <Grid container spacing={3}>
-                    <Grid item xs={3}>
-                    <Typography variant="body2" color="textSecondary" className={classes.typo} component="p">
-                      Cours du : 26/10/2019
-                    </Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                    <Typography variant="body2" color="textSecondary" className={classes.typo} component="p">
-                      {/* Heure début - Heure fin */}
-                      Horaire : 13h00 - 16h15
-                    </Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                    <Typography variant="body2" color="textSecondary" className={classes.typo} component="p">
-                      Promotion : M1MIAA
-                    </Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                      
-                    </Grid>
-                  </Grid>
-                </CardContent>
-                <LinearProgress
-                  className={classes.progress}
-                  value={70}
-                  variant="determinate"
-                />
-              </CardActionArea>
-              {/* A n'afficher que si le user co est prof */}
-              <CardActions>
-                <Button size="small" color="primary" onClick={handleClickOpen}>
-                  Modifier
-                </Button>
-                <Button size="small" color="secondary">
-                  Supprimer
-                </Button>
-              </CardActions>
-            </Card>
-          </Grid>
-          <Grid item xs={2}></Grid>
-        </Grid>
-        <Dialog
-          fullWidth={fullWidth}
-          maxWidth={maxWidth}
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="max-width-dialog-title"
-        >
-          
-        <form className={classes.form} noValidate>
-        <FormControl className={classes.formControl}>
-          <DialogTitle>Modifier le cours</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <Grid container spacing={3}>
-                  <Grid item xs={12} md={6}>
-                    <TextField
-                      autoFocus
-                      margin="dense"
-                      id="name"
-                      label="Nom du cours"
-                      type="name"
-                      fullWidth
-                    />
-                  </Grid>                  
-                  
-                  <Grid item xs={12} md={6}>
-                    <KeyboardDatePicker
-                        disableToolbar
-                        variant="inline"
-                        format="dd/MM/yyyy"
-                        margin="normal"
-                        id="date-picker-inline"
-                        label="Date du cours"
-                        value={selectedDate}
-                        onChange={handleDateChange}
-                        KeyboardButtonProps={{
-                          'aria-label': 'change date',
-                        }}
-                      />
-                  </Grid>                  
-                </Grid>
+  render(){
+    const { classes } = this.props;
 
-                <Grid container spacing={3}>
-                  <Grid item xs={12} md={6}>
-                  <KeyboardTimePicker
-                    margin="normal"
-                    id="time-picker"
-                    label="Heure de début"
-                    value={selectedTimeS}
-                    onChange={handleTimeChangeS}
-                    KeyboardButtonProps={{
-                      'aria-label': 'Modifier l\'heure',
-                    }}
+    var cours = this.state.getCours.map( (item, index) => {
+      return (
+        <Grid key={item._id} container spacing={3} className={classes.row}>
+            <Grid item xs={2}></Grid>
+            <Grid item md={8}>
+              <Card className={classes.card}>
+              <CardActionArea href='/feuilleAppel'>
+                  <CardContent>
+                    {/* <Typography gutterBottom variant="h5" component="h2">
+                      {item.nom}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary" component="p">
+                      Cours du : {item.date}
+                    </Typography> */}
+                    <Grid container spacing={3}>
+                      <Grid item xs={3}>
+                        <Typography gutterBottom className={classes.typo} variant="h5" component="h2">
+                          {item.nom}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary" className={classes.typo} component="p">
+                          {item.professeur.prenom} {item.professeur.nom}
+                          </Typography>
+                        </Grid>
+                      <Grid item xs={3}>
+                        
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={3}>
+                      <Grid item xs={3}>
+                        <Typography variant="body2" color="textSecondary" className={classes.typo} component="p">
+                          Cours du : {item.date}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={3}>
+                        <Typography variant="body2" color="textSecondary" className={classes.typo} component="p">
+                          Horaire : {item.heureD} - {item.heureF}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={3}>
+                        <Typography variant="body2" color="textSecondary" className={classes.typo} component="p">
+                          Promotion : {item.classe.label}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={3}>
+                        <Typography variant="body2" color="textSecondary" className={classes.typo} component="p">
+                          Salle : {item.salle}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </CardContent>
+                  </CardActionArea>
+                  <LinearProgress
+                    className={classes.progress}
+                    value={(item.presents.length / 20) * 100}
+                    variant="determinate"
                   />
+                
+                {/* A n'afficher que si le user co est prof */}
+                {/*
+                <CardActions>
+                  <Button size="small" color="primary" onClick={this.handleClickOpen(item._id)}>
+                    Modifier
+                  </Button>
+                  <Button size="small" color="secondary">
+                    Supprimer
+                  </Button>
+                </CardActions>
+                */}
+              </Card>
+            </Grid>
+            <Grid item xs={2}></Grid>
+          </Grid>
+      )
+    });
+
+    return (
+      <div className={classes.root}>
+        <Grid container spacing={3}>        
+          
+          {cours}
+
+          <Dialog
+            fullWidth={this.state.fullWidth}
+            maxWidth={this.state.maxWidth}
+            open={this.state.open}
+            onClose={this.state.handleClose}
+            aria-labelledby="max-width-dialog-title"
+          >
+            
+          <form className={classes.form} noValidate>
+          <FormControl className={classes.formControl}>
+            <DialogTitle>Modifier le cours</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} md={6}>
+                      <TextField
+                        autoFocus
+                        margin="dense"
+                        id="name"
+                        label="Nom du cours"
+                        type="name"
+                        fullWidth
+                      />
+                    </Grid>                  
+                    
+                    <Grid item xs={12} md={6}>
+                      <KeyboardDatePicker
+                          disableToolbar
+                          variant="inline"
+                          format="dd/MM/yyyy"
+                          margin="normal"
+                          id="date-picker-inline"
+                          label="Date du cours"
+                          value={this.state.selectedDate}
+                          onChange={this.state.handleDateChange}
+                          KeyboardButtonProps={{
+                            'aria-label': 'change date',
+                          }}
+                        />
+                    </Grid>                  
                   </Grid>
-                  <Grid item xs={12} md={6}>
+
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} md={6}>
                     <KeyboardTimePicker
                       margin="normal"
                       id="time-picker"
-                      label="Heure de fin"
-                      value={selectedTimeE}
-                      onChange={handleTimeChangeE}
+                      label="Heure de début"
+                      value={this.state.selectedTimeS}
+                      onChange={this.state.handleTimeChangeS}
                       KeyboardButtonProps={{
                         'aria-label': 'Modifier l\'heure',
                       }}
                     />
-                  </Grid>
-                </Grid>
-              </MuiPickersUtilsProvider>
-
-              <Grid container spacing={3}>
-                  <Grid item xs={12} md={6}>
-                    <TextField
-                      margin="dense"
-                      id="salle"
-                      label="Salle"
-                      type="name"
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <FormControl className={classes.formControl}>
-                      <InputLabel htmlFor="selectPromo">Promotion</InputLabel>
-                      <Select
-                        value={values.promo}
-                        fullWidth
-                        onChange={handleChange}
-                        label="Promotion"
-                        inputProps={{
-                          name: 'promo',
-                          id: 'selectPromo',
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      <KeyboardTimePicker
+                        margin="normal"
+                        id="time-picker"
+                        label="Heure de fin"
+                        value={this.state.selectedTimeE}
+                        onChange={this.state.handleTimeChangeE}
+                        KeyboardButtonProps={{
+                          'aria-label': 'Modifier l\'heure',
                         }}
-                      >
-                        <MenuItem value="l3miaa">L3MIAA</MenuItem>
-                        <MenuItem value="m1miaa">M1MIAA</MenuItem>
-                        <MenuItem value="m2miaa">M2MIAA</MenuItem>
-                        <MenuItem value="l3miai">L3MIAI</MenuItem>
-                        <MenuItem value="m1miai">M1MIAI</MenuItem>
-                        <MenuItem value="m2miai">M2MIAI</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                </Grid>
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} color="primary">
-              Modifier le cours
-            </Button>
-            <Button onClick={handleClose} color="secondary">
-              Fermer
-            </Button>
-          </DialogActions>
-        </FormControl>
-        </form>
-        </Dialog>
-        
-        <Grid container spacing={3} className={classes.row}>
-          <Grid item xs={2}></Grid>
-          <Grid item md={8}>
-          <Card className={classes.card}>
-          <CardActionArea href='/feuilleAppel'>
-                <CardContent>
-                
-                  {/* <Typography gutterBottom variant="h5" component="h2">
-                    ARSI
-                  </Typography>
-                  <Typography variant="body2" color="textSecondary" component="p">
-                    Cours du : 26/10/2019
-                  </Typography> */}
-                  <Grid container spacing={3}>
-                    <Grid item xs={3}>
-                    <Typography gutterBottom className={classes.typo} variant="h5" component="h2">
-                      ARSI
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" className={classes.typo} component="p">
-                        Laurent BREDA
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                      
-                    </Grid>
-                    <Grid item xs={6} className={classes.fab}>
-                      {/* <Typography variant="body2" color="textSecondary" className={classes.name} component="p">
-                        Laurent BREDA
-                      </Typography> */}
-                      <Fab color="primary" aria-label="add" >
-                        <LaunchIcon />
-                      </Fab>
+                      />
                     </Grid>
                   </Grid>
-                  <Grid container spacing={3}>
-                    <Grid item xs={3}>
-                    <Typography variant="body2" color="textSecondary" className={classes.typo} component="p">
-                      Cours du : 26/10/2019
-                    </Typography>
+                </MuiPickersUtilsProvider>
+
+                <Grid container spacing={3}>
+                    <Grid item xs={12} md={6}>
+                      <TextField
+                        margin="dense"
+                        id="salle"
+                        label="Salle"
+                        type="name"
+                        fullWidth
+                      />
                     </Grid>
-                    <Grid item xs={3}>
-                    <Typography variant="body2" color="textSecondary" className={classes.typo} component="p">
-                      {/* Heure début - Heure fin */}
-                      Horaire : 8h30 - 11h45
-                    </Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                    <Typography variant="body2" color="textSecondary" className={classes.typo} component="p">
-                      Promotion : M1MIAA
-                    </Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                      
+                    <Grid item xs={12} md={6}>
+                      <FormControl className={classes.formControl}>
+                        <InputLabel htmlFor="selectPromo">Promotion</InputLabel>
+                        <Select
+                          value={this.state.values.promo}
+                          fullWidth
+                          onChange={this.state.handleChange}
+                          label="Promotion"
+                          inputProps={{
+                            name: 'promo',
+                            id: 'selectPromo',
+                          }}
+                        >
+                          <MenuItem value="l3miaa">L3MIAA</MenuItem>
+                          <MenuItem value="m1miaa">M1MIAA</MenuItem>
+                          <MenuItem value="m2miaa">M2MIAA</MenuItem>
+                          <MenuItem value="l3miai">L3MIAI</MenuItem>
+                          <MenuItem value="m1miai">M1MIAI</MenuItem>
+                          <MenuItem value="m2miai">M2MIAI</MenuItem>
+                        </Select>
+                      </FormControl>
                     </Grid>
                   </Grid>
-                </CardContent>
-                </CardActionArea>
-                <LinearProgress
-                  className={classes.progress}
-                  value={100}
-                  variant="determinate"
-                />
-              
-              {/* A n'afficher que si le user co est prof */}
-              {/* <CardActions>
-                <Button size="small" color="primary">
-                  Modifier
-                </Button>
-                <Button size="small" color="secondary">
-                  Supprimer
-                </Button>
-              </CardActions> */}
-            </Card>
-          </Grid>
-          <Grid item xs={2}></Grid>
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={this.state.handleClose} color="primary">
+                Modifier le cours
+              </Button>
+              <Button onClick={this.state.handleClose} color="secondary">
+                Fermer
+              </Button>
+            </DialogActions>
+          </FormControl>
+          </form>
+          </Dialog>
+
         </Grid>
-
-        <Grid container spacing={3} className={classes.row}>
-          <Grid item xs={2}></Grid>
-          <Grid item md={8}>
-          <Card className={classes.card}>
-          <CardActionArea href='/feuilleAppel'>
-                <CardContent>
-                  {/* <Typography gutterBottom variant="h5" component="h2">
-                    ARSI
-                  </Typography>
-                  <Typography variant="body2" color="textSecondary" component="p">
-                    Cours du : 26/10/2019
-                  </Typography> */}
-                  <Grid container spacing={3}>
-                    <Grid item xs={3}>
-                    <Typography gutterBottom className={classes.typo} variant="h5" component="h2">
-                      PRDLL
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" className={classes.typo} component="p">
-                        Didier COURTAUD
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                      
-                    </Grid>
-                    <Grid item xs={6} className={classes.fab}>
-                      {/* <Typography variant="body2" color="textSecondary" className={classes.name} component="p">
-                        Laurent BREDA
-                      </Typography> */}
-                      {/* <Fab color="primary" aria-label="add" >
-                        <LaunchIcon />
-                      </Fab> */}
-                    </Grid>
-                  </Grid>
-                  <Grid container spacing={3}>
-                    <Grid item xs={3}>
-                    <Typography variant="body2" color="textSecondary" className={classes.typo} component="p">
-                      Cours du : 28/10/2019
-                    </Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                    <Typography variant="body2" color="textSecondary" className={classes.typo} component="p">
-                      {/* Heure début - Heure fin */}
-                      Horaire : 8h30 - 11h45
-                    </Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                    <Typography variant="body2" color="textSecondary" className={classes.typo} component="p">
-                      Promotion : M1MIAA
-                    </Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                      
-                    </Grid>
-                  </Grid>
-                </CardContent>
-                </CardActionArea>
-                <LinearProgress
-                  className={classes.progress}
-                  value={10}
-                  variant="determinate"
-                />
-              
-              {/* A n'afficher que si le user co est prof */}
-              {/* <CardActions>
-                <Button size="small" color="primary">
-                  Modifier
-                </Button>
-                <Button size="small" color="secondary">
-                  Supprimer
-                </Button>
-              </CardActions> */}
-            </Card>
-          </Grid>
-          <Grid item xs={2}></Grid>
-        </Grid>        
-      </Grid>
-    </div>
-
-    // <div className={classes.root}>
-    //   <Paper className={classes.paper}>
-    //     <Table className={classes.table} size="small" aria-label="a dense table">
-    //       <TableHead>
-    //         <TableRow>
-    //           <TableCell><b>Nom du cours</b></TableCell>
-    //           <TableCell align="center"><b>Date</b></TableCell>
-    //           <TableCell align="center"><b>Salle</b></TableCell>
-    //           <TableCell align="center"><b>Heure de début de cours</b></TableCell>
-    //           <TableCell align="center"><b>Heure de fin de cours</b></TableCell>
-    //         </TableRow>
-    //       </TableHead>
-    //       <TableBody>
-    //         {rows.map(row => (
-    //           <TableRow key={row.name}>
-    //             <TableCell component="th" scope="row">
-    //               {row.name}
-    //             </TableCell>
-    //             <TableCell align="center">{row.calories}</TableCell>
-    //             <TableCell align="center">{row.fat}</TableCell>
-    //             <TableCell align="center">{row.carbs}</TableCell>
-    //             <TableCell align="center">{row.fin}</TableCell>
-    //           </TableRow>
-    //         ))}
-    //       </TableBody>
-    //     </Table>
-    //   </Paper>
-    // </div>
-  );
+      </div>
+    );
+  }
 }
+
+TableMain.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(TableMain)
