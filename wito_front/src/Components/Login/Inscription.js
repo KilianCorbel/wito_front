@@ -143,7 +143,7 @@ export default function SignUp() {
                 />
               </Grid>
               <Grid item xs={12}>
-                <FormControlLabel
+                <FormControlLabel id="isStudent"
                   control={<Checkbox value="allowExtraEmails" color="primary" />}
                   label="Je suis étudiant."
                 />

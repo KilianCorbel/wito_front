@@ -100,7 +100,7 @@ class ModalMain extends Component {
               heureF : document.getElementById('time-picker-end').value,
               salle : this.state.salle,
               classe : this.state.promo,
-              professeur : "5da02ccee841151c1cb1b00d"//localStorage.getItem('user_id')
+              professeur : localStorage.getItem('user_id')
         }),
         headers: {"Content-Type": "application/json"}
         })
