@@ -15,6 +15,7 @@ class MainWindow extends Component {
                 <div align="center">
                     <TableMain/>
                 </div>
+                <br/>
                 <div align="center">
                     <ModalMain/> 
                 </div>

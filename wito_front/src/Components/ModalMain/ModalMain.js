@@ -21,23 +21,100 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 
-export default function ModalMain() {
-    const useStyles = makeStyles(theme => ({
-      form: {
-        display: 'flex',
-        flexDirection: 'column',
-      },
-      formControl: {
-        marginTop: theme.spacing(1),
-        display: 'flex',
-        minWidth: 120,
-      },
-      formControlLabel: {
-        marginTop: theme.spacing(1),
-      },
-    }));
-    
-    const classes = useStyles();
+
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/styles';
+
+const styles = theme => ({
+    form: {
+      display: 'flex',
+      flexDirection: 'column',
+    },
+    formControl: {
+      //marginTop: theme.spacing(1),
+      display: 'flex',
+      minWidth: 120,
+    },
+    formControlLabel: {
+      //marginTop: theme.spacing(1),
+    }
+});
+
+//export default function ModalMain() { 
+class ModalMain extends Component {
+    constructor(props) {
+      super(props);
+      this.handleSubmit = this.handleSubmit.bind(this);
+      this.state = {
+          nom : '',
+          selectedDate : new Date(),
+          selectedTimeS : new Date(),
+          selectedTimeE : new Date(),
+          salle : '',
+          promo: '',
+          getPromos : [],
+          open : false,
+          fullWidth : true,
+          maxWidth : 'sm'
+        }
+    }
+
+    componentDidMount() {
+      let currentComponent = this;
+
+      fetch('http://localhost:3010/classes/')
+        .then((resp) => resp.json())
+        .then(function(data) {
+          //console.log("data get: "+ data);
+          var list = [];
+          data.forEach(function(promo) {
+              list.push({id:promo._id, label:promo.label})
+          });
+          console.log(list);
+          currentComponent.setState({getPromos : list});
+        })
+    }
+
+    handleSubmit(event) {
+      event.preventDefault();
+
+      /*
+      let utilisateur = {
+        nom : this.state.nom,
+        date : document.getElementById('date-picker-inline').value,
+        heureD : document.getElementById('time-picker-begin').value,
+        heureF : document.getElementById('time-picker-end').value,
+        salle : this.state.salle,
+        classe : this.state.promo,
+        professeur : "5da02ccee841151c1cb1b00d"//localStorage.getItem('user_id')
+      }
+      console.log("utilisateur: " + JSON.stringify(utilisateur));
+      */
+
+      fetch('http://localhost:3010/cours/',{
+            method: 'POST',
+            body: JSON.stringify({
+              nom : this.state.nom,
+              date : document.getElementById('date-picker-inline').value,
+              heureD : document.getElementById('time-picker-begin').value,
+              heureF : document.getElementById('time-picker-end').value,
+              salle : this.state.salle,
+              classe : this.state.promo,
+              professeur : localStorage.getItem('user_id')
+        }),
+        headers: {"Content-Type": "application/json"}
+        })
+        .then(function(response){
+            console.log(response => response.json());
+            return response => response.json()
+        })
+       
+      this.setState({open : false});
+      window.location.reload();
+    }
+  
+    /*const classes = useStyles();
+  
     const [open, setOpen] = React.useState(false);
     const [fullWidth, setFullWidth] = React.useState(true);
     const [maxWidth, setMaxWidth] = React.useState('sm');
@@ -45,167 +122,181 @@ export default function ModalMain() {
     const [values, setValues] = React.useState({
       promo: '',
     });
-    
-    const handleClickOpen = () => {
-      setOpen(true);
-    };
-    
-    const handleClose = () => {
-      setOpen(false);
-    };
-
-    const handleChange = event => {
-      setValues(oldValues => ({
-        ...oldValues,
-        [event.target.name]: event.target.value,
-      }));
-    };
-
     const [selectedDate, setSelectedDate] = React.useState(new Date());
     const [selectedTimeS, setSelectedTimeS] = React.useState(new Date());
-    const [selectedTimeE, setSelectedTimeE] = React.useState(new Date());
+    const [selectedTimeE, setSelectedTimeE] = React.useState(new Date());*/
 
-    const handleDateChange = date => {
-      setSelectedDate(date);
+    handleClickOpen = () => {
+      this.setState({open : true});
+    };
+    
+    handleClose = () => {
+      this.setState({open : false});
+      window.location.reload();
     };
 
-    const handleTimeChangeS = time => {
-      setSelectedTimeS(time);
+    handleChange = event => {
+      this.setState({promo : event.target.value});
     };
 
-    const handleTimeChangeE = time => {
-      setSelectedTimeE(time);
+    handleDateChange = date => {
+      this.setState({selectedDate : date});
     };
 
-    return(
-      <React.Fragment>
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          className={classes.button}
-          onClick={handleClickOpen}
-          startIcon={<AddIcon />}
-        >
-          Cours
-        </Button>
-        <Dialog
-          fullWidth={fullWidth}
-          maxWidth={maxWidth}
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="max-width-dialog-title"
-        >
-          
-        <form className={classes.form} noValidate>
-        <FormControl className={classes.formControl}>
-          <DialogTitle>Ajouter un cours</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <Grid container spacing={3}>
-                  <Grid item xs={12} md={6}>
-                    <TextField
-                      autoFocus
-                      margin="dense"
-                      id="name"
-                      label="Nom du cours"
-                      type="name"
-                      fullWidth
-                    />
-                  </Grid>                  
-                  
-                  <Grid item xs={12} md={6}>
-                    <KeyboardDatePicker
-                        disableToolbar
-                        variant="inline"
-                        format="dd/MM/yyyy"
-                        margin="normal"
-                        id="date-picker-inline"
-                        label="Date du cours"
-                        value={selectedDate}
-                        onChange={handleDateChange}
-                        KeyboardButtonProps={{
-                          'aria-label': 'change date',
-                        }}
+    handleTimeChangeS = time => {
+      this.setState({selectedTimeS : time});
+    };
+
+    handleTimeChangeE = time => {
+      this.setState({selectedTimeE : time});
+    };
+
+    render(){
+      const { classes } = this.props;
+
+      var promos = this.state.getPromos.map( (promo) => {
+        return (
+          <MenuItem key={promo.id} value={promo.id}>{promo.label}</MenuItem>
+        )
+      });
+
+      return(
+        <React.Fragment>
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            className={classes.button}
+            onClick={this.handleClickOpen}
+            startIcon={<AddIcon />}
+          >
+            Cours
+          </Button>
+          <Dialog
+            fullWidth={this.state.fullWidth}
+            maxWidth={this.state.maxWidth}
+            open={this.state.open}
+            onClose={this.handleClose}
+            aria-labelledby="max-width-dialog-title"
+          >
+            
+          <form className={classes.form} noValidate>
+          <FormControl className={classes.formControl}>
+            <DialogTitle>Ajouter un cours</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} md={6}>
+                      <TextField
+                        autoFocus
+                        margin="dense"
+                        id="name"
+                        label="Nom du cours"
+                        type="name"
+                        value={this.state.nom} onChange={(ev)=>this.setState({nom:ev.target.value})}
+                        fullWidth={this.state.fullWidth}
                       />
-                  </Grid>                  
-                </Grid>
-
-                <Grid container spacing={3}>
-                  <Grid item xs={12} md={6}>
-                  <KeyboardTimePicker
-                    margin="normal"
-                    id="time-picker"
-                    label="Heure de début"
-                    value={selectedTimeS}
-                    onChange={handleTimeChangeS}
-                    KeyboardButtonProps={{
-                      'aria-label': 'Modifier l\'heure',
-                    }}
-                  />
+                    </Grid>                  
+                    
+                    <Grid item xs={12} md={6}>
+                      <KeyboardDatePicker
+                          disableToolbar
+                          variant="inline"
+                          format="dd/MM/yyyy"
+                          margin="normal"
+                          id="date-picker-inline"
+                          label="Date du cours"
+                          value={this.state.selectedDate}
+                          onChange={this.handleDateChange}
+                          // value={this.state.date} onChange={(ev)=>this.setState({date:ev.target.value})}
+                          KeyboardButtonProps={{
+                            'aria-label': 'change date',
+                          }}
+                        />
+                    </Grid>                  
                   </Grid>
-                  <Grid item xs={12} md={6}>
+
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} md={6}>
                     <KeyboardTimePicker
                       margin="normal"
-                      id="time-picker"
-                      label="Heure de fin"
-                      value={selectedTimeE}
-                      onChange={handleTimeChangeE}
+                      id="time-picker-begin"
+                      label="Heure de début"
+                      value={this.state.selectedTimeS}
+                      onChange={this.handleTimeChangeS}
+                      // value={this.state.heureD} onChange={(ev)=>this.setState({heureD:ev.target.value})}
                       KeyboardButtonProps={{
                         'aria-label': 'Modifier l\'heure',
                       }}
                     />
-                  </Grid>
-                </Grid>
-              </MuiPickersUtilsProvider>
-
-              <Grid container spacing={3}>
-                  <Grid item xs={12} md={6}>
-                    <TextField
-                      margin="dense"
-                      id="salle"
-                      label="Salle"
-                      type="name"
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <FormControl className={classes.formControl}>
-                      <InputLabel htmlFor="selectPromo">Promotion</InputLabel>
-                      <Select
-                        value={values.promo}
-                        fullWidth
-                        onChange={handleChange}
-                        label="Promotion"
-                        inputProps={{
-                          name: 'promo',
-                          id: 'selectPromo',
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      <KeyboardTimePicker
+                        margin="normal"
+                        id="time-picker-end"
+                        label="Heure de fin"
+                        value={this.state.selectedTimeE}
+                        onChange={this.handleTimeChangeE}
+                        // value={this.state.heureF} onChange={(ev)=>this.setState({heureF:ev.target.value})}
+                        KeyboardButtonProps={{
+                          'aria-label': 'Modifier l\'heure',
                         }}
-                      >
-                        <MenuItem value="l3miaa">L3MIAA</MenuItem>
-                        <MenuItem value="m1miaa">M1MIAA</MenuItem>
-                        <MenuItem value="m2miaa">M2MIAA</MenuItem>
-                        <MenuItem value="l3miai">L3MIAI</MenuItem>
-                        <MenuItem value="m1miai">M1MIAI</MenuItem>
-                        <MenuItem value="m2miai">M2MIAI</MenuItem>
-                      </Select>
-                    </FormControl>
+                      />
+                    </Grid>
                   </Grid>
-                </Grid>
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} color="primary">
-              Ajouter le cours
-            </Button>
-            <Button onClick={handleClose} color="secondary">
-              Fermer
-            </Button>
-          </DialogActions>
-        </FormControl>
-        </form>
-        </Dialog>
-      </React.Fragment>
-  );
+                </MuiPickersUtilsProvider>
+
+                <Grid container spacing={3}>
+                    <Grid item xs={12} md={6}>
+                      <TextField
+                        margin="dense"
+                        id="salle"
+                        label="Salle"
+                        type="name"
+                        value={this.state.salle} onChange={(ev)=>this.setState({salle:ev.target.value})}
+                        fullWidth={this.state.fullWidth}
+                      />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      <FormControl className={classes.formControl}>
+                        <InputLabel htmlFor="selectPromo">Promotion</InputLabel>
+                        <Select
+                          fullWidth={this.state.fullWidth}
+                          value={this.state.promo}
+                          onChange={this.handleChange}
+                          // value={this.state.classe} onChange={(ev)=>this.setState({classe:ev.target.value})}
+                          label="Promotion"
+                          inputProps={{
+                            name: 'promo',
+                            id: 'selectPromo',
+                          }}
+                        >
+                          {promos}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                  </Grid>
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={this.handleSubmit} color="primary">
+                Ajouter le cours
+              </Button>
+              <Button onClick={this.handleClose} color="secondary">
+                Fermer
+              </Button>
+            </DialogActions>
+          </FormControl>
+          </form>
+          </Dialog>
+        </React.Fragment>
+    );
+  }
 }
+
+ModalMain.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(ModalMain)

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -54,6 +54,35 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function SignUp() {
+    let submit = function (){
+      let utilisateur = {
+        nom : document.getElementById('firstName').value,
+        prenom : document.getElementById('lastName').value,
+        mail : document.getElementById('email').value,
+        mdp : document.getElementById('password').value
+      }
+      console.log("utilisateur: " + JSON.stringify(utilisateur));
+
+      let url = "professeur";
+      if(document.getElementById('isStudent').value) {
+        url = "etudiant";
+      }
+      fetch('http://localhost:3010/' + url + 's/',{
+            method: 'POST',
+            body: JSON.stringify({
+                nom: utilisateur.nom,
+                prenom : utilisateur.prenom,
+                mail : utilisateur.mail,
+                mdp : utilisateur.mdp,
+        }),
+        headers: {"Content-Type": "application/json"}
+        })
+        .then(function(response){
+            console.log(response => response.json());
+            return response => response.json()
+        })
+    }
+
     const classes = useStyles();
 
     return (
@@ -65,7 +94,7 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Inscription
           </Typography>
-          <form className={classes.form} noValidate>
+          <form className={classes.form} action='/' noValidate>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -114,7 +143,7 @@ export default function SignUp() {
                 />
               </Grid>
               <Grid item xs={12}>
-                <FormControlLabel
+                <FormControlLabel id="isStudent"
                   control={<Checkbox value="allowExtraEmails" color="primary" />}
                   label="Je suis étudiant."
                 />
@@ -125,6 +154,7 @@ export default function SignUp() {
               fullWidth
               variant="contained"
               color="primary"
+              onClick={submit}
               className={classes.submit}
             >
               Inscription
