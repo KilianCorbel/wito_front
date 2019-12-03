@@ -160,7 +160,7 @@ const EnhancedTableToolbar = props => {
         </Typography>
       ) : (
         <Typography className={classes.title} variant="h6" id="tableTitle">
-          Gestion des cours
+          Gestion des cours pour les professeurs
         </Typography>
       )}
 
@@ -350,7 +350,7 @@ export default function EnhancedTable() {
           onChangeRowsPerPage={handleChangeRowsPerPage}
         />
       </Paper>
+
     </div>
- 
   );
 }
