@@ -1,5 +1,9 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/styles';
+import Button from '@material-ui/core/Button';
+import AddIcon from '@material-ui/icons/Add';
+
 import clsx from 'clsx';
 import { lighten, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -18,181 +22,12 @@ import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 
-import ModalGestionCours from '../ModalMain/ModalGestionCours';
-
-
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-
-  createData('AOS', '18/10/2019',"IBGBI 113", "8h30", "11h45"),
-  createData('COOL', '18/10/2019',"IBGBI 111", "8h30", "11h45"),
-  createData('DLL', '12/10/2019',"IBGBI 113", "8h30", "11h45"),
-  createData('ARSI', '11/10/2019',"IBGBI 113", "8h30", "11h45"),
-  createData('DROIT', '22/10/2019',"IBGBI 113", "8h30", "11h45"),
-  createData('AOS', '18/10/2019',"IBGBI 113", "8h30", "11h45"),
-  createData('GESO', '16/10/2019',"IBGBI 113", "8h30", "11h45"),
-  createData('AOS', '18/10/2019',"IBGBI 113", "8h30", "11h45"),
-  createData('AOS', '18/10/2019',"IBGBI 113", "8h30", "11h45"),
-  createData('AOS', '18/10/2019',"IBGBI 113", "8h30", "11h45"),
-];
-
-function desc(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function stableSort(array, cmp) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = cmp(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map(el => el[0]);
-}
-
-function getSorting(order, orderBy) {
-  return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
-}
-
-const headCells = [
-  { id: 'name', numeric: false, disablePadding: true, label: 'Cours AOS' },
-  { id: 'calories', numeric: true, disablePadding: false, label: '20/10/2019' },
-  { id: 'fat', numeric: true, disablePadding: false, label: 'iBGBI 116' },
-  { id: 'carbs', numeric: true, disablePadding: false, label: '8h30' },
-  { id: 'protein', numeric: true, disablePadding: false, label: '11h45' },
-];
-
-function EnhancedTableHead(props) {
-  const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
-  const createSortHandler = property => event => {
-    onRequestSort(event, property);
-  };
-
-  return (
-    <TableHead>
-      <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{ 'aria-label': 'selectionner tous les cours' }}
-          />
-        </TableCell>
-        {headCells.map(headCell => (
-          <TableCell
-            key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'default'}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={order}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <span className={classes.visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                </span>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  );
-}
-
-EnhancedTableHead.propTypes = {
-  classes: PropTypes.object.isRequired,
-  numSelected: PropTypes.number.isRequired,
-  onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
-  orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
-};
-
-const useToolbarStyles = makeStyles(theme => ({
-  root: {
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(1),
-  },
-  highlight:
-    theme.palette.type === 'light'
-      ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
-      : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
-  title: {
-    flex: '1 1 100%',
-  },
-}));
-
-const EnhancedTableToolbar = props => {
-  const classes = useToolbarStyles();
-  const { numSelected } = props;
-
-  return (
-    <Toolbar
-      className={clsx(classes.root, {
-        [classes.highlight]: numSelected > 0,
-      })}
-    >
-      {numSelected > 0 ? (
-        <Typography className={classes.title} color="inherit" variant="subtitle1">
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography className={classes.title} variant="h6" id="tableTitle">
-          Gestion des cours pour les professeurs
-        </Typography>
-      )}
-
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton aria-label="delete" href= "/gestionCoursDelete" component={ModalGestionCours}>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton aria-label="filter list">
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
-      )}
-    </Toolbar>
-  );
-};
-
-EnhancedTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-};
-
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
   root: {
     width: '100%',
-    marginTop: theme.spacing(3),
   },
   paper: {
     width: '100%',
-    marginBottom: theme.spacing(2),
   },
   table: {
     minWidth: 750,
@@ -211,146 +46,198 @@ const useStyles = makeStyles(theme => ({
     top: 20,
     width: 1,
   },
-}));
+    
+});
 
-export default function EnhancedTable() {
-  const classes = useStyles();
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('calories');
-  const [selected, setSelected] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+class TableGestionCoursProfesseur extends Component {
+    constructor(props) {
+      super(props);
+      this.handleSubmit = this.handleSubmit.bind(this);
+      this.state = {
+        order : React.useState('asc'),
+        orderBy : React.useState('calories'),
+        selected: React.useState([]),
+        page: React.useState(0),
+        dense : React.useState(false),
+        rowsPerPage : React.useState(5),
+        emptyRows : '',
 
-  const handleRequestSort = (event, property) => {
-    const isDesc = orderBy === property && order === 'desc';
-    setOrder(isDesc ? 'asc' : 'desc');
-    setOrderBy(property);
-  };
+         rows : [
 
-  const handleSelectAllClick = event => {
-    if (event.target.checked) {
-      const newSelecteds = rows.map(n => n.name);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
+          this.createData('AOS', '18/10/2019',"IBGBI 113", "8h30", "11h45"),
+          this.createData('COOL', '18/10/2019',"IBGBI 111", "8h30", "11h45"),
+          this.createData('DLL', '12/10/2019',"IBGBI 113", "8h30", "11h45"),
+          this.createData('ARSI', '11/10/2019',"IBGBI 113", "8h30", "11h45"),
+          this.createData('DROIT', '22/10/2019',"IBGBI 113", "8h30", "11h45"),
+          this.createData('AOS', '18/10/2019',"IBGBI 113", "8h30", "11h45"),
+          this.createData('GESO', '16/10/2019',"IBGBI 113", "8h30", "11h45"),
+          this.createData('AOS', '18/10/2019',"IBGBI 113", "8h30", "11h45"),
+          this.createData('AOS', '18/10/2019',"IBGBI 113", "8h30", "11h45"),
+          this.createData('AOS', '18/10/2019',"IBGBI 113", "8h30", "11h45"),
+        ],
+        
+        }
     }
 
-    setSelected(newSelected);
-  };
+    componentDidMount() {
+      let currentComponent = this;
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
+      this.setState({emptyRows : (this.state.rowsPerPage - Math.min(this.state.rowsPerPage, this.state.rows.length - this.state.page * this.state.rowsPerPage))});
 
-  const handleChangeRowsPerPage = event => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-  const handleChangeDense = event => {
-    setDense(event.target.checked);
-  };
+    }
 
-  const isSelected = name => selected.indexOf(name) !== -1;
+    handleSubmit(event) {
+      event.preventDefault();
 
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+    }
 
-  return (
-    <div className={classes.root}>
-      <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} />
-        <div className={classes.tableWrapper}>
-          <Table
-            className={classes.table}
-            aria-labelledby="tableTitle"
-            size={dense ? 'small' : 'medium'}
-            aria-label="enhanced table"
-          >
-            <EnhancedTableHead
-              classes={classes}
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-            />
-            <TableBody>
-              {stableSort(rows, getSorting(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+    handleClickOpen = () => {
+     
+    };
 
-                  return (
-                    <TableRow
-                      hover
-                      onClick={event => handleClick(event, row.name)}
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.name}
-                      selected={isItemSelected}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={isItemSelected}
-                          inputProps={{ 'aria-labelledby': labelId }}
-                        />
-                      </TableCell>
-                      <TableCell component="th" id={labelId} scope="row" padding="none">
-                        {row.name}
-                      </TableCell>
-                      <TableCell align="right">{row.calories}</TableCell>
-                      <TableCell align="right">{row.fat}</TableCell>
-                      <TableCell align="right">{row.carbs}</TableCell>
-                      <TableCell align="right">{row.protein}</TableCell>
-                    </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          backIconButtonProps={{
-            'aria-label': 'previous page',
-          }}
-          nextIconButtonProps={{
-            'aria-label': 'next page',
-          }}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
-        />
-      </Paper>
 
-    </div>
-  );
+  
+    handleRequestSort = (event, property) => {
+      const isDesc = this.state.orderBy === property && this.state.order === 'desc';
+      var ord =isDesc ? 'asc' : 'desc';
+      this.setState({order : ord, orderBy : property});
+    };
+  
+    handleSelectAllClick = event => {
+      if (event.target.checked) {
+        const newSelecteds = this.state.rows.map(n => n.name);
+        this.setState({selected : newSelecteds});
+        return;
+      }
+      this.setState({selected : []});
+    };
+  
+    handleClick = (event, name) => {
+      const selectedIndex = this.state.selected.indexOf(name);
+      let newSelected = [];
+  
+      if (selectedIndex === -1) {
+        newSelected = newSelected.concat(this.state.selected, name);
+      } else if (selectedIndex === 0) {
+        newSelected = newSelected.concat(this.state.selected.slice(1));
+      } else if (selectedIndex === this.state.selected.length - 1) {
+        newSelected = newSelected.concat(this.state.selected.slice(0, -1));
+      } else if (selectedIndex > 0) {
+        newSelected = newSelected.concat(
+          this.state.selected.slice(0, selectedIndex),
+          this.state.selected.slice(selectedIndex + 1),
+        );
+      }
+  
+      this.setState({selected : newSelected});
+    };
+  
+    handleChangePage = (event, newPage) => {
+      this.setState({page : newPage});
+    };
+  
+    handleChangeRowsPerPage = event => {
+      this.setState({rowsPerPage : parseInt(event.target.value, 10)});
+      this.setState({page : 0});
+    };
+
+    isSelected = name => this.state.selected.indexOf(name) !== -1;
+
+
+   createData = (name, calories, fat, carbs, protein) => {
+  return { name, calories, fat, carbs, protein };
 }
+
+    render(){
+      const {classes} = this.props;
+      return(
+        <div className={classes.root}>
+        <Button
+             variant="contained"
+             color="primary"
+             size="large"
+             className={classes.button}
+             onClick={this.handleClickOpen}
+             startIcon={<AddIcon />}
+           >
+             Cours
+           </Button>
+       <Paper className={classes.paper}>
+         <EnhancedTableToolbar numSelected={this.state.selected.length} />
+         <div className={classes.tableWrapper}>
+           <Table
+             className={classes.table}
+             aria-labelledby="tableTitle"
+             size={this.state.dense ? 'small' : 'medium'}
+             aria-label="enhanced table"
+           >
+             <EnhancedTableHead
+               classes={classes}
+               numSelected={this.state.selected.length}
+               order={this.state.order}
+               orderBy={this.state.orderBy}
+               onSelectAllClick={handleSelectAllClick}
+               onRequestSort={handleRequestSort}
+               rowCount={this.state.rows.length}
+             />
+             <TableBody>
+                     <TableRow
+                       hover
+                       onClick={event => handleClick(event, this.state.row.name)}
+                       role="checkbox"
+                       aria-checked={isItemSelected}
+                       tabIndex={-1}
+                       key={this.state.row.name}
+                       selected={isItemSelected}
+                     >
+                       <TableCell padding="checkbox">
+                         <Checkbox
+                           checked={isItemSelected}
+                           inputProps={{ 'aria-labelledby': labelId }}
+                         />
+                       </TableCell>
+                       <TableCell component="th" id={labelId} scope="row" padding="none">
+                         {this.state.row.name}
+                       </TableCell>
+                       <TableCell align="right">{this.state.row.calories}</TableCell>
+                       <TableCell align="right">{this.state.row.fat}</TableCell>
+                       <TableCell align="right">{this.state.row.carbs}</TableCell>
+                       <TableCell align="right">{this.state.row.protein}</TableCell>
+                     </TableRow>
+                  
+                 
+               {this.state.emptyRows > 0 && (
+                 <TableRow style={{ height: (this.state.dense ? 33 : 53) * this.state.emptyRows }}>
+                   <TableCell colSpan={6} />
+                 </TableRow>
+               )}
+             </TableBody>
+           </Table>
+         </div>
+         <TablePagination
+           rowsPerPageOptions={[5, 10, 25]}
+           component="div"
+           count={this.state.rows.length}
+           rowsPerPage={this.state.rowsPerPage}
+           page={this.state.page}
+           backIconButtonProps={{
+             'aria-label': 'previous page',
+           }}
+           nextIconButtonProps={{
+             'aria-label': 'next page',
+           }}
+           onChangePage={handleChangePage}
+           onChangeRowsPerPage={handleChangeRowsPerPage}
+         />
+       </Paper>
+ 
+     </div>
+    );
+  }
+}
+
+TableGestionCoursProfesseur.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(TableGestionCoursProfesseur)
