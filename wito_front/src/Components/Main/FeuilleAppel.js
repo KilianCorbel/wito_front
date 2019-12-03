@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { render } from 'react-dom';
 import { QRCode } from 'react-qr-svg';
 import Navbar from '../Navbar/Menu';
@@ -15,26 +15,26 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import { withStyles } from '@material-ui/styles';
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
     root: {
       flexGrow: 1,
       marginTop: '2vh',
     },
     paper: {
-      padding: theme.spacing(2),
+      padding: '2vh',
       textAlign: 'center',
-      color: theme.palette.text.secondary,
     },
     cours: {
-      padding: theme.spacing(3),
+      padding: "2vh",
     },
     qr: {
       textAlign: 'center',
       marginTop: '6vh',
     },
     promo: {
-      padding:theme.spacing(3),
+      padding: "2vh",
       textAlign: 'center'
     },
     listPromo: {
@@ -42,299 +42,114 @@ const useStyles = makeStyles(theme => ({
     },
     list: {
       marginTop: "20px"
+    },
+    titreCours: {
+      fontSize: "14px"
     }
-  }));
+  });
 
-const styles = {
-  root: {
-    fontFamily: 'sans-serif',
-  
-    
-  },
-  h1: {
-    textAlign: 'center',
-  },
-  qrcode: {
-    textAlign: 'center',
-  },
-  text: {
-      textAlign : 'right',
-  },
-
-  //modif kilian
-  card: {
-    minWidth: 275,
-    boxShadow: 0,
-  },
-  titreCours: {
-    fontSize: 14,
-  },
-  title: {
-    fontSize: 30,
-  },
-  pos: {
-    marginBottom: 8,
-  },
-  
-};
-export default function AutoGrid() {
-    const classes = useStyles();
-  
-    return (
-    <div>
-      <div><Navbar/></div> 
-      <div className={classes.root}>
-        <Grid container spacing={3}>
-          <Grid item xs={4}>
-            <Paper className={classes.promo} elevation={0}>
-              <Typography variant="h5" color="textSecondary">
-                Promotion M2MIAA
-              </Typography>
-              <List className={classes.list} aria-label="promotion">
-                <ListItem className={classes.listPromo} button>
-                  <ListItemText  primary="Fakih DARKAOUI" />
-                  <ListItemIcon>
-                    <CheckCircleOutlineIcon color="primary" />
-                  </ListItemIcon>
-                </ListItem>
-                <ListItem className={classes.listPromo} button>
-                  <ListItemText  primary="Jeanne BERTOUX" />
-                  <ListItemIcon>
-                    <CheckCircleOutlineIcon color="primary" />
-                  </ListItemIcon>
-                </ListItem>
-                <ListItem className={classes.listPromo} button>
-                  <ListItemText  primary="Kilian CORBEL" />
-                  <ListItemIcon>
-                    <CheckCircleOutlineIcon color="disabled" />
-                  </ListItemIcon>
-                </ListItem>
-                <ListItem className={classes.listPromo} button>
-                  <ListItemText  primary="Fakih DARKAOUI" />
-                  <ListItemIcon>
-                    <CheckCircleOutlineIcon color="primary" />
-                  </ListItemIcon>
-                </ListItem>
-                <ListItem className={classes.listPromo} button>
-                  <ListItemText  primary="Jeanne BERTOUX" />
-                  <ListItemIcon>
-                    <CheckCircleOutlineIcon color="primary" />
-                  </ListItemIcon>
-                </ListItem>
-                <ListItem className={classes.listPromo} button>
-                  <ListItemText  primary="Kilian CORBEL" />
-                  <ListItemIcon>
-                    <CheckCircleOutlineIcon color="disabled" />
-                  </ListItemIcon>
-                </ListItem>
-                <ListItem className={classes.listPromo} button>
-                  <ListItemText  primary="Fakih DARKAOUI" />
-                  <ListItemIcon>
-                    <CheckCircleOutlineIcon color="primary" />
-                  </ListItemIcon>
-                </ListItem>
-                <ListItem className={classes.listPromo} button>
-                  <ListItemText  primary="Jeanne BERTOUX" />
-                  <ListItemIcon>
-                    <CheckCircleOutlineIcon color="primary" />
-                  </ListItemIcon>
-                </ListItem>
-                <ListItem className={classes.listPromo} button>
-                  <ListItemText  primary="Kilian CORBEL" />
-                  <ListItemIcon>
-                    <CheckCircleOutlineIcon color="disabled" />
-                  </ListItemIcon>
-                </ListItem>
-                <ListItem className={classes.listPromo} button>
-                  <ListItemText  primary="Fakih DARKAOUI" />
-                  <ListItemIcon>
-                    <CheckCircleOutlineIcon color="primary" />
-                  </ListItemIcon>
-                </ListItem>
-                <ListItem className={classes.listPromo} button>
-                  <ListItemText  primary="Jeanne BERTOUX" />
-                  <ListItemIcon>
-                    <CheckCircleOutlineIcon color="primary" />
-                  </ListItemIcon>
-                </ListItem>
-                <ListItem className={classes.listPromo} button>
-                  <ListItemText  primary="Kilian CORBEL" />
-                  <ListItemIcon>
-                    <CheckCircleOutlineIcon color="disabled" />
-                  </ListItemIcon>
-                </ListItem>
-                <ListItem className={classes.listPromo} button>
-                  <ListItemText  primary="Fakih DARKAOUI" />
-                  <ListItemIcon>
-                    <CheckCircleOutlineIcon color="primary" />
-                  </ListItemIcon>
-                </ListItem>
-                <ListItem className={classes.listPromo} button>
-                  <ListItemText  primary="Jeanne BERTOUX" />
-                  <ListItemIcon>
-                    <CheckCircleOutlineIcon color="primary" />
-                  </ListItemIcon>
-                </ListItem>
-                <ListItem className={classes.listPromo} button>
-                  <ListItemText  primary="Kilian CORBEL" />
-                  <ListItemIcon>
-                    <CheckCircleOutlineIcon color="disabled" />
-                  </ListItemIcon>
-                </ListItem>
-                <ListItem className={classes.listPromo} button>
-                  <ListItemText  primary="Fakih DARKAOUI" />
-                  <ListItemIcon>
-                    <CheckCircleOutlineIcon color="primary" />
-                  </ListItemIcon>
-                </ListItem>
-                <ListItem className={classes.listPromo} button>
-                  <ListItemText  primary="Jeanne BERTOUX" />
-                  <ListItemIcon>
-                    <CheckCircleOutlineIcon color="primary" />
-                  </ListItemIcon>
-                </ListItem>
-                <ListItem className={classes.listPromo} button>
-                  <ListItemText  primary="Kilian CORBEL" />
-                  <ListItemIcon>
-                    <CheckCircleOutlineIcon color="disabled" />
-                  </ListItemIcon>
-                </ListItem>
-                <ListItem className={classes.listPromo} button>
-                  <ListItemText  primary="Fakih DARKAOUI" />
-                  <ListItemIcon>
-                    <CheckCircleOutlineIcon color="primary" />
-                  </ListItemIcon>
-                </ListItem>
-                <ListItem className={classes.listPromo} button>
-                  <ListItemText  primary="Jeanne BERTOUX" />
-                  <ListItemIcon>
-                    <CheckCircleOutlineIcon color="primary" />
-                  </ListItemIcon>
-                </ListItem>
-                <ListItem className={classes.listPromo} button>
-                  <ListItemText  primary="Kilian CORBEL" />
-                  <ListItemIcon>
-                    <CheckCircleOutlineIcon color="disabled" />
-                  </ListItemIcon>
-                </ListItem>
-                <ListItem className={classes.listPromo} button>
-                  <ListItemText  primary="Fakih DARKAOUI" />
-                  <ListItemIcon>
-                    <CheckCircleOutlineIcon color="primary" />
-                  </ListItemIcon>
-                </ListItem>
-                <ListItem className={classes.listPromo} button>
-                  <ListItemText  primary="Jeanne BERTOUX" />
-                  <ListItemIcon>
-                    <CheckCircleOutlineIcon color="primary" />
-                  </ListItemIcon>
-                </ListItem>
-                <ListItem className={classes.listPromo} button>
-                  <ListItemText  primary="Kilian CORBEL" />
-                  <ListItemIcon>
-                    <CheckCircleOutlineIcon color="disabled" />
-                  </ListItemIcon>
-                </ListItem>
-                <ListItem className={classes.listPromo} button>
-                  <ListItemText  primary="Fakih DARKAOUI" />
-                  <ListItemIcon>
-                    <CheckCircleOutlineIcon color="primary" />
-                  </ListItemIcon>
-                </ListItem>
-                <ListItem className={classes.listPromo} button>
-                  <ListItemText  primary="Jeanne BERTOUX" />
-                  <ListItemIcon>
-                    <CheckCircleOutlineIcon color="primary" />
-                  </ListItemIcon>
-                </ListItem>
-                <ListItem className={classes.listPromo} button>
-                  <ListItemText  primary="Kilian CORBEL" />
-                  <ListItemIcon>
-                    <CheckCircleOutlineIcon color="disabled" />
-                  </ListItemIcon>
-                </ListItem>
-                <ListItem className={classes.listPromo} button>
-                  <ListItemText  primary="Fakih DARKAOUI" />
-                  <ListItemIcon>
-                    <CheckCircleOutlineIcon color="primary" />
-                  </ListItemIcon>
-                </ListItem>
-                <ListItem className={classes.listPromo} button>
-                  <ListItemText  primary="Jeanne BERTOUX" />
-                  <ListItemIcon>
-                    <CheckCircleOutlineIcon color="primary" />
-                  </ListItemIcon>
-                </ListItem>
-                <ListItem className={classes.listPromo} button>
-                  <ListItemText  primary="Kilian CORBEL" />
-                  <ListItemIcon>
-                    <CheckCircleOutlineIcon color="disabled" />
-                  </ListItemIcon>
-                </ListItem>
-                
-              </List>
-            </Paper>
-          </Grid>
-
-          <Grid item xs={5}>
-            <Paper className={classes.qr} elevation={0}>
-              <QRCode
-                level="Q"
-                style={{ width: 400 }}
-                value="http://localhost:3010/cours/2/register/1"
-              />
-            </Paper>
-            {/* <div style={styles.root} >
-              <div style={styles.qrcode}  >
-                <QRCode
-                    level="Q"
-                    style={{ width: 400 }}
-                    value="http://localhost:3010/cours/2/register/1"
-                />
-              </div>
-            </div> */}
-          </Grid>
-
-          <Grid item xs={3}>
-            <Paper elevation={0} className={classes.cours}>
-                <Typography className={classes.titreCours} color="textSecondary" gutterBottom>
-                  Cours du 02/12/2019
-                </Typography>
-                <Typography variant="h5" >
-                  GESO
-                </Typography>
-                <Typography className={classes.pos} color="textSecondary">
-                  8h30 - 11h45
-                </Typography>
-                <Button size="small" color="primary">Plus de cours</Button>
-              </Paper>
-          </Grid>
-        </Grid>
-      </div>
-    </div>
-    );
+class FeuilleAppel extends Component{
+  constructor(props) {
+    super(props);
+    this.state = {
+        cours : null,
+        classe : null,
+        etudiants: [],
+        open : false,
+        fullWidth : true,
+        maxWidth : 'sm',
+        values : {
+          promo: '',
+        },
+        selectedDate : new Date(),
+        selectedTimeS : new Date(),
+        selectedTimeE : new Date()
+      }
   }
-/*export default class FeuilleAppel extends React.Component {
-  componentDidMount() {}
- 
+
+  componentDidMount() {
+    let currentComponent = this;
+
+    fetch('http://localhost:3010/cours/5de4f636d0d3242524815628')
+      .then((resp) => resp.json())
+      .then(function(cours) {
+        console.log(cours);
+        currentComponent.setState(cours);
+
+        fetch('http://localhost:3010/classes/'+cours.classe)
+          .then((resp) => resp.json())
+          .then(function(classe) {
+            console.log(classe);
+            currentComponent.setState(classe);
+          })
+
+        fetch('http://localhost:3010/etudiants/classe/'+ cours.classe)
+          .then((resp) => resp.json())
+          .then(function(etudiants) {
+            console.log(etudiants);
+            currentComponent.setState({etudiants});
+          })
+      })    
+  }
+
   render() {
-    return (
-          <div style={styles.root} >
-            <h1 style={styles.h1}>Feuille d'appel</h1>
-            <div style={styles.qrcode}  >
-            <QRCode
-                level="Q"
-                style={{ width: 256 }}
-                value={JSON.stringify({
-                id: 928328,
-                name: 'Vive les licornes ! ',
-                insider: true,
-                })}
-            />
-            </div>
+    const {classes} = this.props;
+    const cours = this.state;
+    const classe = this.state;
+    const {etudiants} = this.state;
+    return (      
+      <div>
+        <div><Navbar/></div> 
+        <div className={classes.root}>
+          <Grid container spacing={3}>
+            <Grid item xs={4}>
+              <Paper className={classes.promo} elevation={0}>
+                <Typography variant="h5" color="textSecondary">
+                  Promotion {classe.label}
+                </Typography>
+                <List className={classes.list} aria-label="promotion">                  
+                    {etudiants.map(etudiant =>
+                      <ListItem key={etudiant._id} className={classes.listPromo} button>
+                        <ListItemText  primary={etudiant.nom+' '+etudiant.prenom} />
+                        <ListItemIcon>
+                          {/* A Changer quand l'étudiant est marqué présent */}
+                          <CheckCircleOutlineIcon color="disabled" />
+                        </ListItemIcon>
+                      </ListItem>
+                    )}
+                </List>
+              </Paper>
+            </Grid>
+
+            <Grid item xs={4}>
+              <Paper className={classes.qr} elevation={0}>
+                <QRCode
+                  level="Q"
+                  style={{ width: 400 }}
+                  value='http://localhost:3010/cours/present/'+{classe._id}
+                />
+              </Paper>
+            </Grid>
+
+            <Grid item xs={4}>
+              <Paper elevation={0} className={classes.cours}>
+                  <Typography className={classes.titreCours} color="textSecondary" gutterBottom>
+                    Cours du {cours.date}
+                  </Typography>
+                  <Typography variant="h5" >
+                    {cours.nom}
+                  </Typography>
+                  <Typography className={classes.pos} color="textSecondary">
+                    {cours.heureD} - {cours.heureF}
+                  </Typography>
+                  <Button size="small" color="primary">Plus de cours</Button>
+                </Paper>
+            </Grid>
+          </Grid>
         </div>
+      </div>
     );
   }
 }
 
-render(<FeuilleAppel />, document.getElementById('root'));*/
+export default withStyles(styles)(FeuilleAppel);
