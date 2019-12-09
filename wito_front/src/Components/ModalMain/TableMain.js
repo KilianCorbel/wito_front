@@ -9,9 +9,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import Fab from '@material-ui/core/Fab';
-import LaunchIcon from '@material-ui/icons/Launch';
-import AddIcon from '@material-ui/icons/Add';
+import { withRouter } from "react-router-dom";
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -102,19 +100,6 @@ class TableMain extends Component {
         currentComponent.setState({getCours : list});
       })
   }
-  
-  /*const classes = useStyles();
-
-  const [open, setOpen] = React.useState(false);
-  const [fullWidth, setFullWidth] = React.useState(true);
-  const [maxWidth, setMaxWidth] = React.useState('sm');
-  const [promotion, setPromotion] = React.useState([]);
-  const [values, setValues] = React.useState({
-    promo: '',
-  });
-  const [selectedDate, setSelectedDate] = React.useState(new Date());
-  const [selectedTimeS, setSelectedTimeS] = React.useState(new Date());
-  const [selectedTimeE, setSelectedTimeE] = React.useState(new Date());*/
 
   handleClickOpen = (id) => {
     console.log("modiiiiiifiiiiiiier-" + id)
@@ -153,14 +138,8 @@ class TableMain extends Component {
             <Grid item xs={2}></Grid>
             <Grid item md={8}>
               <Card className={classes.card}>
-              <CardActionArea href='/feuilleAppel'>
+              <CardActionArea href={'/feuilleAppel/'+item._id} >
                   <CardContent>
-                    {/* <Typography gutterBottom variant="h5" component="h2">
-                      {item.nom}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" component="p">
-                      Cours du : {item.date}
-                    </Typography> */}
                     <Grid container spacing={3}>
                       <Grid item xs={3}>
                         <Typography gutterBottom className={classes.typo} variant="h5" component="h2">
@@ -356,4 +335,4 @@ TableMain.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(TableMain)
+export default withStyles(styles)(TableMain);
