@@ -1,118 +1,166 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { render } from 'react-dom';
+import { withRouter } from "react-router-dom";
 import { QRCode } from 'react-qr-svg';
 import Navbar from '../Navbar/Menu';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid'
+import Grid from '@material-ui/core/Grid';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import { withStyles } from '@material-ui/styles';
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
     root: {
       flexGrow: 1,
+      marginTop: '2vh',
     },
     paper: {
-      padding: theme.spacing(2),
+      padding: '2vh',
       textAlign: 'center',
-      color: theme.palette.text.secondary,
     },
-  }));
+    cours: {
+      padding: "2vh",
+    },
+    qr: {
+      textAlign: 'center',
+      marginTop: '6vh',
+    },
+    promo: {
+      padding: "2vh",
+      textAlign: 'center'
+    },
+    listPromo: {
+      height: "2.5vh",
+    },
+    list: {
+      marginTop: "20px"
+    },
+    titreCours: {
+      fontSize: "14px"
+    }
+  });
 
-const styles = {
-  root: {
-    fontFamily: 'sans-serif',
-  
+
+class FeuilleAppel extends Component{
+  constructor(props) {
+    super(props);
+    this.state = {
+        idcours : '',
+        cours : null,
+        classe : null,
+        etudiants: [],
+        open : false,
+        fullWidth : true,
+        maxWidth : 'sm',
+        values : {
+          promo: '',
+        },
+        selectedDate : new Date(),
+        selectedTimeS : new Date(),
+        selectedTimeE : new Date()
+      }
+  }
+
+  componentDidMount() {
+    let currentComponent = this;
+    // C'est un peu dégueu mais ça marche pour l'instant
+    const location = this.props.location.pathname;
+    const idCours= location.substr(14,25);
     
-  },
-  h1: {
-    textAlign: 'center',
-  },
-  qrcode: {
-    textAlign: 'center',
-  },
-  text: {
-      textAlign : 'right',
+
+    fetch('http://localhost:3010/cours/'+ idCours ) 
+      .then((resp) => resp.json())
+      .then(function(cours) {
+        console.log(cours);
+        currentComponent.setState(cours);
+        
+        // let id = cours._id;
+        // currentComponent.setState(id);
+
+        fetch('http://localhost:3010/classes/'+cours.classe)
+          .then((resp) => resp.json())
+          .then(function(classe) {
+            console.log(classe);
+            currentComponent.setState(classe);
+          })
+
+        fetch('http://localhost:3010/etudiants/classe/'+ cours.classe)
+          .then((resp) => resp.json())
+          .then(function(etudiants) {
+            console.log(etudiants);
+            currentComponent.setState({etudiants});
+          })
+      })    
   }
-};
-export default function AutoGrid() {
-    const classes = useStyles();
-  
-    return (
-    <div>
-         <div><Navbar/></div> 
-      <div className={classes.root}>
-        <Grid container spacing={3}>
-          <Grid item xs>
-            <Paper className={classes.paper}>
-            <h1 style={styles.h1}>Présence</h1>
-            </Paper>
-          </Grid>
-          <Grid item xs>
-            <Paper className={classes.paper}>
-            <div style={styles.root} >
-            <h1 style={styles.h1}>Feuille d'appel</h1>
-            <div style={styles.qrcode}  >
-            <QRCode
-                level="Q"
-                style={{ width: 256 }}
-                value={JSON.stringify({
-                id: 928328,
-                name: 'Vive les licornes ! ',
-                insider: true,
-                })}
-            />
-            </div>
-        </div>
-            </Paper>
-          </Grid>
-          <Grid item xs>
-            <Paper className={classes.paper}>
-                <div>
-                Cours : AOS
-                </div>
-                <br/>
-                <div>
-                Salle : IBGBI - 107
-                </div>
-                <br/>
-                <div>
-                Date : 23/10/2019
-                </div>
-                <br/>
-                <div>
-                Heure : 8h30 - 11h45
-                </div>
-                <br/>
-                <div>
-                Prof : Franck Ledoux
-                </div>
-            </Paper>
-          </Grid>
-        </Grid>
-      </div>
-    </div>
-    );
-  }
-/*export default class FeuilleAppel extends React.Component {
-  componentDidMount() {}
- 
+
   render() {
-    return (
-          <div style={styles.root} >
-            <h1 style={styles.h1}>Feuille d'appel</h1>
-            <div style={styles.qrcode}  >
-            <QRCode
-                level="Q"
-                style={{ width: 256 }}
-                value={JSON.stringify({
-                id: 928328,
-                name: 'Vive les licornes ! ',
-                insider: true,
-                })}
-            />
-            </div>
+    const {classes} = this.props;
+    const cours = this.state;
+    const classe = this.state;
+    const {etudiants} = this.state;
+    
+    return (      
+      <div>
+        <div><Navbar/></div> 
+        <div className={classes.root}>
+          <Grid container spacing={3}>
+            <Grid item xs={4}>
+              <Paper className={classes.promo} elevation={0}>
+                <Typography variant="h5" color="textSecondary">
+                  Promotion {classe.label}
+                </Typography>
+                <List className={classes.list} aria-label="promotion">                  
+                    {etudiants.map(etudiant =>
+                      <ListItem key={etudiant._id} className={classes.listPromo} button>
+                        <ListItemText  primary={etudiant.nom+' '+etudiant.prenom} />
+                        <ListItemIcon>
+                          {/* A Changer quand l'étudiant est marqué présent */}
+                          <CheckCircleOutlineIcon color="disabled" />
+                        </ListItemIcon>
+                      </ListItem>
+                    )}
+                </List>
+              </Paper>
+            </Grid>
+
+            <Grid item xs={4}>
+              <Paper className={classes.qr} elevation={0}>
+                <QRCode
+                  level="Q"
+                  style={{ width: 400 }}
+                   value={'http://localhost:3010/cours/present/'+ cours._id}
+                />
+              </Paper>
+            </Grid>
+
+            <Grid item xs={4}>
+              <Paper elevation={0} className={classes.cours}>
+                  <Typography className={classes.titreCours} color="textSecondary" gutterBottom>
+                    Cours du {cours.date}
+                  </Typography>
+                  <Typography variant="h5" >
+                    {cours.nom}
+                  </Typography>
+                  <Typography className={classes.pos} color="textSecondary">
+                    {cours.heureD} - {cours.heureF}
+                  </Typography>
+                  <Button size="small" color="primary">Plus de cours</Button>
+                </Paper>
+            </Grid>
+          </Grid>
         </div>
+      </div>
     );
   }
 }
 
-render(<FeuilleAppel />, document.getElementById('root'));*/
+export default withRouter(withStyles(styles)(FeuilleAppel));
