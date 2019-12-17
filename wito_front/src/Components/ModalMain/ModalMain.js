@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import Dialog from '@material-ui/core/Dialog';
@@ -12,7 +11,6 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
-import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import DateFnsUtils from '@date-io/date-fns';
 import {
@@ -112,19 +110,6 @@ class ModalMain extends Component {
       this.setState({open : false});
       window.location.reload();
     }
-  
-    /*const classes = useStyles();
-  
-    const [open, setOpen] = React.useState(false);
-    const [fullWidth, setFullWidth] = React.useState(true);
-    const [maxWidth, setMaxWidth] = React.useState('sm');
-    const [promotion, setPromotion] = React.useState([]);
-    const [values, setValues] = React.useState({
-      promo: '',
-    });
-    const [selectedDate, setSelectedDate] = React.useState(new Date());
-    const [selectedTimeS, setSelectedTimeS] = React.useState(new Date());
-    const [selectedTimeE, setSelectedTimeE] = React.useState(new Date());*/
 
     handleClickOpen = () => {
       this.setState({open : true});

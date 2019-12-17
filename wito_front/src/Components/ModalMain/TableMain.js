@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import { withRouter } from "react-router-dom";
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -90,10 +86,8 @@ class TableMain extends Component {
     fetch('http://localhost:3010/cours/')
       .then((resp) => resp.json())
       .then(function(data) {
-        // console.log("data get: "+ data);
         var list = [];
         data.forEach(function(cours) {
-          // console.log("data cours: "+ JSON.stringify(cours));
           list.push(cours)
         });
         console.log(list);
@@ -102,7 +96,6 @@ class TableMain extends Component {
   }
 
   handleClickOpen = (id) => {
-    console.log("modiiiiiifiiiiiiier-" + id)
     this.setState({open : true});
   };
 
@@ -137,7 +130,7 @@ class TableMain extends Component {
         <Grid key={item._id} container spacing={3} className={classes.row}>
             <Grid item xs={2}></Grid>
             <Grid item md={8}>
-              <Card className={classes.card}>
+              <Card className={classes.card} >
               <CardActionArea href={'/feuilleAppel/'+item._id} >
                   <CardContent>
                     <Grid container spacing={3}>
@@ -203,7 +196,7 @@ class TableMain extends Component {
 
     return (
       <div className={classes.root}>
-        <Grid container spacing={3}>        
+        <Grid container spacing={3}>
           
           {cours}
 

@@ -54,7 +54,7 @@ class FeuilleAppel extends Component{
   constructor(props) {
     super(props);
     this.state = {
-        id : '',
+        idcours : '',
         cours : null,
         classe : null,
         etudiants: [],
@@ -75,14 +75,16 @@ class FeuilleAppel extends Component{
     // C'est un peu dégueu mais ça marche pour l'instant
     const location = this.props.location.pathname;
     const idCours= location.substr(14,25);
+    
 
     fetch('http://localhost:3010/cours/'+ idCours ) 
       .then((resp) => resp.json())
       .then(function(cours) {
         console.log(cours);
         currentComponent.setState(cours);
-        let id = cours._id;
-        currentComponent.setState(id);
+        
+        // let id = cours._id;
+        // currentComponent.setState(id);
 
         fetch('http://localhost:3010/classes/'+cours.classe)
           .then((resp) => resp.json())
@@ -105,7 +107,6 @@ class FeuilleAppel extends Component{
     const cours = this.state;
     const classe = this.state;
     const {etudiants} = this.state;
-    const id = this.state;
     
     return (      
       <div>
@@ -136,7 +137,7 @@ class FeuilleAppel extends Component{
                 <QRCode
                   level="Q"
                   style={{ width: 400 }}
-                   value={'http://localhost:3010/cours/present/'+id}
+                   value={'http://localhost:3010/cours/present/'+ cours._id}
                 />
               </Paper>
             </Grid>
