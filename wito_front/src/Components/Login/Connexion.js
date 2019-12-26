@@ -91,7 +91,7 @@ export default function SignIn() {
               if(data.text === "Erreur"){
                 console.log("data - " + data.text);
               
-                window.location.replace("/");
+                //window.location.replace("/");
               } else {
                 localStorage.setItem('user_id', data.id); 
                 localStorage.setItem('user_token', data.token);
@@ -106,6 +106,16 @@ export default function SignIn() {
     });
   }
 
+  function action () {
+    if(localStorage.getItem('user_token')){
+      console.log("token");
+      return '/cours';
+    } else {
+      console.log("nothing");
+      return '/';
+    }
+  }
+
   const classes = useStyles();
   
   return (
@@ -117,7 +127,7 @@ export default function SignIn() {
           <Typography component="h1" variant="h5">
             Connexion
           </Typography>
-          <form className={classes.form} action='/cours' noValidate>
+          <form className={classes.form} action={action()} noValidate>
             <TextField
               variant="outlined"
               margin="normal"
