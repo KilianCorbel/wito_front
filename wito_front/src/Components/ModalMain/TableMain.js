@@ -1,17 +1,11 @@
 import React, { Component } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import Fab from '@material-ui/core/Fab';
-import LaunchIcon from '@material-ui/icons/Launch';
-import AddIcon from '@material-ui/icons/Add';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -92,32 +86,16 @@ class TableMain extends Component {
     fetch('http://localhost:3010/cours/')
       .then((resp) => resp.json())
       .then(function(data) {
-        // console.log("data get: "+ data);
         var list = [];
         data.forEach(function(cours) {
-          // console.log("data cours: "+ JSON.stringify(cours));
           list.push(cours)
         });
         console.log(list);
         currentComponent.setState({getCours : list});
       })
   }
-  
-  /*const classes = useStyles();
-
-  const [open, setOpen] = React.useState(false);
-  const [fullWidth, setFullWidth] = React.useState(true);
-  const [maxWidth, setMaxWidth] = React.useState('sm');
-  const [promotion, setPromotion] = React.useState([]);
-  const [values, setValues] = React.useState({
-    promo: '',
-  });
-  const [selectedDate, setSelectedDate] = React.useState(new Date());
-  const [selectedTimeS, setSelectedTimeS] = React.useState(new Date());
-  const [selectedTimeE, setSelectedTimeE] = React.useState(new Date());*/
 
   handleClickOpen = (id) => {
-    console.log("modiiiiiifiiiiiiier-" + id)
     this.setState({open : true});
   };
 
@@ -152,15 +130,9 @@ class TableMain extends Component {
         <Grid key={item._id} container spacing={3} className={classes.row}>
             <Grid item xs={2}></Grid>
             <Grid item md={8}>
-              <Card className={classes.card}>
-              <CardActionArea href='/feuilleAppel'>
+              <Card className={classes.card} >
+              <CardActionArea href={'/feuilleAppel/'+item._id} >
                   <CardContent>
-                    {/* <Typography gutterBottom variant="h5" component="h2">
-                      {item.nom}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" component="p">
-                      Cours du : {item.date}
-                    </Typography> */}
                     <Grid container spacing={3}>
                       <Grid item xs={3}>
                         <Typography gutterBottom className={classes.typo} variant="h5" component="h2">
@@ -224,7 +196,7 @@ class TableMain extends Component {
 
     return (
       <div className={classes.root}>
-        <Grid container spacing={3}>        
+        <Grid container spacing={3}>
           
           {cours}
 
@@ -356,4 +328,4 @@ TableMain.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(TableMain)
+export default withStyles(styles)(TableMain);
