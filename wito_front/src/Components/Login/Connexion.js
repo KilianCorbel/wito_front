@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,57 +12,68 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://wito.com/">
-        Wito
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/styles';
 
-const useStyles = makeStyles(theme => ({
+import { createHashHistory } from 'history';
+
+const styles = theme => ({
   '@global': {
     body: {
-      backgroundColor: theme.palette.common.white,
+      //backgroundColor: theme.palette.common.white,
     },
   },
   paper: {
-    marginTop: theme.spacing(12),
+    //marginTop: theme.spacing(12),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
   },
   avatar: {
-    margin: theme.spacing(0),
+    //margin: theme.spacing(0),
     objectFit: "fill",
     height:100,
     width: 100,
   },
   form: {
     width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
+    //marginTop: theme.spacing(1),
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-}));
+    //margin: theme.spacing(3, 0, 2),
+  }
+});
 
+class Connexion extends Component {
+  constructor(props) {
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.state = {
 
-export default function SignIn() {
-  let submit = function (){
+    }
+  }
+
+  componentDidMount() {
+    let currentComponent = this;
+
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+
     let utilisateur = {
       mail : document.getElementById('email').value,
       mdp : document.getElementById('password').value
     }
     console.log("utilisateur: " + JSON.stringify(utilisateur));
 
-    fetch('http://localhost:3010/professeurs/auth',{
+    fetch(window.location.protocol + '//' + window.location.hostname + ':3010/professeurs/auth',{
         method: 'POST',
         body: JSON.stringify({
             mail : utilisateur.mail,
@@ -76,7 +87,7 @@ export default function SignIn() {
 
         if(data.text === "Erreur"){
           console.log("data - " + data.text);
-          fetch('http://localhost:3010/etudiants/auth',{
+          fetch(window.location.protocol + '//' + window.location.hostname + ':3010/etudiants/auth',{
               method: 'POST',
               body: JSON.stringify({
                   mail : utilisateur.mail,
@@ -96,91 +107,106 @@ export default function SignIn() {
                 localStorage.setItem('user_id', data.id); 
                 localStorage.setItem('user_token', data.token);
                 localStorage.setItem('user_role', data.role);
+                window.location.replace(window.location.protocol + '//' + window.location.hostname + ':3000/cours');
               }
           });
         } else {
           localStorage.setItem('user_id', data.id); 
           localStorage.setItem('user_token', data.token);
-          localStorage.setItem('user_role', data.role); 
+          localStorage.setItem('user_role', data.role);
+          window.location.replace(window.location.protocol + '//' + window.location.hostname + ':3000/cours');
         }
     });
   }
 
-  function action () {
-    if(localStorage.getItem('user_token')){
-      console.log("token");
-      return '/cours';
-    } else {
-      console.log("nothing");
-      return '/';
-    }
-  }
+  render(){
+    const { classes } = this.props;
 
-  const classes = useStyles();
-  
-  return (
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <div className={classes.paper}>
-          <Avatar alt="wito logo" src="https://i.imgur.com/smwWWgt.png" className={classes.avatar}>
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Connexion
-          </Typography>
-          <form className={classes.form} action={action()} noValidate>
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Adresse mail"
-              name="email"
-              autoComplete="email"
-              autoFocus
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Mot de passe"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Se souvenir de moi."
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              onClick={submit}
-              className={classes.submit}
-            >
+    var copyright = () => {
+      return (
+        <Typography variant="body2" color="textSecondary" align="center">
+          {'Copyright © '}
+          <Link color="inherit" href="https://wito.com/">
+            Wito
+          </Link>{' '}
+          {new Date().getFullYear()}
+          {'.'}
+        </Typography>
+      );
+    }
+
+    return (
+      <div className={classes.root}>
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <div className={classes.paper}>
+            <Avatar alt="wito logo" src="https://i.imgur.com/smwWWgt.png" className={classes.avatar}>
+            </Avatar>
+            <Typography component="h1" variant="h5">
               Connexion
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Mot de passe oublié ?
-                </Link>
+            </Typography>
+            <form className={classes.form} noValidate>
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Adresse mail"
+                name="email"
+                autoComplete="email"
+                autoFocus
+              />
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Mot de passe"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+              />
+              <FormControlLabel
+                control={<Checkbox value="remember" color="primary" />}
+                label="Se souvenir de moi."
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                onClick={this.handleSubmit}
+                className={classes.submit}
+              >
+                Connexion
+              </Button>
+              <Grid container>
+                <Grid item xs>
+                  <Link href="#" variant="body2">
+                    Mot de passe oublié ?
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <Link href="/signup" variant="body2">
+                    {"Pas de compte ? S'inscrire."}
+                  </Link>
+                </Grid>
               </Grid>
-              <Grid item>
-                <Link href="/signup" variant="body2">
-                  {"Pas de compte ? S'inscrire."}
-                </Link>
-              </Grid>
-            </Grid>
-          </form>
-        </div>
-        <Box mt={8}>
-          <Copyright />
-        </Box>
-      </Container>
-  );
+            </form>
+          </div>
+          <Box mt={8}>
+            {copyright}
+          </Box>  
+        </Container>
+      </div>
+    );
+  }
 }
+
+Connexion.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(Connexion);

@@ -27,12 +27,6 @@ import {
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/styles';
-
-
-  
-function createData(nom, prenom, mail, mdp) {
-return { nom, prenom, mail, mdp };
-}
   
 const rows = [
 // createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
@@ -124,7 +118,7 @@ class GestionProfs extends Component {
         console.log("utilisateur: " + JSON.stringify(utilisateur));
         */
   
-        fetch('http://localhost:3010/professeurs/',{
+        fetch(window.location.protocol + '//' + window.location.hostname + ':3010/professeurs/',{
               method: 'POST',
               body: JSON.stringify({
                 nom : this.state.nom,
@@ -146,7 +140,7 @@ class GestionProfs extends Component {
     componentDidMount() {
         let currentComponent = this;
 
-        fetch('http://localhost:3010/professeurs/')
+        fetch(window.location.protocol + '//' + window.location.hostname + ':3010/professeurs/')
             .then((res) => res.json())
             .then(function(profs) {
                 currentComponent.setState({profs});
@@ -296,12 +290,5 @@ class GestionProfs extends Component {
         );
     }
 }
-
-GestionProfs.propTypes = {
-    classes: PropTypes.object.isRequired,
-    numSelected: PropTypes.number.isRequired,
-    onSelectAllClick: PropTypes.func.isRequired,    
-    rowCount: PropTypes.number.isRequired,
-  };
 
 export default withStyles(styles)(GestionProfs);

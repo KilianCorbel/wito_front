@@ -64,10 +64,12 @@ export default function SignUp() {
       console.log("utilisateur: " + JSON.stringify(utilisateur));
 
       let url = "professeur";
+      
+      console.log("AAAAAAAAAAAA: " + document.getElementById('isStudent').value);
       if(document.getElementById('isStudent').value) {
         url = "etudiant";
       }
-      fetch('http://localhost:3010/' + url + 's/',{
+      fetch(window.location.protocol + '//' + window.location.hostname + ':3010/' + url + 's/',{
             method: 'POST',
             body: JSON.stringify({
                 nom: utilisateur.nom,
@@ -143,8 +145,8 @@ export default function SignUp() {
                 />
               </Grid>
               <Grid item xs={12}>
-                <FormControlLabel id="isStudent"
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
+                <FormControlLabel
+                  control={<Checkbox id="isStudent" value="allowExtraEmails" color="primary" />}
                   label="Je suis étudiant."
                 />
               </Grid>

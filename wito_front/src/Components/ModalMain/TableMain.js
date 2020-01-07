@@ -17,6 +17,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import DateFnsUtils from '@date-io/date-fns';
+import Avatar from '@material-ui/core/Avatar';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import Container from '@material-ui/core/Container';
+import Link from '@material-ui/core/Link';
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
@@ -69,6 +74,7 @@ class TableMain extends Component {
     this.state = {
         getCours : [],
         open : false,
+        display : false,
         fullWidth : true,
         maxWidth : 'sm',
         values : {
@@ -83,17 +89,100 @@ class TableMain extends Component {
   componentDidMount() {
     let currentComponent = this;
 
-    fetch('http://localhost:3010/cours/')
-      .then((resp) => resp.json())
-      .then(function(data) {
-        var list = [];
-        data.forEach(function(cours) {
-          list.push(cours)
-        });
-        console.log(list);
-        currentComponent.setState({getCours : list});
-      })
+    console.log("local test: " + localStorage.getItem('user_token'))
+
+    if(localStorage.getItem('user_token') == null) {
+      this.handleIdentificationDisplay();
+    } else {
+      this.handleIdentificationClose();
+
+      /*if(localStorage.getItem('user_role') == "Professeur") {
+        console.log("Cours du prof " + localStorage.getItem('user_id'));
+        fetch(window.location.protocol + '//' + window.location.hostname + ':3010/cours/professeur/' + localStorage.getItem('user_id'))
+          .then((resp) => resp.json())
+          .then(function(data) {
+            var list = [];
+            data.forEach(function(cours) {
+              list.push(cours)
+            });
+            console.log(list);
+            currentComponent.setState({getCours : list});
+          })
+      } else {*/
+        fetch(window.location.protocol + '//' + window.location.hostname + ':3010/cours/')
+          .then((resp) => resp.json())
+          .then(function(data) {
+            var list = [];
+            data.forEach(function(cours) {
+              list.push(cours)
+            });
+            console.log(list);
+            currentComponent.setState({getCours : list});
+          })
+      /*}*/
+    }
   }
+
+  submitConnexion(event) {
+    event.preventDefault();
+
+    let utilisateur = {
+      mail : document.getElementById('email').value,
+      mdp : document.getElementById('password').value
+    }
+    console.log("utilisateur: " + JSON.stringify(utilisateur));
+
+    fetch(window.location.protocol + '//' + window.location.hostname + ':3010/professeurs/auth',{
+        method: 'POST',
+        body: JSON.stringify({
+            mail : utilisateur.mail,
+            mdp : utilisateur.mdp,
+    }),
+    headers: {"Content-Type": "application/json"}
+    })
+    .then((resp) => resp.json())
+    .then(function(data) {
+        console.log("data - " + data.text);
+
+        if(data.text === "Erreur"){
+          console.log("data - " + data.text);
+          fetch(window.location.protocol + '//' + window.location.hostname + ':3010/etudiants/auth',{
+              method: 'POST',
+              body: JSON.stringify({
+                  mail : utilisateur.mail,
+                  mdp : utilisateur.mdp,
+          }),
+          headers: {"Content-Type": "application/json"}
+          })
+          .then((resp) => resp.json())
+          .then(function(data) {
+              console.log("data - " + data.text);
+
+              if(data.text === "Erreur"){
+                console.log("data - " + data.text);
+              } else {
+                localStorage.setItem('user_id', data.id); 
+                localStorage.setItem('user_token', data.token);
+                localStorage.setItem('user_role', data.role);
+                window.location.reload();
+              }
+          });
+        } else {
+          localStorage.setItem('user_id', data.id); 
+          localStorage.setItem('user_token', data.token);
+          localStorage.setItem('user_role', data.role);
+          window.location.reload();
+        }
+    });
+  }
+
+  handleIdentificationDisplay = () => {
+    this.setState({display : true});
+  };
+
+  handleIdentificationClose = () => {
+    this.setState({display : false});
+  };
 
   handleClickOpen = (id) => {
     this.setState({open : true});
@@ -199,6 +288,81 @@ class TableMain extends Component {
         <Grid container spacing={3}>
           
           {cours}
+
+          <Dialog
+            fullWidth={this.state.fullWidth}
+            maxWidth={this.state.maxWidth}
+            open={this.state.display}
+            aria-labelledby="max-width-dialog-title"
+          >
+            
+          <form className={classes.form} noValidate>
+          <FormControl className={classes.formControl}>
+            <DialogContent>
+              <DialogContentText>
+                <Container component="main" maxWidth="xs">
+                  <center>
+                    <Avatar alt="wito logo" src="https://i.imgur.com/smwWWgt.png" className={classes.avatar}>
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                      Connexion
+                    </Typography>
+                  </center>
+                  <br />
+                  <TextField
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="email"
+                    label="Adresse mail"
+                    name="email"
+                    autoComplete="email"
+                    autoFocus
+                  />
+                  <TextField
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="password"
+                    label="Mot de passe"
+                    type="password"
+                    id="password"
+                    autoComplete="current-password"
+                  />
+                  <FormControlLabel
+                    control={<Checkbox value="remember" color="primary" />}
+                    label="Se souvenir de moi."
+                  />
+                  <Grid container>
+                    <Grid item xs>
+                      <Link href="#" variant="body2">
+                        Mot de passe oublié ?
+                      </Link>
+                    </Grid>
+                    <Grid item>
+                      <Link href="/signup" variant="body2">
+                        {"Pas de compte ? S'inscrire."}
+                      </Link>
+                    </Grid>
+                  </Grid>
+                </Container>
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={this.submitConnexion} color="primary">
+                Connexion
+              </Button>
+            </DialogActions>
+          </FormControl>
+          </form>
+          </Dialog>
+
+
+
+
+
 
           <Dialog
             fullWidth={this.state.fullWidth}

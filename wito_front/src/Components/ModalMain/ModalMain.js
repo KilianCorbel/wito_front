@@ -60,7 +60,7 @@ class ModalMain extends Component {
     componentDidMount() {
       let currentComponent = this;
 
-      fetch('http://localhost:3010/classes/')
+      fetch(window.location.protocol + '//' + window.location.hostname + ':3010/classes/')
         .then((resp) => resp.json())
         .then(function(data) {
           //console.log("data get: "+ data);
@@ -89,7 +89,7 @@ class ModalMain extends Component {
       console.log("utilisateur: " + JSON.stringify(utilisateur));
       */
 
-      fetch('http://localhost:3010/cours/',{
+      fetch(window.location.protocol + '//' + window.location.hostname + ':3010/cours/',{
             method: 'POST',
             body: JSON.stringify({
               nom : this.state.nom,

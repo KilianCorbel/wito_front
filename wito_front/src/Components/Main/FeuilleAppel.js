@@ -16,6 +16,17 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import Avatar from '@material-ui/core/Avatar';
+import Container from '@material-ui/core/Container';
+import Checkbox from '@material-ui/core/Checkbox';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Link from '@material-ui/core/Link';
+import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/styles';
 
 const styles = theme => ({
@@ -55,10 +66,12 @@ class FeuilleAppel extends Component{
     super(props);
     this.state = {
         idcours : '',
+        getCours: '',
         cours : null,
         classe : null,
         etudiants: [],
         open : false,
+        display : false,
         fullWidth : true,
         maxWidth : 'sm',
         values : {
@@ -72,34 +85,37 @@ class FeuilleAppel extends Component{
 
   componentDidMount() {
     let currentComponent = this;
+
+    console.log(window.location.origin + '/signature/'+ this.state.idcours);
+
     // C'est un peu dégueu mais ça marche pour l'instant
     const location = this.props.location.pathname;
-    const idCours= location.substr(14,25);
-    
+    this.setState({idcours : location.substr(14,25)});
 
-    fetch('http://localhost:3010/cours/'+ idCours ) 
+    fetch(window.location.protocol + '//' + window.location.hostname + ':3010/cours/' + location.substr(14,25) ) 
       .then((resp) => resp.json())
       .then(function(cours) {
         console.log(cours);
         currentComponent.setState(cours);
+        currentComponent.setState({getCours:cours});
         
         // let id = cours._id;
         // currentComponent.setState(id);
 
-        fetch('http://localhost:3010/classes/'+cours.classe)
+        fetch(window.location.protocol + '//' + window.location.hostname + ':3010/classes/' + cours.classe)
           .then((resp) => resp.json())
           .then(function(classe) {
             console.log(classe);
             currentComponent.setState(classe);
           })
 
-        fetch('http://localhost:3010/etudiants/classe/'+ cours.classe)
+        fetch(window.location.protocol + '//' + window.location.hostname + ':3010/etudiants/classe/'+ cours.classe)
           .then((resp) => resp.json())
           .then(function(etudiants) {
             console.log(etudiants);
             currentComponent.setState({etudiants});
           })
-      })    
+      })
   }
 
   render() {
@@ -107,6 +123,14 @@ class FeuilleAppel extends Component{
     const cours = this.state;
     const classe = this.state;
     const {etudiants} = this.state;
+
+/*     var presents = this.state.getCours.presents.map( (item, index) => {
+      return (
+        <Grid key={item._id} container spacing={3} className={classes.row}>
+
+        </Grid>
+      );
+    }); */
     
     return (      
       <div>
@@ -137,7 +161,7 @@ class FeuilleAppel extends Component{
                 <QRCode
                   level="Q"
                   style={{ width: 400 }}
-                   value={'http://localhost:3010/cours/present/'+ cours._id}
+                   value={window.location.origin + '/signature/'+ this.state.idcours}
                 />
               </Paper>
             </Grid>
