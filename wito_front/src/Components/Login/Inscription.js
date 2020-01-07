@@ -65,8 +65,8 @@ export default function SignUp() {
 
       let url = "professeur";
       
-      console.log("AAAAAAAAAAAA: " + document.getElementById('isStudent').value);
-      if(document.getElementById('isStudent').value) {
+      console.log("AAAAAAAAAAAA: " + document.getElementById('isStudent').checked);
+      if(document.getElementById('isStudent').checked) {
         url = "etudiant";
       }
       fetch(window.location.protocol + '//' + window.location.hostname + ':3010/' + url + 's/',{
