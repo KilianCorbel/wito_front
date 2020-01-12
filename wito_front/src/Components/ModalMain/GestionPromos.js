@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -7,14 +6,10 @@ import {TableContainer} from '@material-ui/core';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/styles';
 import CreateIcon from '@material-ui/icons/Create';
 import Fab from '@material-ui/core/Fab';
-import DeleteIcon from '@material-ui/icons/Delete';
-  
-const rows = [];
+import CheckAuth from '../Main/CheckAuth';
 
 const styles = theme => ({
     root: {
@@ -86,6 +81,7 @@ class GestionPromos extends Component {
         // var promotions= this.state.promos.map( (item, index) => {
             return (
                 <div className={classes.root}>
+                    <CheckAuth />
                 <Grid container spacing={3}>
                     <Grid item xs={3}></Grid>
 

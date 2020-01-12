@@ -8,40 +8,57 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import FormControl from '@material-ui/core/FormControl';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardTimePicker,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import NavBar from '../Navbar/Menu';
+import CheckAuth from '../Main/CheckAuth';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/styles';
 
-import { createHashHistory } from 'history';
+function Copyright() {
+  return (
+    <Typography variant="body2" color="textSecondary" align="center">
+      {'Copyright © '}
+      <Link color="inherit" href="https://wito.com/">
+        Wito
+      </Link>{' '}
+      {new Date().getFullYear()}
+      {'.'}
+    </Typography>
+  );
+}
+
+function Menu() {
+  return (
+    <NavBar />
+  );
+}
 
 const styles = theme => ({
   '@global': {
     body: {
-      //backgroundColor: theme.palette.common.white,
+      backgroundColor: "#FFF",
     },
   },
   paper: {
-    //marginTop: theme.spacing(12),
+    marginTop: '10vh',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    margin:'10px'
+  },
+  card: {
+    width: '100%',
   },
   avatar: {
-    //margin: theme.spacing(0),
     objectFit: "fill",
     height:100,
     width: 100,
@@ -49,9 +66,28 @@ const styles = theme => ({
   form: {
     width: '100%', // Fix IE 11 issue.
     //marginTop: theme.spacing(1),
+    marginTop: '10px'
   },
   submit: {
+    marginTop: '20px',
+    marginBottom: '10px'
     //margin: theme.spacing(3, 0, 2),
+  },
+  recap: {
+    marginBottom:'20px'
+  },
+  typo: {
+    textAlign: 'center',
+    margin: '5px',
+    //paddingLeft: theme.spacing(2),
+  },
+  typoHead: {
+    textAlign: 'center',
+    marginBottom: '15px'
+  },
+  typoBig: {
+    textAlign: 'center',
+    marginTop: '15px'
   }
 });
 
@@ -61,9 +97,8 @@ class Signature extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.state = {
       cours : '',
+      professeur : '',
       etudiant : '',
-      nom : '',
-      prenom :'',
       display : false
     }
   }
@@ -71,30 +106,25 @@ class Signature extends Component {
   componentDidMount() {
     let currentComponent = this;
 
-    if(localStorage.getItem('user_role') == null || (localStorage.getItem('user_role') != "Etudiant" && localStorage.getItem('user_role') != "Provisoire")) {
-      this.handleIdentificationDisplay();
-    } else {
-      this.handleIdentificationClose();
-      // C'est un peu dégueu mais ça marche pour l'instant
-      const location = this.props.location.pathname;
-      const idCours= location.substr(11,25);
+    // C'est un peu dégueu mais ça marche pour l'instant
+    const location = this.props.location.pathname;
+    const idCours= location.substr(11,25);
 
-      fetch(window.location.protocol + '//' + window.location.hostname + ':3010/cours/'+ idCours ) 
+    fetch(window.location.protocol + '//' + window.location.hostname + ':3010/cours/'+ idCours ) 
+      .then((resp) => resp.json())
+      .then(function(cours) {
+        console.log(cours);
+        currentComponent.setState({cours : cours});
+      })
+
+    if(localStorage.getItem('user_role') == "Etudiant") {
+      fetch(window.location.protocol + '//' + window.location.hostname + ':3010/etudiants/'+ localStorage.getItem('user_id') ) 
         .then((resp) => resp.json())
-        .then(function(cours) {
-          console.log(cours);
-          currentComponent.setState({cours : cours});
+        .then(function(etudiant) {
+          console.log(etudiant);
+          currentComponent.setState({etudiant : etudiant, nom : etudiant.nom, prenom : etudiant.prenom});
         })
-
-      if(localStorage.getItem('user_role') == "Etudiant") {
-        fetch(window.location.protocol + '//' + window.location.hostname + ':3010/etudiants/'+ localStorage.getItem('user_id') ) 
-          .then((resp) => resp.json())
-          .then(function(etudiant) {
-            console.log(etudiant);
-            currentComponent.setState({etudiant : etudiant, nom : etudiant.nom, prenom : etudiant.prenom});
-          })
-      }
-    }   
+    }
   }
 
   submitConnexion(event) {
@@ -188,36 +218,69 @@ class Signature extends Component {
         return response => response.json()
     })
     
-    window.location.replace(window.location.protocol + '//' + window.location.hostname + ':3000/feuilleAppel/ + this.state.cours._id');
+    window.location.replace(window.location.protocol + '//' + window.location.hostname + ':3000/feuilleAppel/' + this.state.cours._id);
   }
 
   render(){
     const { classes } = this.props;
-
-    var copyright = () => {
-      return (
-        <Typography variant="body2" color="textSecondary" align="center">
-          {'Copyright © '}
-          <Link color="inherit" href="https://wito.com/">
-            Wito
-          </Link>{' '}
-          {new Date().getFullYear()}
-          {'.'}
-        </Typography>
-      );
-    }
+    const {cours} = this.state;
+    const {professeur} = this.state;
+    const {etudiant} = this.state;
 
     return (
+      
       <div className={classes.root}>
+        <Menu />
+        <CheckAuth />
         <Container component="main" maxWidth="xs">
           <CssBaseline />
           <div className={classes.paper}>
             <Avatar alt="wito logo" src="https://i.imgur.com/smwWWgt.png" className={classes.avatar}>
             </Avatar>
-            <Typography component="h1" variant="h5">
+            <Typography component="h1" variant="h5" className={classes.recap}>
               Récapitulatif
             </Typography>
-            <Grid item xs={10}>
+            <Grid md={12} xs={12}>
+              <Card className={classes.card} >
+                  <CardContent>
+                    <Grid container spacing={3}>
+                      <Grid md={12} xs={12}>
+                        <Typography gutterBottom className={classes.typoHead} variant="h5" component="h3" >
+                          Présence au cours {cours.nom}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                    <Grid container >
+                      <Grid  md={12} xs={12}>
+                        <Typography variant="body2" color="textSecondary" className={classes.typo}>
+                           Assuré par {professeur.prenom} {professeur.nom} 
+                        </Typography>
+                      </Grid>
+                      <Grid md={12} xs={12}>
+                        <Typography variant="body2" color="textSecondary" className={classes.typo} component="p">
+                          Le {cours.date}
+                        </Typography>
+                      </Grid>
+                      
+                    </Grid>
+                    <Grid container >
+                      <Grid  md={12} xs={12}>
+                        <Typography variant="body2" color="textSecondary" className={classes.typo} component="p">
+                          {cours.heureD} - {cours.heureF}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={3}>
+                      <Grid md={12} xs={12} offset>
+                        <Typography gutterBottom className={classes.typoBig} variant="h5" component="h3">
+                          {etudiant.prenom} {etudiant.nom} assure sa présence
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </CardContent>
+              </Card>
+            </Grid>
+            {/* <Grid item xs={10}>
                   <Typography component="h3">
                     {this.state.cours.nom}
                   </Typography>
@@ -235,7 +298,7 @@ class Signature extends Component {
                   <Typography component="h2">
                     Prenom: {this.state.prenom}
                   </Typography>
-            </Grid>
+            </Grid> */}
               <Button
                 type="submit"
                 fullWidth
@@ -248,7 +311,7 @@ class Signature extends Component {
               </Button>
           </div>
           <Box mt={8}>
-            {copyright}
+            <Copyright />
           </Box>  
         </Container>
 
