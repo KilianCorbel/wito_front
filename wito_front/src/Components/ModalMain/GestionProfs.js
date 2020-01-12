@@ -19,6 +19,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import DateFnsUtils from '@date-io/date-fns';
 import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
@@ -188,6 +189,10 @@ class GestionProfs extends Component {
                                             <TableCell align="right">
                                                 <Fab color="primary" aria-label="edit">
                                                     <CreateIcon />
+                                                </Fab>
+                                                
+                                                <Fab aria-label="delete"  color="secondary">
+                                                    <DeleteIcon />
                                                 </Fab>
                                             </TableCell>
                                         </TableRow>
