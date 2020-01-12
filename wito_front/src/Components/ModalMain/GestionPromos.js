@@ -90,19 +90,19 @@ class GestionPromos extends Component {
                             <Table className={classes.table} aria-label="simple table">
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell align="right">Promotion</TableCell>
-                                        <TableCell align="right">Libellé</TableCell>
-                                        <TableCell align="right">Année</TableCell>
-                                        <TableCell align="right">Actions</TableCell>
+                                        <TableCell align="center">Promotion</TableCell>
+                                        <TableCell align="center">Libellé</TableCell>
+                                        <TableCell align="center">Année</TableCell>
+                                        <TableCell align="center">Actions</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
                                     {promos.map(row => (
                                         <TableRow>
-                                            <TableCell align="right">{row.label}</TableCell>
-                                            <TableCell align="right">{row.filiere}</TableCell>
-                                            <TableCell align="right">{row.annee}</TableCell>
-                                            <TableCell align="right">
+                                            <TableCell align="center">{row.label}</TableCell>
+                                            <TableCell align="center">{row.filiere}</TableCell>
+                                            <TableCell align="center">{row.annee}</TableCell>
+                                            <TableCell align="center">
                                                 {/* <Button
                                                     variant="contained"
                                                     color="primary"
@@ -112,6 +112,9 @@ class GestionPromos extends Component {
                                                 /> */}
                                                 <Fab color="primary" aria-label="edit">
                                                     <CreateIcon />
+                                                </Fab>
+                                                <Fab aria-label="delete"  color="secondary">
+                                                    <DeleteIcon />
                                                 </Fab>
                                             </TableCell>
                                         </TableRow>
