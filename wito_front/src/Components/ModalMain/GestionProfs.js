@@ -79,16 +79,14 @@ const styles = theme => ({
 class GestionProfs extends Component {
     constructor(props) {
         super(props);
+        this.handleSubmit = this.handleSubmit.bind(this);
         this.state = {
             profs: [],
             open: false,
             nom : '',
-            selectedDate : new Date(),
-            selectedTimeS : new Date(),
-            selectedTimeE : new Date(),
-            salle : '',
-            promo: '',
-            getPromos : [],
+            prenom : '',
+            mail : '',
+            mdp : '',
             fullWidth : true,
             maxWidth : 'sm'
         }
@@ -106,26 +104,13 @@ class GestionProfs extends Component {
     handleSubmit(event) {
         event.preventDefault();
   
-        /*
-        let utilisateur = {
-          nom : this.state.nom,
-          date : document.getElementById('date-picker-inline').value,
-          heureD : document.getElementById('time-picker-begin').value,
-          heureF : document.getElementById('time-picker-end').value,
-          salle : this.state.salle,
-          classe : this.state.promo,
-          professeur : "5da02ccee841151c1cb1b00d"//localStorage.getItem('user_id')
-        }
-        console.log("utilisateur: " + JSON.stringify(utilisateur));
-        */
-  
         fetch(window.location.protocol + '//' + window.location.hostname + ':3010/professeurs/',{
               method: 'POST',
               body: JSON.stringify({
                 nom : this.state.nom,
-                prenom : document.getElementById('date-picker-inline').value,
-                mail : document.getElementById('time-picker-begin').value,
-                mdp : document.getElementById('time-picker-end').value
+                prenom : this.state.prenom,
+                mail : this.state.mail,
+                mdp : this.state.mdp
           }),
           headers: {"Content-Type": "application/json"}
           })
@@ -171,10 +156,10 @@ class GestionProfs extends Component {
                                 <TableHead>
                                     <TableRow>
                                         <TableCell>Nom</TableCell>
-                                        <TableCell align="right">Prénom</TableCell>
-                                        <TableCell align="right">Mail</TableCell>
-                                        <TableCell align="right">Mot de passe</TableCell>
-                                        <TableCell align="right">Actions</TableCell>
+                                        <TableCell align="center">Prénom</TableCell>
+                                        <TableCell align="center">Mail</TableCell>
+                                        <TableCell align="center">Mot de passe</TableCell>
+                                        <TableCell align="center">Actions</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -183,10 +168,11 @@ class GestionProfs extends Component {
                                             <TableCell component="th" scope="row">
                                                 {row.nom}
                                             </TableCell>
-                                            <TableCell align="right">{row.prenom}</TableCell>
-                                            <TableCell align="right">{row.mail}</TableCell>
-                                            <TableCell align="right">{row.mdp}</TableCell>
-                                            <TableCell align="right">
+                                            <TableCell align="center">{row.prenom}</TableCell>
+                                            <TableCell align="center">{row.mail}</TableCell>
+                                            <TableCell align="center">{row.mdp}</TableCell>
+                                            <TableCell align="center">
+                    
                                                 <Fab color="primary" aria-label="edit">
                                                     <CreateIcon />
                                                 </Fab>
@@ -235,24 +221,21 @@ class GestionProfs extends Component {
                             <DialogContentText>
                                 <Grid container spacing={4}>
                                     <Grid item xs={12} md={6}>
-                                        <TextField
-                                            autoFocus
-                                            id="name"
-                                            label="Nom"
-                                            type="name"
-                                            value={this.state.nom} 
-                                            onChange={(ev)=>this.setState({nom:ev.target.value})}                                        
-                                        />
+                                    <TextField
+                                        id="name"
+                                        label="Nom du professeur"
+                                        type="name"
+                                        value={this.state.nom} onChange={(ev)=>this.setState({nom:ev.target.value})}
+                                    />
                                     </Grid>                  
                                     
                                     <Grid item xs={12} md={6}>
-                                        <TextField
-                                            id="surname"
-                                            label="Prénom"
-                                            type="surname"
-                                            value={this.state.nom} 
-                                            onChange={(ev)=>this.setState({nom:ev.target.value})}                                        
-                                        />
+                                    <TextField
+                                        id="prenom"
+                                        label="Prénom du Professeur"
+                                        type="surname"
+                                        value={this.state.prenom} onChange={(ev)=>this.setState({prenom:ev.target.value})}
+                                    />
                                     </Grid>                  
                                 </Grid>
 
@@ -262,8 +245,8 @@ class GestionProfs extends Component {
                                             id="mail"
                                             label="Mail"
                                             type="mail"
-                                            value={this.state.nom} 
-                                            onChange={(ev)=>this.setState({nom:ev.target.value})}                                        
+                                            value={this.state.mail} 
+                                            onChange={(ev)=>this.setState({mail:ev.target.value})}                                        
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={6}>
@@ -271,8 +254,8 @@ class GestionProfs extends Component {
                                             id="mdp"
                                             label="Mot de passe"
                                             type="mdp"
-                                            value={this.state.nom} 
-                                            onChange={(ev)=>this.setState({nom:ev.target.value})}                                        
+                                            value={this.state.mdp} 
+                                            onChange={(ev)=>this.setState({mdp:ev.target.value})}                                        
                                         />
                                     </Grid>
                                 </Grid>
