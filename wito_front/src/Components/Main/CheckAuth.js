@@ -149,8 +149,8 @@ class CheckAuth extends Component {
 
     componentDidMount() {
         let currentComponent = this;
-
-        if(localStorage.getItem('user_role') == null || (localStorage.getItem('user_role') != "Etudiant" && localStorage.getItem('user_role') != "Provisoire")) {
+        console.log(localStorage.getItem('user_role'));
+        if(localStorage.getItem('user_role') == null || (localStorage.getItem('user_role') != "Etudiant" && localStorage.getItem('user_role') != "Professeur")) {
             this.handleIdentificationDisplay();
           } else {
             this.handleIdentificationClose();
@@ -162,6 +162,20 @@ class CheckAuth extends Component {
                   currentComponent.setState({etudiant : etudiant});
                 })
             }
+
+            // if(localStorage.getItem('user_role') == "Professeur") {
+            //     console.log("Cours du prof " + localStorage.getItem('user_id'));
+            //     fetch(window.location.protocol + '//' + window.location.hostname + ':3010/cours/professeur/' + localStorage.getItem('user_id'))
+            //       .then((resp) => resp.json())
+            //       .then(function(data) {
+            //         var list = [];
+            //         data.forEach(function(cours) {
+            //           list.push(cours)
+            //         });
+            //         console.log(list);
+            //         currentComponent.setState({getCours : list});
+            //       })
+            //   }
           }
     }
 
