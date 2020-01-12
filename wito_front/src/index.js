@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import { Route, Link, BrowserRouter as Router, Switch } from 'react-router-dom';
+import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 import * as serviceWorker from './serviceWorker';
 import SignIn from './Components/Login/Connexion';
 import SignUp from './Components/Login/Inscription';
@@ -20,7 +20,6 @@ const routing = (
             <Route exact path="/" component={SignIn} />
             <Route path="/signup" component={SignUp} />
             <Route path="/cours" component={truc}/>
-            <Route path="/gestionCours" component={gestionCours}/>
             <Route path="/feuilleAppel" component={feuilleAppel}/>
             <Route path="/signature" component={signature}/>
             <Route path='/promos' component={GestionPromos} />

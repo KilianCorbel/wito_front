@@ -1,14 +1,9 @@
 import React, { Component } from 'react';
-import { render } from 'react-dom';
 import { withRouter } from "react-router-dom";
 import { QRCode } from 'react-qr-svg';
 import Navbar from '../Navbar/Menu';
-import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
@@ -16,18 +11,8 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
-import Avatar from '@material-ui/core/Avatar';
-import Container from '@material-ui/core/Container';
-import Checkbox from '@material-ui/core/Checkbox';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Link from '@material-ui/core/Link';
-import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/styles';
+import CheckAuth from '../Main/CheckAuth';
 
 const styles = theme => ({
     root: {
@@ -134,7 +119,10 @@ class FeuilleAppel extends Component{
     
     return (      
       <div>
-        <div><Navbar/></div> 
+        <div>
+          <Navbar/>
+          <CheckAuth />
+        </div> 
         <div className={classes.root}>
           <Grid container spacing={3}>
             <Grid item xs={4}>
@@ -148,6 +136,7 @@ class FeuilleAppel extends Component{
                         <ListItemText  primary={etudiant.nom+' '+etudiant.prenom} />
                         <ListItemIcon>
                           {/* A Changer quand l'étudiant est marqué présent */}
+                          
                           <CheckCircleOutlineIcon color="disabled" />
                         </ListItemIcon>
                       </ListItem>

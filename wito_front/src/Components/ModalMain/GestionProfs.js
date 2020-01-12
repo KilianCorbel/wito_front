@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -17,24 +16,9 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import DateFnsUtils from '@date-io/date-fns';
 import AddIcon from '@material-ui/icons/Add';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardTimePicker,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
-
-import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/styles';
-  
-const rows = [
-// createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-// createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-// createData('Eclair', 262, 16.0, 24, 6.0),
-// createData('Cupcake', 305, 3.7, 67, 4.3),
-// createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
+import CheckAuth from '../Main/CheckAuth';
 
 const styles = theme => ({
     root: {
@@ -161,6 +145,7 @@ class GestionProfs extends Component {
         
         return (
             <div className={classes.root}>
+                <CheckAuth/>
                 <Grid container spacing={3}>
                     <Grid item xs={3}></Grid>
 

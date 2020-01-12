@@ -8,35 +8,38 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardTimePicker,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/styles';
 
-import { createHashHistory } from 'history';
+function Copyright() {
+  return (
+    <Typography variant="body2" color="textSecondary" align="center">
+      {'Copyright © '}
+      <Link color="inherit" href="https://wito.com/">
+        Wito
+      </Link>{' '}
+      {new Date().getFullYear()}
+      {'.'}
+    </Typography>
+  );
+}
 
 const styles = theme => ({
   '@global': {
     body: {
-      //backgroundColor: theme.palette.common.white,
+      backgroundColor: "#FFF",
     },
   },
   paper: {
-    //marginTop: theme.spacing(12),
+    marginTop: '10vh',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
   },
   avatar: {
-    //margin: theme.spacing(0),
     objectFit: "fill",
     height:100,
     width: 100,
@@ -44,8 +47,10 @@ const styles = theme => ({
   form: {
     width: '100%', // Fix IE 11 issue.
     //marginTop: theme.spacing(1),
+    marginTop: '10px'
   },
   submit: {
+    marginTop: '20px',
     //margin: theme.spacing(3, 0, 2),
   }
 });
@@ -122,18 +127,7 @@ class Connexion extends Component {
   render(){
     const { classes } = this.props;
 
-    var copyright = () => {
-      return (
-        <Typography variant="body2" color="textSecondary" align="center">
-          {'Copyright © '}
-          <Link color="inherit" href="https://wito.com/">
-            Wito
-          </Link>{' '}
-          {new Date().getFullYear()}
-          {'.'}
-        </Typography>
-      );
-    }
+    
 
     return (
       <div className={classes.root}>
@@ -197,7 +191,7 @@ class Connexion extends Component {
             </form>
           </div>
           <Box mt={8}>
-            {copyright}
+            <Copyright />
           </Box>  
         </Container>
       </div>

@@ -6,7 +6,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
-import Badge from '@material-ui/core/Badge';
+import Link from '@material-ui/core/Link';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import SearchIcon from '@material-ui/icons/Search';
@@ -108,6 +108,15 @@ export default function MenuBar() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const disconnect = () => {
+    console.log("disconnected");
+    localStorage.setItem('user_id', null); 
+    localStorage.setItem('user_token', null);
+    localStorage.setItem('user_role', null);
+
+    window.location.reload();
+  };
+
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
@@ -119,8 +128,8 @@ export default function MenuBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Mon profil</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Futur ajout</MenuItem>
+      <Link href='/cours' ><MenuItem onClick={handleMenuClose}>Liste des cours</MenuItem></Link>
+      <Link><MenuItem onClick={disconnect}>Déconnexion</MenuItem></Link>
     </Menu>
   );
 
@@ -139,9 +148,9 @@ export default function MenuBar() {
         <IconButton aria-label="" color="inherit">
             <PeopleIcon />
         </IconButton>
-        <p>Gestion des classes</p>
+        <p>Liste des cours</p>
       </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
+      <MenuItem onClick={disconnect}>
         <IconButton
           aria-label="account of current user"
           aria-controls="primary-search-account-menu"
@@ -150,7 +159,7 @@ export default function MenuBar() {
         >
           <AccountCircle />
         </IconButton>
-        <p>Dider COURTAUD</p>
+        <p>Déconnexion</p>
       </MenuItem>
     </Menu>
   );
@@ -180,10 +189,7 @@ export default function MenuBar() {
             />
           </div>
           <div className={classes.sectionDesktop}>
-            <IconButton 
-                color="inherit">
-                <PeopleIcon />
-            </IconButton>
+            
             <IconButton
               edge="end"
               aria-label="account of current user"
