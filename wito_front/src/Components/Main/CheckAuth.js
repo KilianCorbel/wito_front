@@ -103,41 +103,20 @@ class CheckAuth extends Component {
         }
         console.log("utilisateur: " + JSON.stringify(utilisateur));
     
-        fetch(window.location.protocol + '//' + window.location.hostname + ':3010/professeurs/auth',{
-            method: 'POST',
-            body: JSON.stringify({
-                mail : utilisateur.mail,
-                mdp : utilisateur.mdp,
+        fetch(window.location.protocol + '//' + window.location.hostname + ':3010/utilisateurs/auth',{
+        method: 'POST',
+        body: JSON.stringify({
+            mail : utilisateur.mail,
+            mdp : utilisateur.mdp,
         }),
         headers: {"Content-Type": "application/json"}
         })
         .then((resp) => resp.json())
         .then(function(data) {
             console.log("data - " + data.text);
-    
+
             if(data.text === "Erreur"){
-              console.log("data - " + data.text);
-              fetch(window.location.protocol + '//' + window.location.hostname + ':3010/etudiants/auth',{
-                  method: 'POST',
-                  body: JSON.stringify({
-                      mail : utilisateur.mail,
-                      mdp : utilisateur.mdp,
-              }),
-              headers: {"Content-Type": "application/json"}
-              })
-              .then((resp) => resp.json())
-              .then(function(data) {
-                  console.log("data - " + data.text);
-    
-                  if(data.text === "Erreur"){
-                    console.log("data - " + data.text);
-                  } else {
-                    localStorage.setItem('user_id', data.id); 
-                    localStorage.setItem('user_token', data.token);
-                    localStorage.setItem('user_role', data.role);
-                    window.location.reload();
-                  }
-              });
+
             } else {
               localStorage.setItem('user_id', data.id); 
               localStorage.setItem('user_token', data.token);
@@ -150,7 +129,7 @@ class CheckAuth extends Component {
     componentDidMount() {
         let currentComponent = this;
         console.log(localStorage.getItem('user_role'));
-        if(localStorage.getItem('user_role') == null || (localStorage.getItem('user_role') != "Etudiant" && localStorage.getItem('user_role') != "Professeur")) {
+        if(localStorage.getItem('user_role') == null || (localStorage.getItem('user_role') != "etudiant" && localStorage.getItem('user_role') != "professeur")) {
             this.handleIdentificationDisplay();
           } else {
             this.handleIdentificationClose();

@@ -84,34 +84,19 @@ class TableMain extends Component {
 
   componentDidMount() {
     let currentComponent = this;
-
     
-
-      /*if(localStorage.getItem('user_role') == "Professeur") {
-        console.log("Cours du prof " + localStorage.getItem('user_id'));
-        fetch(window.location.protocol + '//' + window.location.hostname + ':3010/cours/professeur/' + localStorage.getItem('user_id'))
-          .then((resp) => resp.json())
-          .then(function(data) {
-            var list = [];
-            data.forEach(function(cours) {
-              list.push(cours)
-            });
-            console.log(list);
-            currentComponent.setState({getCours : list});
-          })
-      } else {*/
-        fetch(window.location.protocol + '//' + window.location.hostname + ':3010/cours/')
-          .then((resp) => resp.json())
-          .then(function(data) {
-            var list = [];
-            data.forEach(function(cours) {
-              list.push(cours)
-            });
-            console.log(list);
-            currentComponent.setState({getCours : list});
-          })
-      /*}*/
-    }
+    fetch(window.location.protocol + '//' + window.location.hostname + ':3010/cours/' + localStorage.getItem('user_role') + '/' + localStorage.getItem('user_id'))
+      .then((resp) => resp.json())
+      .then(function(data) {
+        console.log("data get " + JSON.stringify(data));
+        var list = [];
+        data.forEach(function(cours) {
+          list.push(cours)
+        });
+        console.log(list);
+        currentComponent.setState({getCours : list});
+      })
+  }
 
   handleClickOpen = (id) => {
     this.setState({open : true});
@@ -157,7 +142,7 @@ class TableMain extends Component {
                           {item.nom}
                         </Typography>
                         <Typography variant="body2" color="textSecondary" className={classes.typo} component="p">
-                          {item.professeur.prenom} {item.professeur.nom}
+                          {item.professeur.utilisateur.prenom} {item.professeur.utilisateur.nom}
                           </Typography>
                         </Grid>
                       <Grid item xs={3}>

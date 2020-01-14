@@ -62,19 +62,19 @@ export default function SignUp() {
       }
       console.log("utilisateur: " + JSON.stringify(utilisateur));
 
-      let url = "professeur";
+      let role = "professeur";
       
-      console.log("AAAAAAAAAAAA: " + document.getElementById('isStudent').checked);
       if(document.getElementById('isStudent').checked) {
-        url = "etudiant";
+        role = "etudiant";
       }
-      fetch(window.location.protocol + '//' + window.location.hostname + ':3010/' + url + 's/',{
+      fetch(window.location.protocol + '//' + window.location.hostname + ':3010/utilisateurs/',{
             method: 'POST',
             body: JSON.stringify({
                 nom: utilisateur.nom,
                 prenom : utilisateur.prenom,
                 mail : utilisateur.mail,
                 mdp : utilisateur.mdp,
+                role : role
         }),
         headers: {"Content-Type": "application/json"}
         })

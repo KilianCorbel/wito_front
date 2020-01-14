@@ -63,7 +63,7 @@ class ModalMain extends Component {
       fetch(window.location.protocol + '//' + window.location.hostname + ':3010/classes/')
         .then((resp) => resp.json())
         .then(function(data) {
-          //console.log("data get: "+ data);
+          console.log("data get " + JSON.stringify(data));
           var list = [];
           data.forEach(function(promo) {
               list.push({id:promo._id, label:promo.label})

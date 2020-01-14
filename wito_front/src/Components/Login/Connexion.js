@@ -78,7 +78,7 @@ class Connexion extends Component {
     }
     console.log("utilisateur: " + JSON.stringify(utilisateur));
 
-    fetch(window.location.protocol + '//' + window.location.hostname + ':3010/professeurs/auth',{
+    fetch(window.location.protocol + '//' + window.location.hostname + ':3010/utilisateurs/auth',{
         method: 'POST',
         body: JSON.stringify({
             mail : utilisateur.mail,
@@ -91,30 +91,7 @@ class Connexion extends Component {
         console.log("data - " + data.text);
 
         if(data.text === "Erreur"){
-          console.log("data - " + data.text);
-          fetch(window.location.protocol + '//' + window.location.hostname + ':3010/etudiants/auth',{
-              method: 'POST',
-              body: JSON.stringify({
-                  mail : utilisateur.mail,
-                  mdp : utilisateur.mdp,
-          }),
-          headers: {"Content-Type": "application/json"}
-          })
-          .then((resp) => resp.json())
-          .then(function(data) {
-              console.log("data - " + data.text);
 
-              if(data.text === "Erreur"){
-                console.log("data - " + data.text);
-              
-                //window.location.replace("/");
-              } else {
-                localStorage.setItem('user_id', data.id); 
-                localStorage.setItem('user_token', data.token);
-                localStorage.setItem('user_role', data.role);
-                window.location.replace(window.location.protocol + '//' + window.location.hostname + ':3000/cours');
-              }
-          });
         } else {
           localStorage.setItem('user_id', data.id); 
           localStorage.setItem('user_token', data.token);
