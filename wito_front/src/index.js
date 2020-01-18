@@ -10,6 +10,7 @@ import gestionCours from './Components/Main/GestionCours';
 import feuilleAppel from './Components/Main/FeuilleAppel';
 import GestionPromos from './Components/Main/GestionPromos';
 import GestionProfs from './Components/Main/GestionProfs';
+import GestionEtudiant from './Components/Main/GestionEtudiant';
 import signature from './Components/Main/Signature';
 import GestionEtudiants from './Components/Main/GestionEtudiant';
 //import ModalMain from './Components/ModalMain/ModalMain';
