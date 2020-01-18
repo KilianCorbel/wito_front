@@ -11,6 +11,7 @@ import feuilleAppel from './Components/Main/FeuilleAppel';
 import GestionPromos from './Components/Main/GestionPromos';
 import GestionProfs from './Components/Main/GestionProfs';
 import signature from './Components/Main/Signature';
+import GestionEtudiants from './Components/Main/GestionEtudiant';
 //import ModalMain from './Components/ModalMain/ModalMain';
 
 const routing = (
@@ -24,6 +25,7 @@ const routing = (
             <Route path="/signature" component={signature}/>
             <Route path='/promos' component={GestionPromos} />
             <Route path='/profs' component={GestionProfs} />
+            <Route path='/etudiants' component={GestionEtudiants} />
             />
         </Switch>
       </div>

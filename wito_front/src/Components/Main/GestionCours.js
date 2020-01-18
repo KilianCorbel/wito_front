@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Navbar from '../Navbar/Navbar';
+import Navbar from '../Navbar/Menu';
 import TableGestionCours from '../ModalMain/TableGestionCours';
 
 class MainWindow extends Component {

@@ -7,7 +7,6 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Grid from '@material-ui/core/Grid';
 import CreateIcon from '@material-ui/icons/Create';
-import DeleteIcon from '@material-ui/icons/Delete';
 import Fab from '@material-ui/core/Fab';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -18,6 +17,10 @@ import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 import { withStyles } from '@material-ui/styles';
 import CheckAuth from '../Main/CheckAuth';
 
@@ -63,22 +66,25 @@ const styles = theme => ({
     }
   });
 
-class GestionProfs extends Component {
+class GestionEtudiants extends Component {
     constructor(props) {
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleUpdate = this.handleUpdate.bind(this);
         this.state = {
-            profs: [],
-            prof: null,
+            etudiants: [],
+            etudiant: null,
             open: false,
             openUpdate: false,
             id: '',
-            profId: '',
+            studentId: '',
+            studentPromo: '',
             nom : '',
             prenom : '',
             mail : '',
             mdp : '',
+            promo: '',
+            getPromos : [],
             fullWidth : true,
             maxWidth : 'sm'
         }
@@ -95,7 +101,7 @@ class GestionProfs extends Component {
                 prenom : this.state.prenom,
                 mail : this.state.mail,
                 mdp : this.state.mdp,
-                role : 'professeur'
+                role : 'etudiant'
           }),
           headers: {"Content-Type": "application/json"}
           })
@@ -105,10 +111,11 @@ class GestionProfs extends Component {
             //   return response => response.json()
           })
           .then(
-            fetch(window.location.protocol + '//' + window.location.hostname + ':3010/professeurs/' + this.state.profId,{
+            fetch(window.location.protocol + '//' + window.location.hostname + ':3010/etudiants/' + this.state.studentId,{
                 method: 'PUT',
                 body: JSON.stringify({
-                    mail : this.state.mail
+                    mail : this.state.mail,
+                    classe : this.state.promo
                 }),
                 headers: {"Content-Type": "application/json"}
                 })
@@ -134,7 +141,7 @@ class GestionProfs extends Component {
                 prenom : this.state.prenom,
                 mail : this.state.mail,
                 mdp : this.state.mdp,
-                role: 'professeur'
+                role : 'etudiant'
           }),
           headers: {"Content-Type": "application/json"}
           })
@@ -147,8 +154,8 @@ class GestionProfs extends Component {
         window.location.reload();
     }
 
-    handleDelete = (id) => {
-        fetch(window.location.protocol + '//' + window.location.hostname + ':3010/professeurs/'+id,{
+    handleDelete = (id, studentId) => {
+        fetch(window.location.protocol + '//' + window.location.hostname + ':3010/etudiants/'+studentId,{
                 method: 'DELETE',
                 headers: {"Content-Type": "application/json"}
             })
@@ -162,12 +169,35 @@ class GestionProfs extends Component {
     componentDidMount() {
         let currentComponent = this;
 
-        fetch(window.location.protocol + '//' + window.location.hostname + ':3010/professeurs/')
+        fetch(window.location.protocol + '//' + window.location.hostname + ':3010/etudiants/')
             .then((res) => res.json())
-            .then(function(profs) {
-                console.log(profs);
-                currentComponent.setState({profs});
+            .then(function(etudiants) {
+                console.log(etudiants);
+
+                
+
+                etudiants.forEach(function(etudiant) {
+                    console.log(etudiant.classe);
+                    if (!etudiant.classe) {
+                        etudiant.classe = '';
+                    }
+                })
+
+                currentComponent.setState({etudiants});
             })
+            .then(
+                fetch(window.location.protocol + '//' + window.location.hostname + ':3010/classes/')
+                    .then((resp) => resp.json())
+                    .then(function(data) {
+                    console.log("data get " + JSON.stringify(data));
+                    var list = [];
+                    data.forEach(function(promo) {
+                        list.push({id:promo._id, label:promo.label})
+                    });
+                    console.log(list);
+                    currentComponent.setState({getPromos : list});
+                    })
+            )
     }
 
     handleClickOpen = (id) => {
@@ -178,21 +208,27 @@ class GestionProfs extends Component {
         this.setState({open : false});
     };
 
-    handleUpdateClickOpen = (id, profId) => {
+    handleChange = event => {
+        this.setState({promo : event.target.value});
+      };
+
+    handleUpdateClickOpen = (id, studentId) => {
         let currentComponent = this;
+        console.log("user id " + id);
+        console.log("student id " + studentId);
         this.setState({id: id});
-        this.setState({profId: profId})
+        this.setState({studentId: studentId})
 
         fetch(window.location.protocol + '//' + window.location.hostname + ':3010/utilisateurs/' +id)
             .then((res) => res.json())
-            .then(function(prof) {
-                console.log(prof);
+            .then(function(etudiant) {
+                console.log(etudiant);
                 
-                currentComponent.setState({nom: prof.nom});
-                currentComponent.setState({prenom: prof.prenom});
-                currentComponent.setState({mail: prof.mail});
-                currentComponent.setState({mdp: prof.mdp});
-                currentComponent.setState({prof});
+                currentComponent.setState({nom: etudiant.nom});
+                currentComponent.setState({prenom: etudiant.prenom});
+                currentComponent.setState({mail: etudiant.mail});
+                currentComponent.setState({mdp: etudiant.mdp});
+                currentComponent.setState({etudiant});
             })
 
         this.setState({openUpdate : true});
@@ -209,7 +245,13 @@ class GestionProfs extends Component {
 
     render() {
         const {classes} = this.props;
-        const {profs} = this.state;
+        const {etudiants} = this.state;
+
+        var promos = this.state.getPromos.map( (promo) => {
+            return (
+              <MenuItem key={promo.id} value={promo.id}>{promo.label}</MenuItem>
+            )
+          });
         
         return (
             <div className={classes.root}>
@@ -226,25 +268,25 @@ class GestionProfs extends Component {
                                         <TableCell align="center">Prénom</TableCell>
                                         <TableCell align="center">Mail</TableCell>
                                         <TableCell align="center">Mot de passe</TableCell>
+                                        <TableCell align="center">Promotion</TableCell>
                                         <TableCell align="center">Actions</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {profs.map(row => (
+                                    {etudiants.map(row => (
                                         <TableRow>
-                                            <TableCell component="th" scope="row">
-                                                {row.utilisateur.nom}
-                                            </TableCell>
+                                            <TableCell component="th" scope="row">{row.utilisateur.nom}</TableCell>
                                             <TableCell align="center">{row.utilisateur.prenom}</TableCell>
-                                            <TableCell align="center">{row.mail}</TableCell>
+                                            <TableCell align="center">{row.utilisateur.mail}</TableCell>
                                             <TableCell align="center">{row.utilisateur.mdp}</TableCell>
+                                            <TableCell align="center">{row.classe.label}</TableCell>
                                             <TableCell align="center">
                     
-                                                <Fab color="primary" className={classes.icons} onClick={(id, studentID) => this.handleUpdateClickOpen(row.utilisateur._id, row._id)} size="small" aria-label="edit">
+                                                <Fab size="small" className={classes.icons} onClick={(id, studentID) => this.handleUpdateClickOpen(row.utilisateur._id, row._id)} color="primary" aria-label="edit">
                                                     <CreateIcon />
                                                 </Fab>
                                                 
-                                                <Fab aria-label="delete" className={classes.icons} onClick={(id) => this.handleDelete(row._id)} size='small' color="secondary">
+                                                <Fab size="small" className={classes.icons} onClick={(id, studentId) => this.handleDelete(row.utilisateur._id, row._id)} aria-label="delete"  color="secondary">
                                                     <DeleteIcon />
                                                 </Fab>
                                             </TableCell>
@@ -269,7 +311,7 @@ class GestionProfs extends Component {
                             onClick={this.handleClickOpen}
                             startIcon={<AddIcon />}
                         >
-                            Professeur
+                            Étudiant
                         </Button>
                     </Grid>
                 
@@ -283,14 +325,14 @@ class GestionProfs extends Component {
                         
                     <form className={classes.form} noValidate>
                     <FormControl className={classes.formControl}>
-                        <DialogTitle>Ajouter un professeur</DialogTitle>
+                        <DialogTitle>Ajouter un étudiant</DialogTitle>
                         <DialogContent>
                             <DialogContentText>
                                 <Grid container spacing={4}>
                                     <Grid item xs={12} md={6}>
                                     <TextField
                                         id="name"
-                                        label="Nom du professeur"
+                                        label="Nom de l'étudiant"
                                         type="name"
                                         value={this.state.nom} onChange={(ev)=>this.setState({nom:ev.target.value})}
                                     />
@@ -299,7 +341,7 @@ class GestionProfs extends Component {
                                     <Grid item xs={12} md={6}>
                                     <TextField
                                         id="prenom"
-                                        label="Prénom du Professeur"
+                                        label="Prénom de l'étudiant"
                                         type="surname"
                                         value={this.state.prenom} onChange={(ev)=>this.setState({prenom:ev.target.value})}
                                     />
@@ -326,11 +368,13 @@ class GestionProfs extends Component {
                                         />
                                     </Grid>
                                 </Grid>
+
+                                
                             </DialogContentText>
                         </DialogContent>
                         <DialogActions>
                         <Button onClick={this.handleSubmit} color="primary">
-                            Ajouter le professeur
+                            Ajouter l'étudiant
                         </Button>
                         <Button onClick={this.handleClose} color="secondary">
                             Fermer
@@ -351,14 +395,14 @@ class GestionProfs extends Component {
                         
                     <form className={classes.form} noValidate>
                     <FormControl className={classes.formControl}>
-                        <DialogTitle>Modifier un professeur</DialogTitle>
+                        <DialogTitle>Modifier un étudiant</DialogTitle>
                         <DialogContent>
                             <DialogContentText>
                                 <Grid container spacing={4}>
                                     <Grid item xs={12} md={6}>
                                     <TextField
                                         id="name"
-                                        label="Nom du professeur"
+                                        label="Nom de l'étudiant"
                                         type="name"
                                         value={this.state.nom} onChange={(ev)=>this.setState({nom:ev.target.value})}
                                     />
@@ -367,7 +411,7 @@ class GestionProfs extends Component {
                                     <Grid item xs={12} md={6}>
                                     <TextField
                                         id="prenom"
-                                        label="Prénom du professeur"
+                                        label="Prénom de l'étudiant"
                                         type="surname"
                                         value={this.state.prenom} onChange={(ev)=>this.setState({prenom:ev.target.value})}
                                     />
@@ -394,11 +438,31 @@ class GestionProfs extends Component {
                                         />
                                     </Grid>
                                 </Grid>
+
+                                <Grid container spacing={3}>
+                                    <Grid item xs={12} md={6}>
+                                    <FormControl className={classes.formControl}>
+                                        <InputLabel htmlFor="selectPromo">Promotion</InputLabel>
+                                        <Select
+                                        fullWidth={this.state.fullWidth}
+                                        value={this.state.promo}
+                                        onChange={this.handleChange}
+                                        label="Promotion"
+                                        inputProps={{
+                                            name: 'promo',
+                                            id: 'selectPromo',
+                                        }}
+                                        >
+                                            {promos}
+                                        </Select>
+                                    </FormControl>
+                                    </Grid>
+                                </Grid>
                             </DialogContentText>
                         </DialogContent>
                         <DialogActions>
                         <Button onClick={this.handleUpdate} color="primary">
-                            Modifier le professeur
+                            Modifier l'étudiant
                         </Button>
                         <Button onClick={this.handleUpdateClose} color="secondary">
                             Fermer
@@ -414,4 +478,4 @@ class GestionProfs extends Component {
     }
 }
 
-export default withStyles(styles)(GestionProfs);
+export default withStyles(styles)(GestionEtudiants);

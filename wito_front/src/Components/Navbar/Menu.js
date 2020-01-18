@@ -129,6 +129,9 @@ export default function MenuBar() {
       onClose={handleMenuClose}
     >
       <Link href='/cours' ><MenuItem onClick={handleMenuClose}>Liste des cours</MenuItem></Link>
+      <Link href='/etudiants' ><MenuItem onClick={handleMenuClose}>Liste des étudiants</MenuItem></Link>
+      <Link href='/profs' ><MenuItem onClick={handleMenuClose}>Liste des professeurs</MenuItem></Link>
+      <Link href='/promos' ><MenuItem onClick={handleMenuClose}>Liste des promotions</MenuItem></Link>
       <Link><MenuItem onClick={disconnect}>Déconnexion</MenuItem></Link>
     </Menu>
   );
