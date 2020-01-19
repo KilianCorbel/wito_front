@@ -113,17 +113,19 @@ class Signature extends Component {
     fetch(window.location.protocol + '//' + window.location.hostname + ':3010/cours/'+ idCours ) 
       .then((resp) => resp.json())
       .then(function(cours) {
-        console.log(cours);
+        currentComponent.setState({professeur: cours.professeur.utilisateur});
         currentComponent.setState({cours : cours});
       })
 
-    if(localStorage.getItem('user_role') == "Etudiant") {
-      fetch(window.location.protocol + '//' + window.location.hostname + ':3010/etudiants/'+ localStorage.getItem('user_id') ) 
+      console.log(localStorage.getItem('user_role'));
+      console.log(localStorage.getItem('user_id'));
+    if(localStorage.getItem('user_role') == "etudiant") {
+      fetch(window.location.protocol + '//' + window.location.hostname + ':3010/utilisateurs/'+ localStorage.getItem('user_id') ) 
         .then((resp) => resp.json())
         .then(function(etudiant) {
           console.log(etudiant);
-          currentComponent.setState({etudiant : etudiant, nom : etudiant.nom, prenom : etudiant.prenom});
-        })
+          currentComponent.setState({etudiant : etudiant});
+        });
     }
   }
 
