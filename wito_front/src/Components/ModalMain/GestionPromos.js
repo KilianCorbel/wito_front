@@ -73,9 +73,12 @@ class GestionPromos extends Component {
     constructor(props) {
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleUpdate = this.handleUpdate.bind(this);
         this.state = {
             promos: [],
             open: false,
+            openUpdate: false,
+            id: '',
             filiere: '',
             annee: '',
             label: '',
@@ -83,16 +86,34 @@ class GestionPromos extends Component {
         }
     }
 
-    componentDidMount() {
-        let currentComponent = this;
+    handleUpdate(event) {
+        event.preventDefault();
+        let currentComponent = this.state;
 
-        fetch(window.location.protocol + '//' + window.location.hostname + ':3010/classes/')
-            .then((res) => res.json())
+        fetch(window.location.protocol + '//' + window.location.hostname + ':3010/classes/' + this.state.id,{
+            method: 'PUT',
+            body: JSON.stringify({
+              filiere : this.state.filiere,
+              annee : this.state.annee,
+              label : this.state.label
+        }),
+        headers: {"Content-Type": "application/json"}
+        })
+        .then(function(response){
+            console.log(response => response.json());
+            return response => response.json()
+        })
+      this.setState({open : false});
+      window.location.reload();
+  }
+
+    /*   fetch(window.location.protocol + '//' + window.location.hostname + ':3010/classes/')
+             .then((res) => res.json())
             .then(function(promos) {
                 currentComponent.setState({promos});
             })
     }
-
+*/
     handleClickOpen = (id) => {
         this.setState({open : true});
     };
@@ -138,6 +159,43 @@ class GestionPromos extends Component {
         window.location.reload();
     }
 
+    componentDidMount() {
+        let currentComponent = this;
+
+        fetch(window.location.protocol + '//' + window.location.hostname + ':3010/classes/')
+            .then((res) => res.json())
+            .then(function(promos) {
+                console.log(promos);
+                currentComponent.setState({promos});
+            })
+    }
+
+    handleUpdateClickOpen = (id) => {
+        let currentComponent = this;
+        this.setState({id: id});
+
+        fetch(window.location.protocol + '//' + window.location.hostname + ':3010/classes/' +id)
+            .then((res) => res.json())
+            .then(function(promo) {
+                console.log(promo);
+                
+                currentComponent.setState({filiere: promo.filiere});
+                currentComponent.setState({annee: promo.annee});
+                currentComponent.setState({label: promo.label});
+                currentComponent.setState({promo});
+            })
+
+        this.setState({openUpdate : true});
+    };
+
+    handleUpdateClose = () => {
+        this.setState({openUpdate : false});
+
+        this.setState({filiere: ''});
+        this.setState({annee: ''});
+        this.setState({label: ''});
+    };
+
     render() {
         const {classes} = this.props;
         const {promos} = this.state;
@@ -166,7 +224,7 @@ class GestionPromos extends Component {
                                         <TableCell align="center">{row.filiere}</TableCell>
                                         <TableCell align="center">{row.annee}</TableCell>
                                         <TableCell align="center">
-                                            <Fab size="small" className={classes.icons} color="primary" aria-label="edit">
+                                            <Fab size="small" className={classes.icons} onClick={(id) => this.handleUpdateClickOpen(row._id)} color="primary" size="small" aria-label="edit">
                                                 <CreateIcon />
                                             </Fab>
                                             
@@ -262,6 +320,67 @@ class GestionPromos extends Component {
                 </FormControl>
                 </form>
                 </Dialog>
+
+                 {/* Dialog modification promos */}
+                 <Dialog
+                        fullWidth={this.state.fullWidth}
+                        maxWidth={this.state.maxWidth}
+                        open={this.state.openUpdate}
+                        onClose={this.handleUpdateClose}
+                        aria-labelledby="max-width-dialog-title"
+                    >
+                        
+                    <form className={classes.form} noValidate>
+                    <FormControl className={classes.formControl}>
+                        <DialogTitle>Modifier une promotion</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                <Grid container spacing={4}>
+                                    <Grid item xs={12} md={6}>
+                                    <TextField
+                                        id="filiere"
+                                        label="Filiere de la promo"
+                                        type="filiere"
+                                        value={this.state.filiere} onChange={(ev)=>this.setState({filiere:ev.target.value})}
+                                    />
+                                    </Grid>                  
+                                    
+                                    <Grid item xs={12} md={6}>
+                                    <TextField
+                                        id="annee"
+                                        label="Annee de la promo"
+                                        type="annee"
+                                        value={this.state.annee} onChange={(ev)=>this.setState({annee:ev.target.value})}
+                                    />
+                                    </Grid>                  
+                                </Grid>
+
+                                <Grid container spacing={3}>
+                                    <Grid item xs={12} md={6}>
+                                        <TextField
+                                            id="label"
+                                            label="label de la promo"
+                                            type="label"
+                                            value={this.state.label} 
+                                            onChange={(ev)=>this.setState({label:ev.target.value})}                                        
+                                        />
+                                    </Grid>
+                                   
+                                </Grid>
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                        <Button onClick={this.handleUpdate} color="primary">
+                            Modifier la promo
+                        </Button>
+                        <Button onClick={this.handleUpdateClose} color="secondary">
+                            Fermer
+                        </Button>
+                        </DialogActions>
+                    </FormControl>
+                    </form>
+                    </Dialog>
+
             </Grid>
         </div>
         )
