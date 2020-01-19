@@ -133,7 +133,7 @@ class FeuilleAppel extends Component{
                 <List className={classes.list} aria-label="promotion">                  
                     {etudiants.map(etudiant =>
                       <ListItem key={etudiant._id} className={classes.listPromo} button>
-                        <ListItemText  primary={etudiant.nom+' '+etudiant.prenom} />
+                        <ListItemText  primary={etudiant.utilisateur.nom+' '+etudiant.utilisateur.prenom} />
                         <ListItemIcon>
                           {/* A Changer quand l'étudiant est marqué présent */}
                           
