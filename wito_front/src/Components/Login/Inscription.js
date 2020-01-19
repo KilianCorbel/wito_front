@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -8,7 +8,6 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
@@ -33,14 +32,16 @@ const useStyles = makeStyles(theme => ({
     },
   },
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: '10vh',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
   },
   avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    margin: theme.spacing(0),
+    objectFit: "fill",
+    height:100,
+    width: 100,
   },
   form: {
     width: '100%', // Fix IE 11 issue.
@@ -52,19 +53,49 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function SignUp() {
+    let submit = function (){
+      let utilisateur = {
+        nom : document.getElementById('firstName').value,
+        prenom : document.getElementById('lastName').value,
+        mail : document.getElementById('email').value,
+        mdp : document.getElementById('password').value
+      }
+      console.log("utilisateur: " + JSON.stringify(utilisateur));
+
+      let role = "professeur";
+      
+      if(document.getElementById('isStudent').checked) {
+        role = "etudiant";
+      }
+      fetch(window.location.protocol + '//' + window.location.hostname + ':3010/utilisateurs/',{
+            method: 'POST',
+            body: JSON.stringify({
+                nom: utilisateur.nom,
+                prenom : utilisateur.prenom,
+                mail : utilisateur.mail,
+                mdp : utilisateur.mdp,
+                role : role
+        }),
+        headers: {"Content-Type": "application/json"}
+        })
+        .then(function(response){
+            console.log(response => response.json());
+            return response => response.json()
+        })
+    }
+
     const classes = useStyles();
 
     return (
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
+          <Avatar alt="wito logo" src="https://i.imgur.com/smwWWgt.png" className={classes.avatar}>
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign up
+            Inscription
           </Typography>
-          <form className={classes.form} noValidate>
+          <form className={classes.form} action='/' noValidate>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -74,7 +105,7 @@ export default function SignUp() {
                   required
                   fullWidth
                   id="firstName"
-                  label="First Name"
+                  label="Prénom"
                   autoFocus
                 />
               </Grid>
@@ -84,7 +115,7 @@ export default function SignUp() {
                   required
                   fullWidth
                   id="lastName"
-                  label="Last Name"
+                  label="Nom"
                   name="lastName"
                   autoComplete="lname"
                 />
@@ -95,7 +126,7 @@ export default function SignUp() {
                   required
                   fullWidth
                   id="email"
-                  label="Email Address"
+                  label="Adresse mail"
                   name="email"
                   autoComplete="email"
                 />
@@ -106,7 +137,7 @@ export default function SignUp() {
                   required
                   fullWidth
                   name="password"
-                  label="Password"
+                  label="Mot de passe"
                   type="password"
                   id="password"
                   autoComplete="current-password"
@@ -114,8 +145,8 @@ export default function SignUp() {
               </Grid>
               <Grid item xs={12}>
                 <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
+                  control={<Checkbox id="isStudent" value="allowExtraEmails" color="primary" />}
+                  label="Je suis étudiant."
                 />
               </Grid>
             </Grid>
@@ -124,14 +155,15 @@ export default function SignUp() {
               fullWidth
               variant="contained"
               color="primary"
+              onClick={submit}
               className={classes.submit}
             >
-              Sign Up
+              Inscription
             </Button>
             <Grid container justify="flex-end">
               <Grid item>
                 <Link href="/" variant="body2">
-                  Already have an account? Sign in
+                  Déjà un compte ? Connectez-vous.
                 </Link>
               </Grid>
             </Grid>
