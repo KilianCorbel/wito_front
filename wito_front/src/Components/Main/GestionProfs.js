@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import Navbar from '../Navbar/Navbar';
-import TableGestionCours from '../ModalMain/TableGestionCours';
+import Menu from '../Navbar/Menu';
 import GestionProfs from '../ModalMain/GestionProfs';
 
 class MainWindow extends Component {
@@ -8,7 +7,7 @@ class MainWindow extends Component {
         return(
            <div>
                <div>
-                    <Navbar/>
+                    <Menu/>
                 </div>
                 <br/>
                 <div align="center">

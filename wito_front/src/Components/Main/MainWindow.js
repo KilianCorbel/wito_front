@@ -3,7 +3,21 @@ import ModalMain from '../ModalMain/ModalMain';
 import TableMain from '../ModalMain/TableMain';
 import MenuBar from '../Navbar/Menu';
 
+
+function DisplayModal(props) {
+    const role = props.role;
+    console.log("role "+role);
+    if (role == "professeur") {
+        return <ModalMain />;
+    }
+    else {
+        return <div></div>;
+    }
+}
+
 class MainWindow extends Component {
+    
+
     render() {
         return(
            <div>
@@ -16,7 +30,7 @@ class MainWindow extends Component {
                 </div>
                 <br/>
                 <div align="center">
-                    <ModalMain/> 
+                    <DisplayModal role={localStorage.getItem("user_role")} />          
                 </div>
            </div>
         

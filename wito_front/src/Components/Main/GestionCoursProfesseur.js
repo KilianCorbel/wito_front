@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
-import Menu from '../Navbar/Menu';
-import GestionPromos from '../ModalMain/GestionPromos';
+import Navbar from '../Navbar/Navbar';
+import TableGestionCoursProfesseur from '../ModalMain/TableGestionCoursProfesseur';
 
-class GestionPromotions extends Component {
+class MainWindow extends Component {
     render() {
         return(
            <div>
                <div>
-                    <Menu/>
+                    <Navbar/>
                 </div>
                 <br/>
                 <div align="center">
-                    <GestionPromos />
+                    <TableGestionCoursProfesseur/>
                 </div>
                 
            </div>
@@ -19,4 +19,4 @@ class GestionPromotions extends Component {
         );
     }
 }
-export default GestionPromotions;
+export default MainWindow;

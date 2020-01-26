@@ -6,13 +6,15 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
-import Badge from '@material-ui/core/Badge';
+import Link from '@material-ui/core/Link';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import Disconnect from '@material-ui/icons/PowerSettingsNew';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import PeopleIcon from '@material-ui/icons/People';
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles(theme => ({
   grow: {
@@ -78,8 +80,12 @@ const useStyles = makeStyles(theme => ({
   },
   bigAvatar: {
     margin: 10,
-    width: 60,
-    height: 60,
+  },
+  disco: {
+    marginLeft: 5,
+  },
+  btnMenu: {
+    marginLeft:10,
   }
 }));
 
@@ -108,6 +114,29 @@ export default function MenuBar() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  function AdminBar(props) {
+    const role = props.role;
+    console.log("role "+role);
+    if (role == "professeur") {
+      return <Button 
+              color="inherit" 
+              className={classes.btnMenu}
+              >Administration</Button>;
+    }
+    else {
+      return <div></div>;
+    }
+  }
+
+  const disconnect = () => {
+    console.log("disconnected");
+    localStorage.setItem('user_id', null); 
+    localStorage.setItem('user_token', null);
+    localStorage.setItem('user_role', null);
+
+    window.location.reload();
+  };
+
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
@@ -119,8 +148,11 @@ export default function MenuBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Mon profil</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Futur ajout</MenuItem>
+      <Link href='/cours' ><MenuItem onClick={handleMenuClose}>Liste des cours</MenuItem></Link>
+      <Link href='/etudiants' ><MenuItem onClick={handleMenuClose}>Liste des étudiants</MenuItem></Link>
+      <Link href='/profs' ><MenuItem onClick={handleMenuClose}>Liste des professeurs</MenuItem></Link>
+      <Link href='/promos' ><MenuItem onClick={handleMenuClose}>Liste des promotions</MenuItem></Link>
+      <Link><MenuItem onClick={disconnect}>Déconnexion</MenuItem></Link>
     </Menu>
   );
 
@@ -139,9 +171,9 @@ export default function MenuBar() {
         <IconButton aria-label="" color="inherit">
             <PeopleIcon />
         </IconButton>
-        <p>Gestion des classes</p>
+        <p>Liste des cours</p>
       </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
+      <MenuItem onClick={disconnect}>
         <IconButton
           aria-label="account of current user"
           aria-controls="primary-search-account-menu"
@@ -150,7 +182,7 @@ export default function MenuBar() {
         >
           <AccountCircle />
         </IconButton>
-        <p>Dider COURTAUD</p>
+        <p>Déconnexion</p>
       </MenuItem>
     </Menu>
   );
@@ -164,6 +196,11 @@ export default function MenuBar() {
             <Typography className={classes.title} variant="h6" noWrap>
                 WITO
             </Typography>
+
+          <div className={classes.sectionDesktop}>
+            <Button color="inherit" className={classes.btnMenu} href='/cours'>Liste des Cours</Button>
+            <AdminBar role={localStorage.getItem("user_role")} />
+          </div>
           
           <div className={classes.grow} />
           <div className={classes.search}>
@@ -180,10 +217,7 @@ export default function MenuBar() {
             />
           </div>
           <div className={classes.sectionDesktop}>
-            <IconButton 
-                color="inherit">
-                <PeopleIcon />
-            </IconButton>
+            
             <IconButton
               edge="end"
               aria-label="account of current user"
@@ -193,6 +227,18 @@ export default function MenuBar() {
               color="inherit"
             >
               <AccountCircle />
+            </IconButton>
+
+            <IconButton
+              className={classes.disco}
+              edge="end"
+              aria-label="disconnect"
+              aria-controls={menuId}
+              aria-haspopup="true"
+              onClick={disconnect}
+              color="inherit"
+            >
+              <Disconnect />
             </IconButton>
           </div>
           <div className={classes.sectionMobile}>

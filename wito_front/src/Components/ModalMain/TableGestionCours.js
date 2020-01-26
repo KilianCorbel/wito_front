@@ -265,9 +265,9 @@ export default function EnhancedTable() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-  const handleChangeDense = event => {
-    setDense(event.target.checked);
-  };
+  // const handleChangeDense = event => {
+  //   setDense(event.target.checked);
+  // };
 
   const isSelected = name => selected.indexOf(name) !== -1;
 
@@ -351,5 +351,6 @@ export default function EnhancedTable() {
         />
       </Paper>
     </div>
+ 
   );
 }

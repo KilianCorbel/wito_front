@@ -8,7 +8,6 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
@@ -33,7 +32,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   paper: {
-    marginTop: theme.spacing(12),
+    marginTop: '10vh',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -63,17 +62,19 @@ export default function SignUp() {
       }
       console.log("utilisateur: " + JSON.stringify(utilisateur));
 
-      let url = "professeur";
-      if(document.getElementById('isStudent').value) {
-        url = "etudiant";
+      let role = "professeur";
+      
+      if(document.getElementById('isStudent').checked) {
+        role = "etudiant";
       }
-      fetch('http://localhost:3010/' + url + 's/',{
+      fetch(window.location.protocol + '//' + window.location.hostname + ':3010/utilisateurs/',{
             method: 'POST',
             body: JSON.stringify({
                 nom: utilisateur.nom,
                 prenom : utilisateur.prenom,
                 mail : utilisateur.mail,
                 mdp : utilisateur.mdp,
+                role : role
         }),
         headers: {"Content-Type": "application/json"}
         })
@@ -143,8 +144,8 @@ export default function SignUp() {
                 />
               </Grid>
               <Grid item xs={12}>
-                <FormControlLabel id="isStudent"
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
+                <FormControlLabel
+                  control={<Checkbox id="isStudent" value="allowExtraEmails" color="primary" />}
                   label="Je suis étudiant."
                 />
               </Grid>
