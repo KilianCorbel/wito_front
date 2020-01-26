@@ -11,8 +11,10 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import Disconnect from '@material-ui/icons/PowerSettingsNew';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import PeopleIcon from '@material-ui/icons/People';
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles(theme => ({
   grow: {
@@ -78,8 +80,12 @@ const useStyles = makeStyles(theme => ({
   },
   bigAvatar: {
     margin: 10,
-    width: 60,
-    height: 60,
+  },
+  disco: {
+    marginLeft: 5,
+  },
+  btnMenu: {
+    marginLeft:10,
   }
 }));
 
@@ -107,6 +113,20 @@ export default function MenuBar() {
   const handleMobileMenuOpen = event => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
+
+  function AdminBar(props) {
+    const role = props.role;
+    console.log("role "+role);
+    if (role == "professeur") {
+      return <Button 
+              color="inherit" 
+              className={classes.btnMenu}
+              >Administration</Button>;
+    }
+    else {
+      return <div></div>;
+    }
+  }
 
   const disconnect = () => {
     console.log("disconnected");
@@ -176,6 +196,11 @@ export default function MenuBar() {
             <Typography className={classes.title} variant="h6" noWrap>
                 WITO
             </Typography>
+
+          <div className={classes.sectionDesktop}>
+            <Button color="inherit" className={classes.btnMenu} href='/cours'>Liste des Cours</Button>
+            <AdminBar role={localStorage.getItem("user_role")} />
+          </div>
           
           <div className={classes.grow} />
           <div className={classes.search}>
@@ -202,6 +227,18 @@ export default function MenuBar() {
               color="inherit"
             >
               <AccountCircle />
+            </IconButton>
+
+            <IconButton
+              className={classes.disco}
+              edge="end"
+              aria-label="disconnect"
+              aria-controls={menuId}
+              aria-haspopup="true"
+              onClick={disconnect}
+              color="inherit"
+            >
+              <Disconnect />
             </IconButton>
           </div>
           <div className={classes.sectionMobile}>

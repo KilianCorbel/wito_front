@@ -37,6 +37,7 @@ const styles = theme => ({
   },
   row: {
     margin: 0,
+    marginBottom: 15,
   },
   card: {
   },
@@ -90,7 +91,7 @@ class TableMain extends Component {
       fetch(window.location.protocol + '//' + window.location.hostname + ':3010/cours/' + localStorage.getItem('user_role') + '/' + localStorage.getItem('user_id'))
       .then((resp) => resp.json())
       .then(function(data) {
-        console.log("data get " + JSON.stringify(data));
+        console.log(data);
         var list = [];
         if (JSON.stringify(data) != '{}') {
           data.forEach(function(cours) {
@@ -135,7 +136,7 @@ class TableMain extends Component {
 
     var cours = this.state.getCours.map( (item, index) => {
       return (
-        <Grid key={item._id} container spacing={3} className={classes.row}>
+        <Grid key={item._id} container  className={classes.row}>
             <Grid item xs={2}></Grid>
             <Grid item md={8}>
               <Card className={classes.card} >
@@ -204,7 +205,7 @@ class TableMain extends Component {
 
     return (
       <div className={classes.root}>
-        <Grid container spacing={3}>
+        <Grid spacing={3}>
 
           <CheckAuth />
           

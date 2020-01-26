@@ -173,16 +173,12 @@ class GestionEtudiants extends Component {
             .then((res) => res.json())
             .then(function(etudiants) {
                 console.log(etudiants);
-
-                
-
                 etudiants.forEach(function(etudiant) {
                     console.log(etudiant.classe);
                     if (!etudiant.classe) {
                         etudiant.classe = '';
                     }
                 })
-
                 currentComponent.setState({etudiants});
             })
             .then(
@@ -256,7 +252,7 @@ class GestionEtudiants extends Component {
         return (
             <div className={classes.root}>
                 <CheckAuth/>
-                <Grid container spacing={3}>
+                <Grid spacing={3}>
                     <Grid item xs={3}></Grid>
 
                     <Grid item xs={6}>
@@ -300,7 +296,7 @@ class GestionEtudiants extends Component {
                     <Grid item xs={3}></Grid>
                 </Grid>
 
-                <Grid container spacing={5}>
+                <Grid  spacing={5}>
                     <Grid item xs={3}></Grid>
                     <Grid item xs={6}>
                         <Button
