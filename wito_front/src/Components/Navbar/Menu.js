@@ -15,6 +15,7 @@ import Disconnect from '@material-ui/icons/PowerSettingsNew';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import PeopleIcon from '@material-ui/icons/People';
 import Button from '@material-ui/core/Button';
+import  { Redirect } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
   grow: {
@@ -86,6 +87,9 @@ const useStyles = makeStyles(theme => ({
   },
   btnMenu: {
     marginLeft:10,
+  },
+  btMobile: {
+    marginLeft: 15,
   }
 }));
 
@@ -114,14 +118,31 @@ export default function MenuBar() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const cours = () => {
+    this.props.history.push('/cours')
+  }
+
+  const etudiants = () => {
+    this.props.history.push('/etudiants')
+  }
+
+  const profs = () => {
+    window.location.replace(window.location.protocol + '//' + window.location.hostname + ':3000/profs');
+  }
+
+  const promos = () => {
+    window.location.replace(window.location.protocol + '//' + window.location.hostname + ':3000/promos');
+  }
+
   function AdminBar(props) {
     const role = props.role;
     console.log("role "+role);
-    if (role == "professeur") {
+    if (role === "professeur") {
       return <Button 
               color="inherit" 
               className={classes.btnMenu}
-              >Administration</Button>;
+              href='/admin'>
+                Administration</Button>;
     }
     else {
       return <div></div>;
@@ -137,24 +158,12 @@ export default function MenuBar() {
     window.location.reload();
   };
 
+  const myAccount = () => {
+    window.location.replace(window.location.protocol + '//' + window.location.hostname + ':3000/moncompte');
+  }
+
   const menuId = 'primary-search-account-menu';
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <Link href='/cours' ><MenuItem onClick={handleMenuClose}>Liste des cours</MenuItem></Link>
-      <Link href='/etudiants' ><MenuItem onClick={handleMenuClose}>Liste des étudiants</MenuItem></Link>
-      <Link href='/profs' ><MenuItem onClick={handleMenuClose}>Liste des professeurs</MenuItem></Link>
-      <Link href='/promos' ><MenuItem onClick={handleMenuClose}>Liste des promotions</MenuItem></Link>
-      <Link><MenuItem onClick={disconnect}>Déconnexion</MenuItem></Link>
-    </Menu>
-  );
+
 
   const mobileMenuId = 'primary-search-account-menu-mobile';
   const renderMobileMenu = (
@@ -168,21 +177,40 @@ export default function MenuBar() {
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
-        <IconButton aria-label="" color="inherit">
-            <PeopleIcon />
-        </IconButton>
-        <p>Liste des cours</p>
+          <Button 
+            aria-label="" 
+            color="inherit"
+            href='/cours'
+            
+            >
+              <PeopleIcon  />
+          
+          <p className={classes.btMobile}>Liste des cours</p>
+          </Button>
+        
+      </MenuItem>
+      <MenuItem>
+        <Button 
+            aria-label="" 
+            color="inherit"
+            href='/admin'
+            >
+              <PeopleIcon />
+          
+          <p className={classes.btMobile}>Administration</p>
+          </Button>
       </MenuItem>
       <MenuItem onClick={disconnect}>
-        <IconButton
+        <Button
           aria-label="account of current user"
           aria-controls="primary-search-account-menu"
           aria-haspopup="true"
           color="inherit"
         >
           <AccountCircle />
-        </IconButton>
-        <p>Déconnexion</p>
+        
+          <p className={classes.btMobile}>Déconnexion</p>
+          </Button>
       </MenuItem>
     </Menu>
   );
@@ -223,7 +251,7 @@ export default function MenuBar() {
               aria-label="account of current user"
               aria-controls={menuId}
               aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
+              onClick={myAccount}
               color="inherit"
             >
               <AccountCircle />
@@ -255,7 +283,6 @@ export default function MenuBar() {
         </Toolbar>
       </AppBar>
       {renderMobileMenu}
-      {renderMenu}
     </div>
   );
 }
