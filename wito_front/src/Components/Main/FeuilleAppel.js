@@ -29,6 +29,8 @@ const styles = theme => ({
     qr: {
       textAlign: 'center',
       marginTop: '6vh',
+      marginLeft: '5vh',
+      marginRight: '5vh',
     },
     promo: {
       padding: "2vh",
@@ -42,6 +44,9 @@ const styles = theme => ({
     },
     titreCours: {
       fontSize: "14px"
+    },
+    qrcode: {
+      width: 'auto',
     }
   });
 
@@ -124,8 +129,8 @@ class FeuilleAppel extends Component{
           <CheckAuth />
         </div> 
         <div className={classes.root}>
-          <Grid container spacing={3}>
-            <Grid item xs={4}>
+          <Grid container >
+            <Grid xs={12} md={4} xl={4}>
               <Paper className={classes.promo} elevation={0}>
                 <Typography variant="h5" color="textSecondary">
                   Promotion {classe.label}
@@ -145,17 +150,17 @@ class FeuilleAppel extends Component{
               </Paper>
             </Grid>
 
-            <Grid item xs={4}>
+            <Grid xs={12} md={4} xl={4}>
               <Paper className={classes.qr} elevation={0}>
                 <QRCode
                   level="Q"
-                  style={{ width: 400 }}
+                  className={classes.qrcode}
                    value={window.location.origin + '/signature/'+ this.state.idcours}
                 />
               </Paper>
             </Grid>
 
-            <Grid item xs={4}>
+            <Grid xs={12} md={4} xl={4}>
               <Paper elevation={0} className={classes.cours}>
                   <Typography className={classes.titreCours} color="textSecondary" gutterBottom>
                     Cours du {cours.date}

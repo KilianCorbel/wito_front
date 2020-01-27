@@ -305,12 +305,6 @@ class TableMain extends Component {
                             id: 'selectPromo',
                           }}
                         >
-                          <MenuItem value="l3miaa">L3MIAA</MenuItem>
-                          <MenuItem value="m1miaa">M1MIAA</MenuItem>
-                          <MenuItem value="m2miaa">M2MIAA</MenuItem>
-                          <MenuItem value="l3miai">L3MIAI</MenuItem>
-                          <MenuItem value="m1miai">M1MIAI</MenuItem>
-                          <MenuItem value="m2miai">M2MIAI</MenuItem>
                         </Select>
                       </FormControl>
                     </Grid>

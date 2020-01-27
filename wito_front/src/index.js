@@ -13,7 +13,9 @@ import GestionProfs from './Components/Main/GestionProfs';
 import GestionEtudiant from './Components/Main/GestionEtudiant';
 import signature from './Components/Main/Signature';
 import GestionEtudiants from './Components/Main/GestionEtudiant';
-//import ModalMain from './Components/ModalMain/ModalMain';
+import Administration from './Components/Main/Administration';
+import MonCompte from './Components/Main/MonCompte';
+import ValiderEtudiant from './Components/Main/ValiderEtudiant';
 
 const routing = (
     <Router>
@@ -27,6 +29,9 @@ const routing = (
             <Route path='/promos' component={GestionPromos} />
             <Route path='/profs' component={GestionProfs} />
             <Route path='/etudiants' component={GestionEtudiants} />
+            <Route path='/admin' component={Administration} />
+            <Route path='/moncompte' component={MonCompte} />
+            <Route path='/validation' component={ValiderEtudiant} />
             />
         </Switch>
       </div>
