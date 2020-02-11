@@ -197,7 +197,7 @@ class Signature extends Component {
 
     var b = '';
 
-    if(localStorage.getItem('user_role') == "Etudiant") {
+    if(localStorage.getItem('user_role') == "etudiant") {
       b = JSON.stringify({
         idEtudiant: currentComponent.state.etudiant._id,
         presents : currentComponent.state.presents

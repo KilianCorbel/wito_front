@@ -101,7 +101,29 @@ class FeuilleAppel extends Component{
 
         fetch(window.location.protocol + '//' + window.location.hostname + ':3010/etudiants/classe/'+ cours.classe)
           .then((resp) => resp.json())
-          .then(function(etudiants) {
+          .then(function(data) {
+            var etudiants = [];
+
+            data.forEach(function(etudiant) {
+              etudiant.color = "secondary";
+
+              cours.presents.some(function(present) {
+                if(present._id === etudiant._id) {
+                  etudiant.color = "primary";
+                  return true;
+                }
+              });
+              
+              cours.presentsProvisoire.some(function(provisoire) {
+                if(provisoire._id === etudiant._id) {
+                  etudiant.color = "disabled";
+                  return true;
+                }
+              });
+
+              etudiants.push(etudiant);
+            });
+
             console.log(etudiants);
             currentComponent.setState({etudiants});
           })
@@ -142,7 +164,7 @@ class FeuilleAppel extends Component{
                         <ListItemIcon>
                           {/* A Changer quand l'étudiant est marqué présent */}
                           
-                          <CheckCircleOutlineIcon color="disabled" />
+                          <CheckCircleOutlineIcon color={etudiant.color} />
                         </ListItemIcon>
                       </ListItem>
                     )}
