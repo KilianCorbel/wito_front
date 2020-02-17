@@ -65,7 +65,7 @@ export default function SignUp() {
       let role = "professeur";
       
       if(document.getElementById('isStudent').checked) {
-        role = "etudiant";
+        role = "inscrit";
       }
       fetch(window.location.protocol + '//' + window.location.hostname + ':3010/utilisateurs/',{
             method: 'POST',
