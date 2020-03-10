@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
@@ -26,6 +27,8 @@ import {
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/styles';
+
+import moment from 'moment';
 
 const styles = theme => ({
   root: {
@@ -68,18 +71,22 @@ const styles = theme => ({
 class TableMain extends Component {
   constructor(props) {
     super(props);
+    this.handleUpdate = this.handleUpdate.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
     this.state = {
         getCours : [],
-        open : false,
+        id: '',
+        nom : '',
+        selectedDate : new Date(),
+        selectedTimeS : new Date(),
+        selectedTimeE : new Date(),
+        salle : '',
+        promo: '',
+        openUpdate : false,
         display : false,
         fullWidth : true,
         maxWidth : 'sm',
-        values : {
-          promo: '',
-        },
-        selectedDate : new Date(),
-        selectedTimeS : new Date(),
-        selectedTimeE : new Date()
+        getPromos : [],
       }
   }
 
@@ -101,22 +108,35 @@ class TableMain extends Component {
         console.log(list);
         currentComponent.setState({getCours : list});
       })
+      .then(
+          fetch(window.location.protocol + '//' + window.location.hostname + ':3010/classes/')
+              .then((resp) => resp.json())
+              .then(function(data) {
+              console.log("data get " + JSON.stringify(data));
+              var list = [];
+              data.forEach(function(promo) {
+                  list.push({id:promo._id, label:promo.label})
+              });
+              console.log(list);
+              currentComponent.setState({getPromos : list});
+              })
+      )
     }    
   }
 
-  handleClickOpen = (id) => {
-    this.setState({open : true});
-  };
+  handleUpdateClose = () => {
+    this.setState({openUpdate : false});
 
-  handleClose = () => {
-    this.setState({open : false});
+    this.setState({nom: ''});
+    this.setState({selectedDate: new Date()});
+    this.setState({selectedTimeS: new Date()});
+    this.setState({selectedTimeE: new Date()});
+    this.setState({salle: ''});
+    this.setState({promo: ''});
   };
 
   handleChange = event => {
-    this.setState({values : oldValues => ({
-      ...oldValues,
-      [event.target.name]: event.target.value,
-    })});
+    this.setState({promo : event.target.value});
   };
 
   handleDateChange = date => {
@@ -131,8 +151,95 @@ class TableMain extends Component {
     this.setState({selectedTimeE : time});
   };
 
+  handleUpdate(event) {
+      event.preventDefault();
+      let currentComponent = this.state;
+
+      fetch(window.location.protocol + '//' + window.location.hostname + ':3010/cours/' + this.state.id,{
+            method: 'PUT',
+            body: JSON.stringify({
+              nom : this.state.nom,
+              date : document.getElementById('date-picker-inline').value,
+              heureD : document.getElementById('time-picker-begin').value,
+              heureF : document.getElementById('time-picker-end').value,
+              salle : this.state.salle,
+              classe : this.state.promo
+        }),
+        headers: {"Content-Type": "application/json"}
+        })
+        .then(function(response){
+            console.log(response => response.json());
+            console.log('promo ' + currentComponent.promo);
+          //   return response => response.json()
+        })
+
+      
+       
+      this.setState({openUpdate : false});
+      window.location.reload();
+  }
+
+  handleUpdateClickOpen = (id) => {
+      let currentComponent = this;
+      this.setState({id: id});
+
+      fetch(window.location.protocol + '//' + window.location.hostname + ':3010/cours/' + id)
+          .then((res) => res.json())
+          .then(function(cours) {
+            var date = cours.date.split("/");
+            date = date[1] + "/" + date[0] + "/" + date[2];
+              
+            currentComponent.setState({nom: cours.nom});
+            currentComponent.setState({selectedDate: new Date(date)});
+            currentComponent.setState({selectedTimeS: new Date(moment(date +' '+ cours.heureD).format())});
+            currentComponent.setState({selectedTimeE: new Date(moment(date +' '+ cours.heureF).format())});
+            currentComponent.setState({salle: cours.salle});
+            currentComponent.setState({promo: cours.classe});
+          })
+
+      this.setState({openUpdate : true});
+  };
+
+  handleDelete = (id) => {
+      fetch(window.location.protocol + '//' + window.location.hostname + ':3010/cours/'+id,{
+              method: 'DELETE',
+              headers: {"Content-Type": "application/json"}
+          })
+          .then(function(response){
+              console.log(response => response.json());
+              return response => response.json()
+          })
+      window.location.reload();
+  }
+
   render(){
     const { classes } = this.props;
+    let gestion;
+
+    var promos = this.state.getPromos.map( (promo) => {
+      return (
+        <MenuItem key={promo.id} value={promo.id}>{promo.label}</MenuItem>
+      )
+    });
+
+    if(localStorage.getItem('user_role') == "professeur") {
+      {/* Modification possible si le user co est un professeur */}
+      gestion = (idcours) => {
+        return (
+          <CardActions>
+            <Button size="small" color="primary" onClick={(id) => this.handleUpdateClickOpen(idcours)}>
+              Modifier
+            </Button>
+            <Button size="small" color="secondary" onClick={(id) => this.handleDelete(idcours)}>
+              Supprimer
+            </Button>
+          </CardActions>
+        )
+      }
+    } else {
+      gestion = (id) => {
+      }
+    }
 
     var cours = this.state.getCours.map( (item, index) => {
       return (
@@ -184,18 +291,7 @@ class TableMain extends Component {
                     value={(item.presents.length / 20) * 100}
                     variant="determinate"
                   />
-                
-                {/* A n'afficher que si le user co est prof */}
-                {/*
-                <CardActions>
-                  <Button size="small" color="primary" onClick={this.handleClickOpen(item._id)}>
-                    Modifier
-                  </Button>
-                  <Button size="small" color="secondary">
-                    Supprimer
-                  </Button>
-                </CardActions>
-                */}
+                    {gestion(item._id)}
               </Card>
             </Grid>
             <Grid item xs={2}></Grid>
@@ -214,8 +310,8 @@ class TableMain extends Component {
           <Dialog
             fullWidth={this.state.fullWidth}
             maxWidth={this.state.maxWidth}
-            open={this.state.open}
-            onClose={this.state.handleClose}
+            open={this.state.openUpdate}
+            onClose={this.state.handleUpdateClose}
             aria-labelledby="max-width-dialog-title"
           >
             
@@ -234,6 +330,8 @@ class TableMain extends Component {
                         label="Nom du cours"
                         type="name"
                         fullWidth
+                        value={this.state.nom}
+                        onChange={(ev)=>this.setState({nom:ev.target.value})}
                       />
                     </Grid>                  
                     
@@ -246,7 +344,7 @@ class TableMain extends Component {
                           id="date-picker-inline"
                           label="Date du cours"
                           value={this.state.selectedDate}
-                          onChange={this.state.handleDateChange}
+                          onChange={this.handleDateChange}
                           KeyboardButtonProps={{
                             'aria-label': 'change date',
                           }}
@@ -258,10 +356,10 @@ class TableMain extends Component {
                     <Grid item xs={12} md={6}>
                     <KeyboardTimePicker
                       margin="normal"
-                      id="time-picker"
+                      id="time-picker-begin"
                       label="Heure de début"
                       value={this.state.selectedTimeS}
-                      onChange={this.state.handleTimeChangeS}
+                      onChange={this.handleTimeChangeS}
                       KeyboardButtonProps={{
                         'aria-label': 'Modifier l\'heure',
                       }}
@@ -270,10 +368,10 @@ class TableMain extends Component {
                     <Grid item xs={12} md={6}>
                       <KeyboardTimePicker
                         margin="normal"
-                        id="time-picker"
+                        id="time-picker-end"
                         label="Heure de fin"
                         value={this.state.selectedTimeE}
-                        onChange={this.state.handleTimeChangeE}
+                        onChange={this.handleTimeChangeE}
                         KeyboardButtonProps={{
                           'aria-label': 'Modifier l\'heure',
                         }}
@@ -290,21 +388,24 @@ class TableMain extends Component {
                         label="Salle"
                         type="name"
                         fullWidth
+                        value={this.state.salle}
+                        onChange={(ev)=>this.setState({salle:ev.target.value})}
                       />
                     </Grid>
                     <Grid item xs={12} md={6}>
                       <FormControl className={classes.formControl}>
                         <InputLabel htmlFor="selectPromo">Promotion</InputLabel>
                         <Select
-                          value={this.state.values.promo}
+                          value={this.state.promo}
                           fullWidth
-                          onChange={this.state.handleChange}
+                          onChange={this.handleChange}
                           label="Promotion"
                           inputProps={{
                             name: 'promo',
                             id: 'selectPromo',
                           }}
                         >
+                          {promos}
                         </Select>
                       </FormControl>
                     </Grid>
@@ -312,10 +413,10 @@ class TableMain extends Component {
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button onClick={this.state.handleClose} color="primary">
+              <Button onClick={this.handleUpdate} color="primary">
                 Modifier le cours
               </Button>
-              <Button onClick={this.state.handleClose} color="secondary">
+              <Button onClick={this.handleUpdateClose} color="secondary">
                 Fermer
               </Button>
             </DialogActions>
