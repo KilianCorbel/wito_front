@@ -72,15 +72,20 @@ class ValiderEtudiant extends Component {
         super(props);
         this.handleValidate = this.handleValidate.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
+        this.handleUpdate = this.handleUpdate.bind(this);
         this.state = {
             etudiants: [],
             etudiant: null,
+            openValidate: false,
+            open: false,
+            promo: '',
+            getPromos : [],
             id: '',
             studentId: '',
             nom : '',
             prenom : '',
             mail : '',
-            fullWidth : true,
+            fullWidth : false,
             maxWidth : 'sm'
         }
     }
@@ -112,6 +117,59 @@ class ValiderEtudiant extends Component {
         window.location.reload();
     }
 
+    handleUpdate(event) {
+        event.preventDefault();
+        let currentComponent = this.state;
+        console.log("handle update");
+        console.log(this.state.id);
+        fetch(window.location.protocol + '//' + window.location.hostname + ':3010/utilisateurs/' + this.state.id,{
+              method: 'PUT',
+              body: JSON.stringify({
+                role : 'etudiant'
+          }),
+          headers: {"Content-Type": "application/json"}
+          })
+          .then(function(response){
+              console.log('promo ' + currentComponent.promo);
+            //   return response => response.json()
+          })
+          .then(              
+            fetch(window.location.protocol + '//' + window.location.hostname + ':3010/etudiants/' + this.state.studentId,{
+                method: 'PUT',
+                body: JSON.stringify({
+                    classe : this.state.promo
+                }),
+                headers: {"Content-Type": "application/json"}
+                })
+                .then(function(response){
+                    return response => response.json()
+                })
+          )
+
+        
+         
+        this.setState({open : false});
+        //window.location.reload();
+    }
+
+    handleValidateOpen = (id, studentId) => {
+        this.setState({id: id});
+        this.setState({studentId: studentId});
+        this.setState({open : true});
+    }
+
+    handleClickOpen = (id) => {
+        this.setState({open : true});
+    };
+    
+    handleClose = () => {
+        this.setState({open : false});
+    };
+
+    handleChange = event => {
+        this.setState({promo : event.target.value});
+      };
+
     componentDidMount() {
         let currentComponent = this;
 
@@ -121,11 +179,30 @@ class ValiderEtudiant extends Component {
                 console.log(etudiants);
                 currentComponent.setState({etudiants});
             })
+            .then(
+                fetch(window.location.protocol + '//' + window.location.hostname + ':3010/classes/')
+                    .then((resp) => resp.json())
+                    .then(function(data) {
+                    console.log("data get " + JSON.stringify(data));
+                    var list = [];
+                    data.forEach(function(promo) {
+                        list.push({id:promo._id, label:promo.label})
+                    });
+                    console.log(list);
+                    currentComponent.setState({getPromos : list});
+                    })
+            )
     }
 
     render() {
         const {classes} = this.props;
         const {etudiants} = this.state;
+
+        const promos = this.state.getPromos.map( (promo) => {
+            return (
+              <MenuItem key={promo.id} value={promo.id}>{promo.label}</MenuItem>
+            )
+          });
         
         return (
             <div className={classes.root}>
@@ -142,7 +219,7 @@ class ValiderEtudiant extends Component {
                                         <TableCell align="center">Prénom</TableCell>
                                         <TableCell align="center">Mail</TableCell>
                                         <TableCell align="center">Statut</TableCell>
-                                        <TableCell align="center">Actions</TableCell>
+                                        <TableCell align="center">Promotion</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -151,10 +228,10 @@ class ValiderEtudiant extends Component {
                                             <TableCell component="th" scope="row">{row.utilisateur.nom}</TableCell>
                                             <TableCell align="center">{row.utilisateur.prenom}</TableCell>
                                             <TableCell align="center">{row.utilisateur.mail}</TableCell>
-                                            <TableCell align="center">{row.utilisateur.role}</TableCell>
+                                            <TableCell align="center">À assigner</TableCell>
                                             <TableCell align="center">
                     
-                                                <Fab size="small" className={classes.icons} onClick={(id, studentID) => this.handleValidate(row.utilisateur._id, row._id)} color="primary" aria-label="valider">
+                                                <Fab size="small" className={classes.icons} onClick={(id, studentID) => this.handleValidateOpen(row.utilisateur._id, row._id)} color="primary" aria-label="valider">
                                                 <CheckIcon/>
                                                 </Fab>
                                                 
@@ -171,6 +248,52 @@ class ValiderEtudiant extends Component {
                     </Grid>
                     
                     <Grid item xs={3}></Grid>
+
+                    <Dialog
+                        fullWidth={this.state.fullWidth}
+                        maxWidth={this.state.maxWidth}
+                        open={this.state.open}
+                        onClose={this.handleClose}
+                        aria-labelledby="max-width-dialog-title"
+                    >
+                        
+                    <form className={classes.form} noValidate>
+                    <FormControl className={classes.formControl}>
+                        <DialogTitle>Assigner la promotion</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                <Grid container spacing={3}>
+                                    <Grid item xs={12} >
+                                    <FormControl className={classes.formControl}>
+                                        <InputLabel htmlFor="selectPromo">Promotion</InputLabel>
+                                        <Select
+                                        fullWidth={this.state.fullWidth}
+                                        value={this.state.promo}
+                                        onChange={this.handleChange}
+                                        label="Promotion"
+                                        inputProps={{
+                                            name: 'promo',
+                                            id: 'selectPromo',
+                                        }}
+                                        >
+                                            {promos}
+                                        </Select>
+                                    </FormControl>
+                                    </Grid>
+                                </Grid>
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                        <Button onClick={this.handleUpdate} color="primary">
+                            Valider l'étudiant
+                        </Button>
+                        <Button onClick={this.handleClose} color="secondary">
+                            Fermer
+                        </Button>
+                        </DialogActions>
+                    </FormControl>
+                    </form>
+                    </Dialog>
                 </Grid>
             </div>
             
