@@ -225,7 +225,6 @@ class GestionProfs extends Component {
                                         <TableCell>Nom</TableCell>
                                         <TableCell align="center">Prénom</TableCell>
                                         <TableCell align="center">Mail</TableCell>
-                                        <TableCell align="center">Mot de passe</TableCell>
                                         <TableCell align="center">Actions</TableCell>
                                     </TableRow>
                                 </TableHead>
@@ -237,7 +236,6 @@ class GestionProfs extends Component {
                                             </TableCell>
                                             <TableCell align="center">{row.utilisateur.prenom}</TableCell>
                                             <TableCell align="center">{row.mail}</TableCell>
-                                            <TableCell align="center">{row.utilisateur.mdp}</TableCell>
                                             <TableCell align="center">
                     
                                                 <Fab color="primary" className={classes.icons} onClick={(id, studentID) => this.handleUpdateClickOpen(row.utilisateur._id, row._id)} size="small" aria-label="edit">

@@ -129,12 +129,12 @@ class CheckAuth extends Component {
     componentDidMount() {
         let currentComponent = this;
         console.log(localStorage.getItem('user_role'));
-        if(localStorage.getItem('user_role') == null || (localStorage.getItem('user_role') != "etudiant" && localStorage.getItem('user_role') != "professeur")) {
+        if(localStorage.getItem('user_role') == null || (localStorage.getItem('user_role') != "etudiant" && localStorage.getItem('user_role') != "professeur" && localStorage.getItem('user_role') != "administrateur")) {
             this.handleIdentificationDisplay();
           } else {
             this.handleIdentificationClose();
       
-            if(localStorage.getItem('user_role') == "Etudiant") {
+            if(localStorage.getItem('user_role') == "etudiant") {
               fetch(window.location.protocol + '//' + window.location.hostname + ':3010/etudiants/'+ localStorage.getItem('user_id') ) 
                 .then((resp) => resp.json())
                 .then(function(etudiant) {

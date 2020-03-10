@@ -263,7 +263,6 @@ class GestionEtudiants extends Component {
                                         <TableCell>Nom</TableCell>
                                         <TableCell align="center">Prénom</TableCell>
                                         <TableCell align="center">Mail</TableCell>
-                                        <TableCell align="center">Mot de passe</TableCell>
                                         <TableCell align="center">Promotion</TableCell>
                                         <TableCell align="center">Actions</TableCell>
                                     </TableRow>
@@ -274,7 +273,6 @@ class GestionEtudiants extends Component {
                                             <TableCell component="th" scope="row">{row.utilisateur.nom}</TableCell>
                                             <TableCell align="center">{row.utilisateur.prenom}</TableCell>
                                             <TableCell align="center">{row.utilisateur.mail}</TableCell>
-                                            <TableCell align="center">{row.utilisateur.mdp}</TableCell>
                                             <TableCell align="center">{row.classe.label}</TableCell>
                                             <TableCell align="center">
                     
@@ -358,7 +356,7 @@ class GestionEtudiants extends Component {
                                         <TextField
                                             id="mdp"
                                             label="Mot de passe"
-                                            type="mdp"
+                                            type="password"
                                             value={this.state.mdp} 
                                             onChange={(ev)=>this.setState({mdp:ev.target.value})}                                        
                                         />
@@ -428,7 +426,7 @@ class GestionEtudiants extends Component {
                                         <TextField
                                             id="mdp"
                                             label="Mot de passe"
-                                            type="mdp"
+                                            type="password"
                                             value={this.state.mdp} 
                                             onChange={(ev)=>this.setState({mdp:ev.target.value})}                                        
                                         />

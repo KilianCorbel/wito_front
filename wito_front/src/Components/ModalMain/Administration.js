@@ -49,9 +49,9 @@ class Administration extends Component {
             <CheckAuth/>
 
             <Grid spacing={3}>
-                <Grid item md={4}></Grid>
+                <Grid item xs={1} md={3}></Grid>
 
-                <Grid item xs={12} md={4} >
+                <Grid item xs={10} md={6} >
                     <Card className={classes.card}>
                         <CardActionArea href='/validation'>
                         <CardMedia
@@ -70,13 +70,13 @@ class Administration extends Component {
                     </Card>                 
                 </Grid>
 
-                <Grid item md={4}></Grid>
+                <Grid item xs={1} md={3}></Grid>
             </Grid>
 
             <Grid spacing={3}>
-                <Grid item md={4}></Grid>
+                <Grid item xs={1} md={3}></Grid>
 
-                <Grid item xs={12} md={4}>
+                <Grid item xs={10} md={6}>
                     <Card className={classes.card}>
                         <CardActionArea href='/etudiants'>
                         <CardMedia
@@ -95,13 +95,13 @@ class Administration extends Component {
                     </Card>                 
                 </Grid>
 
-                <Grid item md={4}></Grid>
+                <Grid item xs={1} md={3}></Grid>
             </Grid>
 
             <Grid spacing={3}>
-                <Grid item md={4}></Grid>
+                <Grid item xs={1} md={3}></Grid>
 
-                <Grid item xs={12} md={4}>
+                <Grid item xs={10} md={6}>
                 <Card className={classes.card}>
                         <CardActionArea href='/profs'>
                         <CardMedia
@@ -120,13 +120,13 @@ class Administration extends Component {
                     </Card>
                 </Grid>
 
-                <Grid item md={4}></Grid>
+                <Grid item xs={1} md={3}></Grid>
             </Grid>
 
             <Grid spacing={3}>
-                <Grid item md={4}></Grid>
+                <Grid item xs={1} md={3}></Grid>
 
-                <Grid xs={12}  md={4}>
+                <Grid xs={10}  md={6}>
                 <Card className={classes.card}>
                         <CardActionArea href='/promos'>
                         <CardMedia
@@ -145,7 +145,7 @@ class Administration extends Component {
                     </Card>
                 </Grid>
 
-                <Grid item md={4}></Grid>
+                <Grid item xs={1} md={3}></Grid>
             </Grid>
         </div>
       );
