@@ -94,7 +94,36 @@ class TableMain extends Component {
     let currentComponent = this;
     console.log("user role " + localStorage.getItem('user_role'));
     console.log("user id " + localStorage.getItem('user_id'));
-    if (localStorage.getItem('user_role') !== null && localStorage.getItem('user_id') !== null) {
+
+    if(localStorage.getItem('user_role') === "administrateur" && localStorage.getItem('user_id') !== null) {
+      fetch(window.location.protocol + '//' + window.location.hostname + ':3010/cours/')
+      .then((resp) => resp.json())
+      .then(function(data) {
+        console.log(data);
+        var list = [];
+        if (JSON.stringify(data) != '{}') {
+          data.forEach(function(cours) {
+            list.push(cours)
+          });
+        }        
+        console.log(list);
+        currentComponent.setState({getCours : list});
+      })
+      .then(
+        fetch(window.location.protocol + '//' + window.location.hostname + ':3010/classes/')
+            .then((resp) => resp.json())
+            .then(function(data) {
+            console.log("data get " + JSON.stringify(data));
+            var list = [];
+            data.forEach(function(promo) {
+                list.push({id:promo._id, label:promo.label})
+            });
+            console.log(list);
+            currentComponent.setState({getPromos : list});
+            })
+    )
+    }
+    if (localStorage.getItem('user_role') !== null && localStorage.getItem('user_role') !== "administrateur" && localStorage.getItem('user_id') !== null) {
       fetch(window.location.protocol + '//' + window.location.hostname + ':3010/cours/' + localStorage.getItem('user_role') + '/' + localStorage.getItem('user_id'))
       .then((resp) => resp.json())
       .then(function(data) {
@@ -222,8 +251,8 @@ class TableMain extends Component {
       )
     });
 
-    if(localStorage.getItem('user_role') == "professeur") {
-      {/* Modification possible si le user co est un professeur */}
+    if(localStorage.getItem('user_role') == "administrateur") {
+      {/* Modification possible si le user co est un admin */}
       gestion = (idcours) => {
         return (
           <CardActions>
