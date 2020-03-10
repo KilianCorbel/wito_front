@@ -137,7 +137,7 @@ export default function MenuBar() {
   function AdminBar(props) {
     const role = props.role;
     console.log("role "+role);
-    if (role === "professeur") {
+    if (role === "administrateur") {
       return <Button 
               color="inherit" 
               className={classes.btnMenu}
