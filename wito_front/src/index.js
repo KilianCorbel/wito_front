@@ -6,7 +6,6 @@ import * as serviceWorker from './serviceWorker';
 import SignIn from './Components/Login/Connexion';
 import SignUp from './Components/Login/Inscription';
 import truc from './Components/Main/MainWindow';
-import gestionCours from './Components/Main/GestionCours';
 import feuilleAppel from './Components/Main/FeuilleAppel';
 import GestionPromos from './Components/Main/GestionPromos';
 import GestionProfs from './Components/Main/GestionProfs';
