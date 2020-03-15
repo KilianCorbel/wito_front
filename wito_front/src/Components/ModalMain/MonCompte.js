@@ -50,6 +50,10 @@ const styles = theme => ({
       },
       top: {
         marginTop: '8vh',
+      },
+      role: {
+        textAlign: 'left',
+        marginTop: '5px',
       }
 });
 
@@ -132,12 +136,21 @@ class MonCompte extends Component {
                               <Avatar alt="" className={classes.avatar} src="./src\account.png" />
                             </Grid>
                             <Grid item xs={6}>
-                              <Typography gutterBottom className={classes.typo} variant="h5" component="h2">
-                                {user.nom} {user.prenom}
-                              </Typography>
-                              <Typography variant="body2" color="textSecondary" className={classes.typo} component="p">
-                                {user.mail} 
+                              <Grid item xs={12} >
+                                <Typography gutterBottom className={classes.role} variant="h5" component="h2">
+                                  {user.nom} {user.prenom}
                                 </Typography>
+                              </Grid>
+                              <Grid item xs={12} >
+                                <Typography variant="body2" color="textSecondary" className={classes.role} component="h2">
+                                  {user.mail} 
+                                </Typography>
+                              </Grid>
+                              <Grid item xs={12} >
+                                <Typography variant="body2" color="textSecondary" className={classes.role} component="h2">
+                                  {user.role} 
+                                </Typography>
+                              </Grid>
                               </Grid>
                             <Grid item xs={3}>
                               

@@ -149,6 +149,27 @@ export default function MenuBar() {
     }
   }
 
+  function AdminMenuBar(props) {
+    const role = props.role;
+    
+    if (role === "administrateur") {
+      return <MenuItem>
+              <Button 
+                  aria-label="" 
+                  color="inherit"
+                  href='/admin'
+                  >
+                    <PeopleIcon />
+                
+                <p className={classes.btMobile}>Administration</p>
+                </Button>
+            </MenuItem>;
+    }
+    else {
+      return <div></div>;
+    }
+  }
+
   const disconnect = () => {
     console.log("disconnected");
     localStorage.setItem('user_id', null); 
@@ -189,17 +210,7 @@ export default function MenuBar() {
           </Button>
         
       </MenuItem>
-      <MenuItem>
-        <Button 
-            aria-label="" 
-            color="inherit"
-            href='/admin'
-            >
-              <PeopleIcon />
-          
-          <p className={classes.btMobile}>Administration</p>
-          </Button>
-      </MenuItem>
+      <AdminMenuBar />
       <MenuItem onClick={disconnect}>
         <Button
           aria-label="account of current user"

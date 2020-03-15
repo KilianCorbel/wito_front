@@ -33,6 +33,17 @@ class Administration extends Component {
       }
   }
 
+  componentDidMount() {
+      let currentComponent = this;
+
+      const role = localStorage.getItem('user_role');
+      console.log(role);
+
+      if (role !== "administrateur") {
+        window.location.replace(window.location.protocol + '//' + window.location.hostname + ':3000/cours');
+      }
+  }
+
   handleChange = (event, newValue) => {
     this.setState({setValue : newValue});
   };
