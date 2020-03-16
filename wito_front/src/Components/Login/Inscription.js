@@ -55,8 +55,8 @@ const useStyles = makeStyles(theme => ({
 export default function SignUp() {
     let submit = function (){
       let utilisateur = {
-        nom : document.getElementById('firstName').value,
-        prenom : document.getElementById('lastName').value,
+        prenom : document.getElementById('firstName').value,
+        nom : document.getElementById('lastName').value,
         mail : document.getElementById('email').value,
         mdp : document.getElementById('password').value
       }
