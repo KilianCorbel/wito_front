@@ -15,6 +15,7 @@ import GestionEtudiants from './Components/Main/GestionEtudiant';
 import Administration from './Components/Main/Administration';
 import MonCompte from './Components/Main/MonCompte';
 import ValiderEtudiant from './Components/Main/ValiderEtudiant';
+import AccesRefuse from './Components/Main/AccesRefuse';
 
 const routing = (
     <Router>
@@ -31,7 +32,7 @@ const routing = (
             <Route path='/admin' component={Administration} />
             <Route path='/moncompte' component={MonCompte} />
             <Route path='/validation' component={ValiderEtudiant} />
-            />
+            <Route path='/accesrefuse' component={AccesRefuse} />
         </Switch>
       </div>
     </Router>

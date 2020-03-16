@@ -12,6 +12,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
 import DateFnsUtils from '@date-io/date-fns';
 import {
   MuiPickersUtilsProvider,
@@ -35,6 +37,13 @@ const styles = theme => ({
     },
     formControlLabel: {
       //marginTop: theme.spacing(1),
+    },
+    typo: {
+      marginTop:'25px',
+    },
+    divider: {
+      marginTop: '20px',
+      marginBottom: '20px',
     }
 });
 
@@ -53,7 +62,8 @@ class ModalMain extends Component {
           getPromos : [],
           open : false,
           fullWidth : true,
-          maxWidth : 'sm'
+          maxWidth : 'sm',
+          ics : '',
         }
     }
 
@@ -75,41 +85,47 @@ class ModalMain extends Component {
 
     handleSubmit(event) {
       event.preventDefault();
+      console.log(this.state.ics);
 
-      /*
-      let utilisateur = {
-        nom : this.state.nom,
-        date : document.getElementById('date-picker-inline').value,
-        heureD : document.getElementById('time-picker-begin').value,
-        heureF : document.getElementById('time-picker-end').value,
-        salle : this.state.salle,
-        classe : this.state.promo,
-        professeur : "5da02ccee841151c1cb1b00d"//localStorage.getItem('user_id')
+      if (this.state.ics !== '') {
+        fetch(window.location.protocol + '//' + window.location.hostname + ':3010/cours/ics',{
+          method: 'POST',
+          body: JSON.stringify({
+            lien : this.state.ics,
+            classe : this.state.promo
+            }),
+            headers: {"Content-Type": "application/json"}
+            })
+            .then(function(response){
+                console.log(response => response.json());
+                return response => response.json()
+            })
       }
-      console.log("utilisateur: " + JSON.stringify(utilisateur));
-      */
+      else {
+        fetch(window.location.protocol + '//' + window.location.hostname + ':3010/cours/',{
+          method: 'POST',
+          body: JSON.stringify({
+            nom : this.state.nom,
+            date : document.getElementById('date-picker-inline').value,
+            heureD : document.getElementById('time-picker-begin').value,
+            heureF : document.getElementById('time-picker-end').value,
+            salle : this.state.salle,
+            classe : this.state.promo,
+            professeur : localStorage.getItem('user_id')
+            }),
+            headers: {"Content-Type": "application/json"}
+            })
+            .then(function(response){
+                console.log(response => response.json());
+                return response => response.json()
+            })
+          
+          this.setState({open : false});
+          window.location.reload();
+        }
+      }
 
-      fetch(window.location.protocol + '//' + window.location.hostname + ':3010/cours/',{
-            method: 'POST',
-            body: JSON.stringify({
-              nom : this.state.nom,
-              date : document.getElementById('date-picker-inline').value,
-              heureD : document.getElementById('time-picker-begin').value,
-              heureF : document.getElementById('time-picker-end').value,
-              salle : this.state.salle,
-              classe : this.state.promo,
-              professeur : localStorage.getItem('user_id')
-        }),
-        headers: {"Content-Type": "application/json"}
-        })
-        .then(function(response){
-            console.log(response => response.json());
-            return response => response.json()
-        })
-       
-      this.setState({open : false});
-      window.location.reload();
-    }
+      
 
     handleClickOpen = () => {
       this.setState({open : true});
@@ -261,6 +277,48 @@ class ModalMain extends Component {
                         </Select>
                       </FormControl>
                     </Grid>
+                    
+                  </Grid>
+                  <Divider className={classes.divider} />
+
+                  <Grid container spacing={3}> 
+                    <Grid item xs={4}  >
+                        <Typography gutterBottom className={classes.typo} color="primary" variant="p" component="div">
+                            Import iCalendar
+                        </Typography>
+                    </Grid>
+                    <Grid container xs={8}  >
+                        <Grid item xs={12} >
+                          <TextField
+                            margin="dense"
+                            id="ical"
+                            label="Lien fichier .ics"
+                            type="name"
+                            value={this.state.ics} onChange={(ev)=>this.setState({ics:ev.target.value})}
+                            fullWidth={this.state.fullWidth}
+                          />
+                        </Grid>
+                        <Grid item xs={12} >
+                          <FormControl className={classes.formControl}>
+                            <InputLabel htmlFor="selectPromo">Promotion</InputLabel>
+                            <Select
+                              fullWidth={this.state.fullWidth}
+                              value={this.state.promo}
+                              onChange={this.handleChange}
+                              // value={this.state.classe} onChange={(ev)=>this.setState({classe:ev.target.value})}
+                              label="Promotion"
+                              inputProps={{
+                                name: 'promo',
+                                id: 'selectPromo',
+                              }}
+                            >
+                              {promos}
+                            </Select>
+                          </FormControl>
+                        </Grid>
+                      
+                    </Grid>
+                    
                   </Grid>
               </DialogContentText>
             </DialogContent>

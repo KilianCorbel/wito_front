@@ -121,7 +121,12 @@ class CheckAuth extends Component {
               localStorage.setItem('user_id', data.id); 
               localStorage.setItem('user_token', data.token);
               localStorage.setItem('user_role', data.role);
-              window.location.reload();
+
+              if (data.role === "inscrit") {
+                window.location.replace(window.location.protocol + '//' + window.location.hostname + ':3000/accesrefuse');
+              } else {
+                window.location.reload();
+              } 
             }
         });
       }
@@ -129,32 +134,23 @@ class CheckAuth extends Component {
     componentDidMount() {
         let currentComponent = this;
         console.log(localStorage.getItem('user_role'));
-        if(localStorage.getItem('user_role') == null || (localStorage.getItem('user_role') != "etudiant" && localStorage.getItem('user_role') != "professeur" && localStorage.getItem('user_role') != "administrateur")) {
+        if(localStorage.getItem('user_role') == null || (localStorage.getItem('user_role') != "etudiant" && localStorage.getItem('user_role') != "professeur" && localStorage.getItem('user_role') != "administrateur" && localStorage.getItem('user_role') != "inscrit")) {
             this.handleIdentificationDisplay();
           } else {
             this.handleIdentificationClose();
-      
-            if(localStorage.getItem('user_role') == "etudiant") {
-              fetch(window.location.protocol + '//' + window.location.hostname + ':3010/etudiants/'+ localStorage.getItem('user_id') ) 
-                .then((resp) => resp.json())
-                .then(function(etudiant) {
-                  currentComponent.setState({etudiant : etudiant});
-                })
+            if(localStorage.getItem('user_role') === "inscrit") {
+              window.location.replace(window.location.protocol + '//' + window.location.hostname + ':3000/accesrefuse');
             }
-
-            // if(localStorage.getItem('user_role') == "Professeur") {
-            //     console.log("Cours du prof " + localStorage.getItem('user_id'));
-            //     fetch(window.location.protocol + '//' + window.location.hostname + ':3010/cours/professeur/' + localStorage.getItem('user_id'))
-            //       .then((resp) => resp.json())
-            //       .then(function(data) {
-            //         var list = [];
-            //         data.forEach(function(cours) {
-            //           list.push(cours)
-            //         });
-            //         console.log(list);
-            //         currentComponent.setState({getCours : list});
-            //       })
-            //   }
+            // if(localStorage.getItem('user_role') === "etudiant") {
+            //   fetch(window.location.protocol + '//' + window.location.hostname + ':3010/etudiants/'+ localStorage.getItem('user_id') ) 
+            //     .then((resp) => resp.json())
+            //     .then(function(etudiant) {
+            //       console.log(etudiant);
+            //       console.log("classe");
+            //       console.log(etudiant.classe);
+            //       currentComponent.setState({etudiant : etudiant});
+            //     })
+            // }
           }
     }
 

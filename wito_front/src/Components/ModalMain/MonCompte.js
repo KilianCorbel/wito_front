@@ -133,7 +133,7 @@ class MonCompte extends Component {
                         <CardContent>
                           <Grid container spacing={3}>
                             <Grid item xs={4}>
-                              <Avatar alt="" className={classes.avatar} src="./src\account.png" />
+                              <Avatar alt="" className={classes.avatar} src="./src/img\account.png" />
                             </Grid>
                             <Grid item xs={6}>
                               <Grid item xs={12} >

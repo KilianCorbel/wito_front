@@ -168,6 +168,9 @@ class GestionEtudiants extends Component {
 
     componentDidMount() {
         let currentComponent = this;
+        if (localStorage.getItem('user_role') !== "administrateur") {
+            window.location.replace(window.location.protocol + '//' + window.location.hostname + ':3000/cours');
+          }
 
         fetch(window.location.protocol + '//' + window.location.hostname + ':3010/etudiants/')
             .then((res) => res.json())
