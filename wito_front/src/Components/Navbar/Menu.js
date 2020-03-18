@@ -135,7 +135,7 @@ export default function MenuBar() {
   }
 
   function AdminBar(props) {
-    const role = props.role;
+    const role = localStorage.getItem('user_role');
     console.log("role "+role);
     if (role === "administrateur") {
       return <Button 
@@ -150,20 +150,18 @@ export default function MenuBar() {
   }
 
   function AdminMenuBar(props) {
-    const role = props.role;
-    
+    const role = localStorage.getItem('user_role');
+    console.log("rolemb "+role);
     if (role === "administrateur") {
-      return <MenuItem>
-              <Button 
-                  aria-label="" 
-                  color="inherit"
-                  href='/admin'
-                  >
-                    <PeopleIcon />
-                
+      return  <MenuItem><Button 
+                aria-label="" 
+                color="inherit"
+                href='/admin'
+                >
+                  <PeopleIcon />
+              
                 <p className={classes.btMobile}>Administration</p>
-                </Button>
-            </MenuItem>;
+              </Button></MenuItem>;
     }
     else {
       return <div></div>;
@@ -210,7 +208,9 @@ export default function MenuBar() {
           </Button>
         
       </MenuItem>
+
       <AdminMenuBar />
+      
       <MenuItem onClick={disconnect}>
         <Button
           aria-label="account of current user"

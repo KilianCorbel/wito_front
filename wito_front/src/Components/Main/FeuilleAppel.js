@@ -57,7 +57,10 @@ class FeuilleAppel extends Component{
     this.state = {
         idcours : '',
         getCours: '',
+        prenom: '',
+        nom: '',
         cours : null,
+        nomCours: '',
         classe : null,
         etudiants: [],
         open : false,
@@ -87,7 +90,10 @@ class FeuilleAppel extends Component{
       .then(function(cours) {
         console.log(cours);
         currentComponent.setState(cours);
-        currentComponent.setState({getCours:cours});
+        currentComponent.setState({nomCours : cours.nom});
+        currentComponent.setState({prenom : cours.professeur.utilisateur.prenom});
+        currentComponent.setState({nom : cours.professeur.utilisateur.nom});
+        console.log(currentComponent.state.prenom);
         
         // let id = cours._id;
         // currentComponent.setState(id);
@@ -133,6 +139,7 @@ class FeuilleAppel extends Component{
   render() {
     const {classes} = this.props;
     const cours = this.state;
+    const prof = this.state;
     const classe = this.state;
     const {etudiants} = this.state;
 
@@ -188,7 +195,10 @@ class FeuilleAppel extends Component{
                     Cours du {cours.date}
                   </Typography>
                   <Typography variant="h5" >
-                    {cours.nom}
+                    {this.state.nomCours}
+                  </Typography>
+                  <Typography className={classes.titreCours} color="textSecondary" gutterBottom>
+                    {this.state.prenom} {this.state.nom}
                   </Typography>
                   <Typography className={classes.pos} color="textSecondary">
                     {cours.heureD} - {cours.heureF}
