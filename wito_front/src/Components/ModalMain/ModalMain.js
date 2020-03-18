@@ -91,7 +91,7 @@ class ModalMain extends Component {
             console.log("data get " + JSON.stringify(data));
             var liste = [];
             data.forEach(function(prof) {
-              liste.push({id:prof._id, mail:prof.mail})
+              liste.push({id:prof._id, utilisateur:prof.utilisateur.nom})
             });
             console.log(liste);
             currentComponent.setState({getProfs : liste});
@@ -183,7 +183,7 @@ class ModalMain extends Component {
 
       var profs = this.state.getProfs.map( (prof) => {
         return (
-          <MenuItem key={prof.id} value={prof.id}>{prof.mail}</MenuItem>
+          <MenuItem key={prof.id} value={prof.id}>{prof.utilisateur.nom} {prof.utilisateur.prenom}</MenuItem>
         )
       });
 

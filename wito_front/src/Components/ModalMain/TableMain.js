@@ -131,7 +131,7 @@ class TableMain extends Component {
           console.log("data get " + JSON.stringify(data));
           var liste = [];
           data.forEach(function(prof) {
-              liste.push({id:prof._id, mail:prof.mail})
+              liste.push({id:prof._id, utilisateur:prof.utilisateur.prenom})
           });
           console.log(liste);
           currentComponent.setState({getprofs : liste});
@@ -172,7 +172,7 @@ class TableMain extends Component {
             console.log("data get " + JSON.stringify(data));
             var liste = [];
             data.forEach(function(prof) {
-              liste.push({id:prof._id, mail:prof.mail})
+              liste.push({id:prof._id, utilisateur:prof.utilisateur.prenom})
             });
             console.log(liste);
             currentComponent.setState({getprofs : liste});
@@ -287,7 +287,7 @@ class TableMain extends Component {
 
     var profs = this.state.getProfs.map( (prof) => {
       return (
-        <MenuItem key={prof.id} value={prof.id}>{prof.mail}</MenuItem>
+        <MenuItem key={prof.id} value={prof.id}>{prof.utilisateur.prenom}</MenuItem>
       )
     });
 
@@ -347,11 +347,6 @@ class TableMain extends Component {
                       <Grid item xs={3}>
                         <Typography variant="body2" color="textSecondary" className={classes.typo} component="p">
                           Salle : {item.salle}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={3}>
-                        <Typography variant="body2" color="textSecondary" className={classes.typo} component="p">
-                          Professeur : {item.professeur.mail}
                         </Typography>
                       </Grid>
                     </Grid>
