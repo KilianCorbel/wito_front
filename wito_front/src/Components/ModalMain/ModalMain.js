@@ -97,8 +97,8 @@ class ModalMain extends Component {
             headers: {"Content-Type": "application/json"}
             })
             .then(function(response){
-                console.log(response => response.json());
-                return response => response.json()
+                console.log(response.json());
+                window.location.reload();
             })
       }
       else {

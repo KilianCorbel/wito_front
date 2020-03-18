@@ -279,7 +279,7 @@ class TableMain extends Component {
               <CardActionArea href={'/feuilleAppel/'+item._id} >
                   <CardContent>
                     <Grid container spacing={3}>
-                      <Grid item xs={3}>
+                      <Grid item xs={6}>
                         <Typography gutterBottom className={classes.typo} variant="h5" component="h2">
                           {item.nom}
                         </Typography>
@@ -287,9 +287,6 @@ class TableMain extends Component {
                           {item.professeur.utilisateur.prenom} {item.professeur.utilisateur.nom}
                           </Typography>
                         </Grid>
-                      <Grid item xs={3}>
-                        
-                      </Grid>
                     </Grid>
                     <Grid container spacing={3}>
                       <Grid item xs={3}>
