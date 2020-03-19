@@ -94,14 +94,11 @@ class TableMain extends Component {
 
   componentDidMount() {
     let currentComponent = this;
-    console.log("user role " + localStorage.getItem('user_role'));
-    console.log("user id " + localStorage.getItem('user_id'));
 
     if(localStorage.getItem('user_role') === "administrateur" && localStorage.getItem('user_id') !== null) {
       fetch(window.location.protocol + '//' + window.location.hostname + ':3010/cours/')
       .then((resp) => resp.json())
       .then(function(data) {
-        console.log(data);
         var list = [];
         if (JSON.stringify(data) != '{}') {
           data.forEach(function(cours) {
@@ -128,13 +125,12 @@ class TableMain extends Component {
       fetch(window.location.protocol + '//' + window.location.hostname + ':3010/professeurs/')
           .then((resp) => resp.json())
           .then(function(data) {
-          console.log("data get " + JSON.stringify(data));
           var liste = [];
           data.forEach(function(prof) {
-              liste.push({id:prof._id, utilisateur:prof.utilisateur.prenom})
+            liste.push({id:prof._id, nom:prof.utilisateur.nom, prenom:prof.utilisateur.prenom})
           });
-          console.log(liste);
-          currentComponent.setState({getprofs : liste});
+          console.log(data);
+          currentComponent.setState({getProfs : liste});
           })
   )
     }
@@ -156,7 +152,6 @@ class TableMain extends Component {
           fetch(window.location.protocol + '//' + window.location.hostname + ':3010/classes/')
               .then((resp) => resp.json())
               .then(function(data) {
-              console.log("data get " + JSON.stringify(data));
               var list = [];
               data.forEach(function(promo) {
                   list.push({id:promo._id, label:promo.label})
@@ -169,13 +164,12 @@ class TableMain extends Component {
         fetch(window.location.protocol + '//' + window.location.hostname + ':3010/professeurs/')
             .then((resp) => resp.json())
             .then(function(data) {
-            console.log("data get " + JSON.stringify(data));
             var liste = [];
             data.forEach(function(prof) {
-              liste.push({id:prof._id, utilisateur:prof.utilisateur.prenom})
+              liste.push({id:prof._id, nom:prof.utilisateur.nom, prenom:prof.utilisateur.prenom})
             });
             console.log(liste);
-            currentComponent.setState({getprofs : liste});
+            currentComponent.setState({getProfs : liste});
             })
     )
     }    
@@ -197,7 +191,7 @@ class TableMain extends Component {
     this.setState({promo : event.target.value});
   };
 
-  handleChange = event => {
+  handleProfChange = event => {
     this.setState({prof : event.target.value});
   };
 
@@ -238,7 +232,7 @@ class TableMain extends Component {
         })
 
       this.setState({openUpdate : false});
-      window.location.reload();
+      //window.location.reload();
   }
 
   handleUpdateClickOpen = (id) => {
@@ -248,6 +242,7 @@ class TableMain extends Component {
       fetch(window.location.protocol + '//' + window.location.hostname + ':3010/cours/' + id)
           .then((res) => res.json())
           .then(function(cours) {
+            console.log(cours);
             var date = cours.date.split("/");
             date = date[1] + "/" + date[0] + "/" + date[2];
               
@@ -257,7 +252,7 @@ class TableMain extends Component {
             currentComponent.setState({selectedTimeE: new Date(moment(date +' '+ cours.heureF).format())});
             currentComponent.setState({salle: cours.salle});
             currentComponent.setState({promo: cours.classe});
-            currentComponent.setState({prof : cours.professeur});
+            currentComponent.setState({prof : cours.professeur._id});
           })
 
       this.setState({openUpdate : true});
@@ -287,7 +282,7 @@ class TableMain extends Component {
 
     var profs = this.state.getProfs.map( (prof) => {
       return (
-        <MenuItem key={prof.id} value={prof.id}>{prof.utilisateur.prenom}</MenuItem>
+        <MenuItem key={prof.id} value={prof.id}>{prof.nom} {prof.prenom}</MenuItem>
       )
     });
 
@@ -481,7 +476,7 @@ class TableMain extends Component {
                         <Select
                           value={this.state.prof}
                           fullWidth
-                          onChange={this.handleChange}
+                          onChange={this.handleProfChange}
                           label="Professeur"
                           inputProps={{
                             name: 'prof',

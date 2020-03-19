@@ -75,7 +75,6 @@ class ModalMain extends Component {
       fetch(window.location.protocol + '//' + window.location.hostname + ':3010/classes/')
         .then((resp) => resp.json())
         .then(function(data) {
-          console.log("data get " + JSON.stringify(data));
           var list = [];
           data.forEach(function(promo) {
               list.push({id:promo._id, label:promo.label})
@@ -88,12 +87,11 @@ class ModalMain extends Component {
          fetch(window.location.protocol + '//' + window.location.hostname + ':3010/professeurs/')
           .then((resp) => resp.json())
           .then(function(data) {
-            console.log("data get " + JSON.stringify(data));
+            console.log(data);
             var liste = [];
             data.forEach(function(prof) {
-              liste.push({id:prof._id, utilisateur:prof.utilisateur.nom})
+              liste.push({id:prof._id, nom:prof.utilisateur.nom, prenom:prof.utilisateur.prenom})
             });
-            console.log(liste);
             currentComponent.setState({getProfs : liste});
             })
        )
@@ -101,7 +99,6 @@ class ModalMain extends Component {
 
     handleSubmit(event) {
       event.preventDefault();
-      console.log(this.state.ics);
 
       if (this.state.ics !== '') {
         fetch(window.location.protocol + '//' + window.location.hostname + ':3010/cours/ics',{
@@ -156,7 +153,7 @@ class ModalMain extends Component {
       this.setState({promo : event.target.value});
     };
 
-    handleChange = event => {
+    handleProfChange = event => {
       this.setState({prof : event.target.value});
     };
 
@@ -183,7 +180,7 @@ class ModalMain extends Component {
 
       var profs = this.state.getProfs.map( (prof) => {
         return (
-          <MenuItem key={prof.id} value={prof.id}>{prof.utilisateur.nom} {prof.utilisateur.prenom}</MenuItem>
+          <MenuItem key={prof.id} value={prof.id}>{prof.nom} {prof.prenom}</MenuItem>
         )
       });
 
@@ -292,7 +289,7 @@ class ModalMain extends Component {
                           fullWidth={this.state.fullWidth}
                           value={this.state.promo}
                           onChange={this.handleChange}
-                          // value={this.state.classe} onChange={(ev)=>this.setState({classe:ev.target.value})}
+                          //value={this.state.classe} onChange={(ev)=>this.setState({classe:ev.target.value})}
                           label="Promotion"
                           inputProps={{
                             name: 'promo',
@@ -309,9 +306,10 @@ class ModalMain extends Component {
                         <InputLabel htmlFor="selectProf">Professeur</InputLabel>
                         <Select
                           fullWidth={this.state.fullWidth}
-                          value={this.state.prof}
-                          onChange={this.handleChange}
-                          // value={this.state.classe} onChange={(ev)=>this.setState({classe:ev.target.value})}
+                          //value={this.state.prof}
+                          onChange={this.handleProfChange}
+                          //value={this.state.classe} 
+                          //onChange={(ev)=>this.setState({prof:ev.target.value})}
                           label="Professeur"
                           inputProps={{
                             name: 'prof',
@@ -348,7 +346,7 @@ class ModalMain extends Component {
                             <InputLabel htmlFor="selectPromo">Promotion</InputLabel>
                             <Select
                               fullWidth={this.state.fullWidth}
-                              value={this.state.promo}
+                              //value={this.state.promo}
                               onChange={this.handleChange}
                               // value={this.state.classe} onChange={(ev)=>this.setState({classe:ev.target.value})}
                               label="Promotion"

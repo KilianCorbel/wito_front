@@ -11,6 +11,11 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { withRouter } from 'react-router';
 import { withStyles } from '@material-ui/styles';
+import validate from '../../img/validate.jpg';
+import prof from '../../img/professeur.jpg';
+import students from '../../img/students.jpg';
+import promo from '../../img/promo.jfif';
+
 
 
 const styles = theme => ({
@@ -67,9 +72,9 @@ class Administration extends Component {
                         <CardActionArea href='/validation'>
                         <CardMedia
                             component="img"
-                            alt="Contemplative Reptile"
+                            alt="Validation"
                             height="140"
-                            image="https://i.imgur.com/DI9m4DK.jpg"
+                            image={validate}
                             title="Validation étudiants"
                             />
                             <CardContent>
@@ -94,7 +99,7 @@ class Administration extends Component {
                             component="img"
                             alt="Contemplative Reptile"
                             height="140"
-                            image="https://i.imgur.com/xz9IFHv.jpg"
+                            image={students}
                             title="Gestion étudiants"
                             />
                             <CardContent>
@@ -119,7 +124,7 @@ class Administration extends Component {
                             component="img"
                             alt="Contemplative Reptile"
                             height="140"
-                            image="https://i.imgur.com/ktKtM2t.jpg"
+                            image={prof}
                             title="Gestion professeurs"
                             />
                             <CardContent>
@@ -144,7 +149,7 @@ class Administration extends Component {
                             component="img"
                             alt="Contemplative Reptile"
                             height="140"
-                            image="https://i.imgur.com/1QLXjvc.jpg"
+                            image={promo}
                             title="Gestion promotion"
                             />
                             <CardContent>

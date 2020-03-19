@@ -12,7 +12,7 @@ import Menu from '@material-ui/core/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Disconnect from '@material-ui/icons/PowerSettingsNew';
-import MoreIcon from '@material-ui/icons/MoreVert';
+import MenuIcon from '@material-ui/icons/Menu';
 import PeopleIcon from '@material-ui/icons/People';
 import Button from '@material-ui/core/Button';
 import  { Redirect } from 'react-router-dom';
@@ -119,7 +119,7 @@ export default function MenuBar() {
   };
 
   const cours = () => {
-    this.props.history.push('/cours')
+    window.location.replace(window.location.protocol + '//' + window.location.hostname + ':3000/cours');
   }
 
   const etudiants = () => {
@@ -132,6 +132,10 @@ export default function MenuBar() {
 
   const promos = () => {
     window.location.replace(window.location.protocol + '//' + window.location.hostname + ':3000/promos');
+  }
+
+  const admin = () => {
+    window.location.replace(window.location.protocol + '//' + window.location.hostname + ':3000/admin');
   }
 
   function AdminBar(props) {
@@ -153,15 +157,10 @@ export default function MenuBar() {
     const role = localStorage.getItem('user_role');
     console.log("rolemb "+role);
     if (role === "administrateur") {
-      return  <MenuItem><Button 
-                aria-label="" 
-                color="inherit"
-                href='/admin'
-                >
-                  <PeopleIcon />
-              
-                <p className={classes.btMobile}>Administration</p>
-              </Button></MenuItem>;
+      return  <MenuItem onClick={admin}>
+                  <PeopleIcon />              
+                  <p className={classes.btMobile}>Administration</p>
+              </MenuItem>;
     }
     else {
       return <div></div>;
@@ -195,33 +194,17 @@ export default function MenuBar() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-          <Button 
-            aria-label="" 
-            color="inherit"
-            href='/cours'
-            
-            >
-              <PeopleIcon  />
-          
+      <MenuItem onClick={cours}>
+          <PeopleIcon  />
           <p className={classes.btMobile}>Liste des cours</p>
-          </Button>
-        
       </MenuItem>
 
       <AdminMenuBar />
       
       <MenuItem onClick={disconnect}>
-        <Button
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
           <AccountCircle />
         
           <p className={classes.btMobile}>Déconnexion</p>
-          </Button>
       </MenuItem>
     </Menu>
   );
@@ -288,7 +271,7 @@ export default function MenuBar() {
               onClick={handleMobileMenuOpen}
               color="inherit"
             >
-              <MoreIcon />
+              <MenuIcon />
             </IconButton>
           </div>
         </Toolbar>
