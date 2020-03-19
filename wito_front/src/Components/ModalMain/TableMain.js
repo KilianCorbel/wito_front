@@ -82,11 +82,13 @@ class TableMain extends Component {
         selectedTimeE : new Date(),
         salle : '',
         promo: '',
+        prof : '',
         openUpdate : false,
         display : false,
         fullWidth : true,
         maxWidth : 'sm',
         getPromos : [],
+        getProfs : []
       }
   }
 
@@ -122,6 +124,19 @@ class TableMain extends Component {
             currentComponent.setState({getPromos : list});
             })
     )
+    .then(
+      fetch(window.location.protocol + '//' + window.location.hostname + ':3010/professeurs/')
+          .then((resp) => resp.json())
+          .then(function(data) {
+          console.log("data get " + JSON.stringify(data));
+          var liste = [];
+          data.forEach(function(prof) {
+              liste.push({id:prof._id, utilisateur:prof.utilisateur.prenom})
+          });
+          console.log(liste);
+          currentComponent.setState({getprofs : liste});
+          })
+  )
     }
     if (localStorage.getItem('user_role') !== null && localStorage.getItem('user_role') !== "administrateur" && localStorage.getItem('user_id') !== null) {
       fetch(window.location.protocol + '//' + window.location.hostname + ':3010/cours/' + localStorage.getItem('user_role') + '/' + localStorage.getItem('user_id'))
@@ -150,6 +165,19 @@ class TableMain extends Component {
               currentComponent.setState({getPromos : list});
               })
       )
+      .then(
+        fetch(window.location.protocol + '//' + window.location.hostname + ':3010/professeurs/')
+            .then((resp) => resp.json())
+            .then(function(data) {
+            console.log("data get " + JSON.stringify(data));
+            var liste = [];
+            data.forEach(function(prof) {
+              liste.push({id:prof._id, utilisateur:prof.utilisateur.prenom})
+            });
+            console.log(liste);
+            currentComponent.setState({getprofs : liste});
+            })
+    )
     }    
   }
 
@@ -162,10 +190,15 @@ class TableMain extends Component {
     this.setState({selectedTimeE: new Date()});
     this.setState({salle: ''});
     this.setState({promo: ''});
+    this.setState({prof : ''});
   };
 
   handleChange = event => {
     this.setState({promo : event.target.value});
+  };
+
+  handleChange = event => {
+    this.setState({prof : event.target.value});
   };
 
   handleDateChange = date => {
@@ -192,18 +225,18 @@ class TableMain extends Component {
               heureD : document.getElementById('time-picker-begin').value,
               heureF : document.getElementById('time-picker-end').value,
               salle : this.state.salle,
-              classe : this.state.promo
+              classe : this.state.promo,
+              professeur : this.state.prof
         }),
         headers: {"Content-Type": "application/json"}
         })
         .then(function(response){
             console.log(response => response.json());
             console.log('promo ' + currentComponent.promo);
+            console.log('prof  ' + currentComponent.prof);
           //   return response => response.json()
         })
 
-      
-       
       this.setState({openUpdate : false});
       window.location.reload();
   }
@@ -224,6 +257,7 @@ class TableMain extends Component {
             currentComponent.setState({selectedTimeE: new Date(moment(date +' '+ cours.heureF).format())});
             currentComponent.setState({salle: cours.salle});
             currentComponent.setState({promo: cours.classe});
+            currentComponent.setState({prof : cours.professeur});
           })
 
       this.setState({openUpdate : true});
@@ -248,6 +282,12 @@ class TableMain extends Component {
     var promos = this.state.getPromos.map( (promo) => {
       return (
         <MenuItem key={promo.id} value={promo.id}>{promo.label}</MenuItem>
+      )
+    });
+
+    var profs = this.state.getProfs.map( (prof) => {
+      return (
+        <MenuItem key={prof.id} value={prof.id}>{prof.utilisateur.prenom}</MenuItem>
       )
     });
 
@@ -435,6 +475,24 @@ class TableMain extends Component {
                         </Select>
                       </FormControl>
                     </Grid>
+                    <Grid item xs={12} md={6}>
+                      <FormControl className={classes.formControl}>
+                        <InputLabel htmlFor="selectProf">Professeur</InputLabel>
+                        <Select
+                          value={this.state.prof}
+                          fullWidth
+                          onChange={this.handleChange}
+                          label="Professeur"
+                          inputProps={{
+                            name: 'prof',
+                            id: 'selectProf',
+                          }}
+                        >
+                          {profs}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+            
                   </Grid>
               </DialogContentText>
             </DialogContent>

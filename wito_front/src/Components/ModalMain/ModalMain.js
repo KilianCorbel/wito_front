@@ -60,6 +60,8 @@ class ModalMain extends Component {
           salle : '',
           promo: '',
           getPromos : [],
+          prof : '',
+          getProfs : [],
           open : false,
           fullWidth : true,
           maxWidth : 'sm',
@@ -81,6 +83,20 @@ class ModalMain extends Component {
           console.log(list);
           currentComponent.setState({getPromos : list});
         })
+
+       .then(
+         fetch(window.location.protocol + '//' + window.location.hostname + ':3010/professeurs/')
+          .then((resp) => resp.json())
+          .then(function(data) {
+            console.log("data get " + JSON.stringify(data));
+            var liste = [];
+            data.forEach(function(prof) {
+              liste.push({id:prof._id, utilisateur:prof.utilisateur.nom})
+            });
+            console.log(liste);
+            currentComponent.setState({getProfs : liste});
+            })
+       )
     }
 
     handleSubmit(event) {
@@ -140,6 +156,10 @@ class ModalMain extends Component {
       this.setState({promo : event.target.value});
     };
 
+    handleChange = event => {
+      this.setState({prof : event.target.value});
+    };
+
     handleDateChange = date => {
       this.setState({selectedDate : date});
     };
@@ -158,6 +178,12 @@ class ModalMain extends Component {
       var promos = this.state.getPromos.map( (promo) => {
         return (
           <MenuItem key={promo.id} value={promo.id}>{promo.label}</MenuItem>
+        )
+      });
+
+      var profs = this.state.getProfs.map( (prof) => {
+        return (
+          <MenuItem key={prof.id} value={prof.id}>{prof.utilisateur.nom} {prof.utilisateur.prenom}</MenuItem>
         )
       });
 
@@ -274,6 +300,25 @@ class ModalMain extends Component {
                           }}
                         >
                           {promos}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+
+                    <Grid item xs={12} md={6}>
+                      <FormControl className={classes.formControl}>
+                        <InputLabel htmlFor="selectProf">Professeur</InputLabel>
+                        <Select
+                          fullWidth={this.state.fullWidth}
+                          value={this.state.prof}
+                          onChange={this.handleChange}
+                          // value={this.state.classe} onChange={(ev)=>this.setState({classe:ev.target.value})}
+                          label="Professeur"
+                          inputProps={{
+                            name: 'prof',
+                            id: 'selectProf',
+                          }}
+                        >
+                          {profs}
                         </Select>
                       </FormControl>
                     </Grid>
