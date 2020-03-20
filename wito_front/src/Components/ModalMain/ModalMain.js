@@ -90,7 +90,7 @@ class ModalMain extends Component {
             console.log(data);
             var liste = [];
             data.forEach(function(prof) {
-              liste.push({id:prof._id, nom:prof.utilisateur.nom, prenom:prof.utilisateur.prenom})
+              liste.push({id:prof.utilisateur._id, nom:prof.utilisateur.nom, prenom:prof.utilisateur.prenom})
             });
             currentComponent.setState({getProfs : liste});
             })
@@ -124,7 +124,7 @@ class ModalMain extends Component {
             heureF : document.getElementById('time-picker-end').value,
             salle : this.state.salle,
             classe : this.state.promo,
-            professeur : localStorage.getItem('user_id')
+            professeur : this.state.prof
             }),
             headers: {"Content-Type": "application/json"}
             })

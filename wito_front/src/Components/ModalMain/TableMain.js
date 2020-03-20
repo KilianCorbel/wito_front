@@ -73,6 +73,7 @@ class TableMain extends Component {
     super(props);
     this.handleUpdate = this.handleUpdate.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.handleGeneratePDF = this.handleGeneratePDF.bind(this);
     this.state = {
         getCours : [],
         id: '',
@@ -270,6 +271,16 @@ class TableMain extends Component {
       window.location.reload();
   }
 
+  handleGeneratePDF = (id) => {
+    fetch(window.location.protocol + '//' + window.location.hostname + ':3010/PDF/'+ id)
+      .then((res) => res.json())
+      .then(function(response){
+          console.log(response => response.json());
+          return response => response.json()
+      })
+    //window.location.reload();
+  }
+
   render(){
     const { classes } = this.props;
     let gestion;
@@ -296,6 +307,9 @@ class TableMain extends Component {
             </Button>
             <Button size="small" color="secondary" onClick={(id) => this.handleDelete(idcours)}>
               Supprimer
+            </Button>
+            <Button size="small" color="secondary" onClick={(id) => this.handleGeneratePDF(idcours)}>
+              PDF
             </Button>
           </CardActions>
         )
