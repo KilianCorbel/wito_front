@@ -19,6 +19,8 @@ import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import DateFnsUtils from '@date-io/date-fns';
 import CheckAuth from '../Main/CheckAuth';
+import html2canvas from 'html2canvas';
+import jsPdf from 'jspdf';
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
@@ -113,12 +115,10 @@ class TableMain extends Component {
         fetch(window.location.protocol + '//' + window.location.hostname + ':3010/classes/')
             .then((resp) => resp.json())
             .then(function(data) {
-            console.log("data get " + JSON.stringify(data));
             var list = [];
             data.forEach(function(promo) {
                 list.push({id:promo._id, label:promo.label})
             });
-            console.log(list);
             currentComponent.setState({getPromos : list});
             })
     )
@@ -130,7 +130,6 @@ class TableMain extends Component {
           data.forEach(function(prof) {
             liste.push({id:prof._id, nom:prof.utilisateur.nom, prenom:prof.utilisateur.prenom})
           });
-          console.log(data);
           currentComponent.setState({getProfs : liste});
           })
   )
@@ -272,12 +271,20 @@ class TableMain extends Component {
   }
 
   handleGeneratePDF = (id) => {
-    fetch(window.location.protocol + '//' + window.location.hostname + ':3010/PDF/'+ id)
-      .then((res) => res.json())
-      .then(function(response){
-          console.log(response => response.json());
-          return response => response.json()
-      })
+    let doc = new jsPdf();
+
+    doc.setFont("times");
+    doc.setFontStyle("normal");
+    doc.setFontSize("32");
+    doc.text("Feuille de présence", 105, 20, null, null, "center");
+    doc.text("And a little bit more underneath it.", 105, 90, null, null, "center");
+
+    // fetch(window.location.protocol + '//' + window.location.hostname + ':3010/PDF/'+ id)
+    //   .then((res) => res.json())
+    //   .then(function(response){
+    //       console.log(response => response.json());
+    //       return response => response.json()
+    //   })
     //window.location.reload();
   }
 
@@ -328,14 +335,14 @@ class TableMain extends Component {
               <CardActionArea href={'/feuilleAppel/'+item._id} >
                   <CardContent>
                     <Grid container spacing={3}>
-                      <Grid item xs={6}>
+                      <Grid item xs={10}>
                         <Typography gutterBottom className={classes.typo} variant="h5" component="h2">
                           {item.nom}
                         </Typography>
                         <Typography variant="body2" color="textSecondary" className={classes.typo} component="p">
                           {item.professeur.utilisateur.prenom} {item.professeur.utilisateur.nom}
                           </Typography>
-                        </Grid>
+                      </Grid>
                     </Grid>
                     <Grid container spacing={3}>
                       <Grid item xs={3}>
@@ -376,7 +383,7 @@ class TableMain extends Component {
 
     return (
       <div className={classes.root}>
-        <Grid spacing={3}>
+        <Grid container spacing={0}>
 
           <CheckAuth />
           

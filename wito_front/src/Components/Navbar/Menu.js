@@ -140,7 +140,6 @@ export default function MenuBar() {
 
   function AdminBar(props) {
     const role = localStorage.getItem('user_role');
-    console.log("role "+role);
     if (role === "administrateur") {
       return <Button 
               color="inherit" 
@@ -155,7 +154,6 @@ export default function MenuBar() {
 
   function AdminMenuBar(props) {
     const role = localStorage.getItem('user_role');
-    console.log("rolemb "+role);
     if (role === "administrateur") {
       return  <MenuItem onClick={admin}>
                   <PeopleIcon />              

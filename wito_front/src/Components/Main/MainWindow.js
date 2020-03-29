@@ -6,7 +6,6 @@ import MenuBar from '../Navbar/Menu';
 
 function DisplayModal(props) {
     const role = props.role;
-    console.log("role "+role);
     if (role === "administrateur") {
         return <ModalMain />;
     }

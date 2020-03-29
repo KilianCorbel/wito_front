@@ -20,6 +20,7 @@ import AccesRefuse from './Components/Main/AccesRefuse';
 const routing = (
     <Router>
       <div>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
         <Switch>
             <Route exact path="/" component={SignIn} />
             <Route path="/signup" component={SignUp} />

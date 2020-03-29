@@ -79,7 +79,6 @@ class ModalMain extends Component {
           data.forEach(function(promo) {
               list.push({id:promo._id, label:promo.label})
           });
-          console.log(list);
           currentComponent.setState({getPromos : list});
         })
 
@@ -87,7 +86,6 @@ class ModalMain extends Component {
          fetch(window.location.protocol + '//' + window.location.hostname + ':3010/professeurs/')
           .then((resp) => resp.json())
           .then(function(data) {
-            console.log(data);
             var liste = [];
             data.forEach(function(prof) {
               liste.push({id:prof.utilisateur._id, nom:prof.utilisateur.nom, prenom:prof.utilisateur.prenom})
@@ -330,7 +328,7 @@ class ModalMain extends Component {
                             Import iCalendar
                         </Typography>
                     </Grid>
-                    <Grid container xs={8}  >
+                    <Grid item xs={8}  >
                         <Grid item xs={12} >
                           <TextField
                             margin="dense"
