@@ -162,6 +162,10 @@ class GestionPromos extends Component {
     componentDidMount() {
         let currentComponent = this;
 
+        if (localStorage.getItem('user_role') !== "administrateur") {
+            window.location.replace(window.location.protocol + '//' + window.location.hostname + ':3000/cours');
+          }
+
         fetch(window.location.protocol + '//' + window.location.hostname + ':3010/classes/')
             .then((res) => res.json())
             .then(function(promos) {
@@ -203,7 +207,7 @@ class GestionPromos extends Component {
         return (
             <div className={classes.root}>
                 <CheckAuth />
-            <Grid container spacing={3}>
+            <Grid spacing={3}>
                 <Grid item xs={3}></Grid>
 
                 <Grid item xs={6}>
@@ -242,7 +246,7 @@ class GestionPromos extends Component {
                 <Grid item xs={3}></Grid>
             </Grid>
 
-            <Grid container spacing={5}>
+            <Grid spacing={5}>
                 <Grid item xs={3}></Grid>
                 <Grid item xs={6}>
                     <Button

@@ -10,7 +10,10 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import html2canvas from 'html2canvas';
+import jsPdf from 'jspdf';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import Icon from '@material-ui/core/Icon';
 import { withStyles } from '@material-ui/styles';
 import CheckAuth from '../Main/CheckAuth';
 
@@ -29,6 +32,8 @@ const styles = theme => ({
     qr: {
       textAlign: 'center',
       marginTop: '6vh',
+      marginLeft: '5vh',
+      marginRight: '5vh',
     },
     promo: {
       padding: "2vh",
@@ -42,9 +47,14 @@ const styles = theme => ({
     },
     titreCours: {
       fontSize: "14px"
+    },
+    qrcode: {
+      width: 'auto',
+    },
+    export: {
+      marginLeft: '5vw',
     }
   });
-
 
 class FeuilleAppel extends Component{
   constructor(props) {
@@ -52,7 +62,10 @@ class FeuilleAppel extends Component{
     this.state = {
         idcours : '',
         getCours: '',
+        prenom: '',
+        nom: '',
         cours : null,
+        nomCours: '',
         classe : null,
         etudiants: [],
         open : false,
@@ -68,6 +81,8 @@ class FeuilleAppel extends Component{
       }
   }
 
+  
+
   componentDidMount() {
     let currentComponent = this;
 
@@ -82,30 +97,80 @@ class FeuilleAppel extends Component{
       .then(function(cours) {
         console.log(cours);
         currentComponent.setState(cours);
-        currentComponent.setState({getCours:cours});
+        currentComponent.setState({nomCours : cours.nom});
+        currentComponent.setState({prenom : cours.professeur.utilisateur.prenom});
+        currentComponent.setState({nom : cours.professeur.utilisateur.nom});
+        console.log(currentComponent.state.prenom);
         
         // let id = cours._id;
         // currentComponent.setState(id);
 
-        fetch(window.location.protocol + '//' + window.location.hostname + ':3010/classes/' + cours.classe)
+        fetch(window.location.protocol + '//' + window.location.hostname + ':3010/classes/' + cours.classe._id)
           .then((resp) => resp.json())
           .then(function(classe) {
             console.log(classe);
             currentComponent.setState(classe);
           })
 
-        fetch(window.location.protocol + '//' + window.location.hostname + ':3010/etudiants/classe/'+ cours.classe)
+        fetch(window.location.protocol + '//' + window.location.hostname + ':3010/etudiants/classe/'+ cours.classe._id)
           .then((resp) => resp.json())
-          .then(function(etudiants) {
+          .then(function(data) {
+            var etudiants = [];
+
+            data.forEach(function(etudiant) {
+              etudiant.color = "secondary";
+
+              cours.presents.some(function(present) {
+                if(present._id === etudiant._id) {
+                  etudiant.color = "primary";
+                  return true;
+                }
+              });
+              
+              cours.presentsProvisoire.some(function(provisoire) {
+                if(provisoire._id === etudiant._id) {
+                  etudiant.color = "disabled";
+                  return true;
+                }
+              });
+
+              etudiants.push(etudiant);
+            });
+
             console.log(etudiants);
             currentComponent.setState({etudiants});
           })
       })
   }
 
+  generatePdf(event) {
+    event.preventDefault();
+
+    const students = document.getElementById('std');
+    const cours = document.getElementById('cours');
+    html2canvas(students, { onclone: (document) => {
+      //document.getElementById('print-button').style.visibility = 'hidden'
+    }})
+    .then((canvas) => {
+      html2canvas(cours, { onclone: (document) => {
+        //document.getElementById('print-button').style.visibility = 'hidden'
+      }})
+      .then((result) => {
+        const img = canvas.toDataURL('image/png');
+        const img2 = result.toDataURL('image/png');
+        const pdf = new jsPdf()
+        pdf.addImage(img2, 'JPEG', 20, 10, 100, 50);
+        pdf.addImage(img, 'JPEG', 25, 80, 100, 60);
+        
+        pdf.save('your-filename.pdf')
+      });        
+  });
+}
+
   render() {
     const {classes} = this.props;
     const cours = this.state;
+    const prof = this.state;
     const classe = this.state;
     const {etudiants} = this.state;
 
@@ -117,56 +182,66 @@ class FeuilleAppel extends Component{
       );
     }); */
     
-    return (      
+    return (
       <div>
         <div>
           <Navbar/>
           <CheckAuth />
         </div> 
-        <div className={classes.root}>
-          <Grid container spacing={3}>
-            <Grid item xs={4}>
-              <Paper className={classes.promo} elevation={0}>
-                <Typography variant="h5" color="textSecondary">
-                  Promotion {classe.label}
-                </Typography>
-                <List className={classes.list} aria-label="promotion">                  
-                    {etudiants.map(etudiant =>
-                      <ListItem key={etudiant._id} className={classes.listPromo} button>
-                        <ListItemText  primary={etudiant.utilisateur.nom+' '+etudiant.utilisateur.prenom} />
-                        <ListItemIcon>
-                          {/* A Changer quand l'étudiant est marqué présent */}
-                          
-                          <CheckCircleOutlineIcon color="disabled" />
-                        </ListItemIcon>
-                      </ListItem>
-                    )}
-                </List>
-              </Paper>
+        <div id="root" className={classes.root}>
+          <Grid container>
+            <Grid xs={12}>
+              <Button className={classes.export} onClick={this.generatePdf} variant="contained" color="secondary">
+                Export PDF
+              </Button>
+            </Grid>
+            <Grid xs={12} md={4} xl={4}>
+              <div id="students">
+                <Paper id="std" className={classes.promo} elevation={0}>
+                  <Typography variant="h5" color="textSecondary">
+                    Promotion {classe.label}
+                  </Typography>
+                  <List className={classes.list} aria-label="promotion">                  
+                      {etudiants.map(etudiant =>
+                        <ListItem key={etudiant._id}  primary={etudiant.color} className={classes.listPromo} button>
+                          <ListItemText  primary={etudiant.utilisateur.nom+' '+etudiant.utilisateur.prenom} />
+                          {/* <ListItemIcon color={etudiant.color}> */}
+                            {/* A Changer quand l'étudiant est marqué présent */}
+                            
+                            <Icon color={etudiant.color}>checkcircle</Icon>
+                          {/* </ListItemIcon> */}
+                        </ListItem>
+                      )}
+                  </List>
+                </Paper>
+              </div>
             </Grid>
 
-            <Grid item xs={4}>
+            <Grid xs={12} md={4} xl={4}>
               <Paper className={classes.qr} elevation={0}>
                 <QRCode
                   level="Q"
-                  style={{ width: 400 }}
+                  className={classes.qrcode}
                    value={window.location.origin + '/signature/'+ this.state.idcours}
                 />
               </Paper>
             </Grid>
 
-            <Grid item xs={4}>
-              <Paper elevation={0} className={classes.cours}>
+            <Grid xs={12} md={4} xl={4}>
+              <Paper id="cours" elevation={0} className={classes.cours}>
                   <Typography className={classes.titreCours} color="textSecondary" gutterBottom>
                     Cours du {cours.date}
                   </Typography>
                   <Typography variant="h5" >
-                    {cours.nom}
+                    {this.state.nomCours}
+                  </Typography>
+                  <Typography className={classes.titreCours} color="textSecondary" gutterBottom>
+                    {this.state.prenom} {this.state.nom}
                   </Typography>
                   <Typography className={classes.pos} color="textSecondary">
                     {cours.heureD} - {cours.heureF}
                   </Typography>
-                  <Button size="small" color="primary">Plus de cours</Button>
+                  {/* <Button size="small" color="primary">Plus de cours</Button> */}
                 </Paper>
             </Grid>
           </Grid>

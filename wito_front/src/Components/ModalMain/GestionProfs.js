@@ -162,6 +162,10 @@ class GestionProfs extends Component {
     componentDidMount() {
         let currentComponent = this;
 
+        if (localStorage.getItem('user_role') !== "administrateur") {
+            window.location.replace(window.location.protocol + '//' + window.location.hostname + ':3000/cours');
+          }
+
         fetch(window.location.protocol + '//' + window.location.hostname + ':3010/professeurs/')
             .then((res) => res.json())
             .then(function(profs) {
@@ -214,7 +218,7 @@ class GestionProfs extends Component {
         return (
             <div className={classes.root}>
                 <CheckAuth/>
-                <Grid container spacing={3}>
+                <Grid spacing={3}>
                     <Grid item xs={3}></Grid>
 
                     <Grid item xs={6}>
@@ -225,7 +229,6 @@ class GestionProfs extends Component {
                                         <TableCell>Nom</TableCell>
                                         <TableCell align="center">Prénom</TableCell>
                                         <TableCell align="center">Mail</TableCell>
-                                        <TableCell align="center">Mot de passe</TableCell>
                                         <TableCell align="center">Actions</TableCell>
                                     </TableRow>
                                 </TableHead>
@@ -237,7 +240,6 @@ class GestionProfs extends Component {
                                             </TableCell>
                                             <TableCell align="center">{row.utilisateur.prenom}</TableCell>
                                             <TableCell align="center">{row.mail}</TableCell>
-                                            <TableCell align="center">{row.utilisateur.mdp}</TableCell>
                                             <TableCell align="center">
                     
                                                 <Fab color="primary" className={classes.icons} onClick={(id, studentID) => this.handleUpdateClickOpen(row.utilisateur._id, row._id)} size="small" aria-label="edit">
@@ -258,7 +260,7 @@ class GestionProfs extends Component {
                     <Grid item xs={3}></Grid>
                 </Grid>
 
-                <Grid container spacing={5}>
+                <Grid spacing={5}>
                     <Grid item xs={3}></Grid>
                     <Grid item xs={6}>
                         <Button

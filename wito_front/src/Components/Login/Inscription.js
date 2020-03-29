@@ -55,8 +55,8 @@ const useStyles = makeStyles(theme => ({
 export default function SignUp() {
     let submit = function (){
       let utilisateur = {
-        nom : document.getElementById('firstName').value,
-        prenom : document.getElementById('lastName').value,
+        prenom : document.getElementById('firstName').value,
+        nom : document.getElementById('lastName').value,
         mail : document.getElementById('email').value,
         mdp : document.getElementById('password').value
       }
@@ -65,7 +65,7 @@ export default function SignUp() {
       let role = "professeur";
       
       if(document.getElementById('isStudent').checked) {
-        role = "etudiant";
+        role = "inscrit";
       }
       fetch(window.location.protocol + '//' + window.location.hostname + ':3010/utilisateurs/',{
             method: 'POST',

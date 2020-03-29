@@ -12,6 +12,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
 import DateFnsUtils from '@date-io/date-fns';
 import {
   MuiPickersUtilsProvider,
@@ -35,6 +37,13 @@ const styles = theme => ({
     },
     formControlLabel: {
       //marginTop: theme.spacing(1),
+    },
+    typo: {
+      marginTop:'25px',
+    },
+    divider: {
+      marginTop: '20px',
+      marginBottom: '20px',
     }
 });
 
@@ -51,9 +60,12 @@ class ModalMain extends Component {
           salle : '',
           promo: '',
           getPromos : [],
+          prof : '',
+          getProfs : [],
           open : false,
           fullWidth : true,
-          maxWidth : 'sm'
+          maxWidth : 'sm',
+          ics : '',
         }
     }
 
@@ -63,53 +75,68 @@ class ModalMain extends Component {
       fetch(window.location.protocol + '//' + window.location.hostname + ':3010/classes/')
         .then((resp) => resp.json())
         .then(function(data) {
-          console.log("data get " + JSON.stringify(data));
           var list = [];
           data.forEach(function(promo) {
               list.push({id:promo._id, label:promo.label})
           });
-          console.log(list);
           currentComponent.setState({getPromos : list});
         })
+
+       .then(
+         fetch(window.location.protocol + '//' + window.location.hostname + ':3010/professeurs/')
+          .then((resp) => resp.json())
+          .then(function(data) {
+            var liste = [];
+            data.forEach(function(prof) {
+              liste.push({id:prof.utilisateur._id, nom:prof.utilisateur.nom, prenom:prof.utilisateur.prenom})
+            });
+            currentComponent.setState({getProfs : liste});
+            })
+       )
     }
 
     handleSubmit(event) {
       event.preventDefault();
 
-      /*
-      let utilisateur = {
-        nom : this.state.nom,
-        date : document.getElementById('date-picker-inline').value,
-        heureD : document.getElementById('time-picker-begin').value,
-        heureF : document.getElementById('time-picker-end').value,
-        salle : this.state.salle,
-        classe : this.state.promo,
-        professeur : "5da02ccee841151c1cb1b00d"//localStorage.getItem('user_id')
+      if (this.state.ics !== '') {
+        fetch(window.location.protocol + '//' + window.location.hostname + ':3010/cours/ics',{
+          method: 'POST',
+          body: JSON.stringify({
+            lien : this.state.ics,
+            classe : this.state.promo
+            }),
+            headers: {"Content-Type": "application/json"}
+            })
+            .then(function(response){
+                console.log(response.json());
+                window.location.reload();
+            })
       }
-      console.log("utilisateur: " + JSON.stringify(utilisateur));
-      */
+      else {
+        fetch(window.location.protocol + '//' + window.location.hostname + ':3010/cours/',{
+          method: 'POST',
+          body: JSON.stringify({
+            nom : this.state.nom,
+            date : document.getElementById('date-picker-inline').value,
+            heureD : document.getElementById('time-picker-begin').value,
+            heureF : document.getElementById('time-picker-end').value,
+            salle : this.state.salle,
+            classe : this.state.promo,
+            professeur : this.state.prof
+            }),
+            headers: {"Content-Type": "application/json"}
+            })
+            .then(function(response){
+                console.log(response => response.json());
+                return response => response.json()
+            })
+          
+          this.setState({open : false});
+          window.location.reload();
+        }
+      }
 
-      fetch(window.location.protocol + '//' + window.location.hostname + ':3010/cours/',{
-            method: 'POST',
-            body: JSON.stringify({
-              nom : this.state.nom,
-              date : document.getElementById('date-picker-inline').value,
-              heureD : document.getElementById('time-picker-begin').value,
-              heureF : document.getElementById('time-picker-end').value,
-              salle : this.state.salle,
-              classe : this.state.promo,
-              professeur : localStorage.getItem('user_id')
-        }),
-        headers: {"Content-Type": "application/json"}
-        })
-        .then(function(response){
-            console.log(response => response.json());
-            return response => response.json()
-        })
-       
-      this.setState({open : false});
-      window.location.reload();
-    }
+      
 
     handleClickOpen = () => {
       this.setState({open : true});
@@ -122,6 +149,10 @@ class ModalMain extends Component {
 
     handleChange = event => {
       this.setState({promo : event.target.value});
+    };
+
+    handleProfChange = event => {
+      this.setState({prof : event.target.value});
     };
 
     handleDateChange = date => {
@@ -142,6 +173,12 @@ class ModalMain extends Component {
       var promos = this.state.getPromos.map( (promo) => {
         return (
           <MenuItem key={promo.id} value={promo.id}>{promo.label}</MenuItem>
+        )
+      });
+
+      var profs = this.state.getProfs.map( (prof) => {
+        return (
+          <MenuItem key={prof.id} value={prof.id}>{prof.nom} {prof.prenom}</MenuItem>
         )
       });
 
@@ -250,7 +287,7 @@ class ModalMain extends Component {
                           fullWidth={this.state.fullWidth}
                           value={this.state.promo}
                           onChange={this.handleChange}
-                          // value={this.state.classe} onChange={(ev)=>this.setState({classe:ev.target.value})}
+                          //value={this.state.classe} onChange={(ev)=>this.setState({classe:ev.target.value})}
                           label="Promotion"
                           inputProps={{
                             name: 'promo',
@@ -261,6 +298,68 @@ class ModalMain extends Component {
                         </Select>
                       </FormControl>
                     </Grid>
+
+                    <Grid item xs={12} md={6}>
+                      <FormControl className={classes.formControl}>
+                        <InputLabel htmlFor="selectProf">Professeur</InputLabel>
+                        <Select
+                          fullWidth={this.state.fullWidth}
+                          //value={this.state.prof}
+                          onChange={this.handleProfChange}
+                          //value={this.state.classe} 
+                          //onChange={(ev)=>this.setState({prof:ev.target.value})}
+                          label="Professeur"
+                          inputProps={{
+                            name: 'prof',
+                            id: 'selectProf',
+                          }}
+                        >
+                          {profs}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    
+                  </Grid>
+                  <Divider className={classes.divider} />
+
+                  <Grid container spacing={3}> 
+                    <Grid item xs={4}  >
+                        <Typography gutterBottom className={classes.typo} color="primary" variant="p" component="div">
+                            Import iCalendar
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={8}  >
+                        <Grid item xs={12} >
+                          <TextField
+                            margin="dense"
+                            id="ical"
+                            label="Lien fichier .ics"
+                            type="name"
+                            value={this.state.ics} onChange={(ev)=>this.setState({ics:ev.target.value})}
+                            fullWidth={this.state.fullWidth}
+                          />
+                        </Grid>
+                        <Grid item xs={12} >
+                          <FormControl className={classes.formControl}>
+                            <InputLabel htmlFor="selectPromo">Promotion</InputLabel>
+                            <Select
+                              fullWidth={this.state.fullWidth}
+                              //value={this.state.promo}
+                              onChange={this.handleChange}
+                              // value={this.state.classe} onChange={(ev)=>this.setState({classe:ev.target.value})}
+                              label="Promotion"
+                              inputProps={{
+                                name: 'promo',
+                                id: 'selectPromo',
+                              }}
+                            >
+                              {promos}
+                            </Select>
+                          </FormControl>
+                        </Grid>
+                      
+                    </Grid>
+                    
                   </Grid>
               </DialogContentText>
             </DialogContent>

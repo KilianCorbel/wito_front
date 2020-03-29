@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
-import Navbar from '../Navbar/Menu';
-import TableGestionCours from '../ModalMain/TableGestionCours';
+import ValiderEtudiant from '../ModalMain/ValiderEtudiant';
+import MenuBar from '../Navbar/Menu';
 
 class MainWindow extends Component {
+    
+
     render() {
         return(
            <div>
                <div>
-                    <Navbar/>
+                    <MenuBar/> 
                 </div>
                 <br/>
                 <div align="center">
-                    <TableGestionCours/>
+                    <ValiderEtudiant />
                 </div>
-                
            </div>
         
         );

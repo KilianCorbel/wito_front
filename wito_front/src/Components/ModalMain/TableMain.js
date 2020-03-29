@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
@@ -18,6 +19,8 @@ import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import DateFnsUtils from '@date-io/date-fns';
 import CheckAuth from '../Main/CheckAuth';
+import html2canvas from 'html2canvas';
+import jsPdf from 'jspdf';
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
@@ -26,6 +29,8 @@ import {
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/styles';
+
+import moment from 'moment';
 
 const styles = theme => ({
   root: {
@@ -37,6 +42,7 @@ const styles = theme => ({
   },
   row: {
     margin: 0,
+    marginBottom: 15,
   },
   card: {
   },
@@ -67,30 +73,35 @@ const styles = theme => ({
 class TableMain extends Component {
   constructor(props) {
     super(props);
+    this.handleUpdate = this.handleUpdate.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+    this.handleGeneratePDF = this.handleGeneratePDF.bind(this);
     this.state = {
         getCours : [],
-        open : false,
+        id: '',
+        nom : '',
+        selectedDate : new Date(),
+        selectedTimeS : new Date(),
+        selectedTimeE : new Date(),
+        salle : '',
+        promo: '',
+        prof : '',
+        openUpdate : false,
         display : false,
         fullWidth : true,
         maxWidth : 'sm',
-        values : {
-          promo: '',
-        },
-        selectedDate : new Date(),
-        selectedTimeS : new Date(),
-        selectedTimeE : new Date()
+        getPromos : [],
+        getProfs : []
       }
   }
 
   componentDidMount() {
     let currentComponent = this;
-    console.log("user role " + localStorage.getItem('user_role'));
-    console.log("user id " + localStorage.getItem('user_id'));
-    if (localStorage.getItem('user_role') !== null && localStorage.getItem('user_id') !== null) {
-      fetch(window.location.protocol + '//' + window.location.hostname + ':3010/cours/' + localStorage.getItem('user_role') + '/' + localStorage.getItem('user_id'))
+
+    if(localStorage.getItem('user_role') === "administrateur" && localStorage.getItem('user_id') !== null) {
+      fetch(window.location.protocol + '//' + window.location.hostname + ':3010/cours/')
       .then((resp) => resp.json())
       .then(function(data) {
-        console.log("data get " + JSON.stringify(data));
         var list = [];
         if (JSON.stringify(data) != '{}') {
           data.forEach(function(cours) {
@@ -100,22 +111,88 @@ class TableMain extends Component {
         console.log(list);
         currentComponent.setState({getCours : list});
       })
+      .then(
+        fetch(window.location.protocol + '//' + window.location.hostname + ':3010/classes/')
+            .then((resp) => resp.json())
+            .then(function(data) {
+            var list = [];
+            data.forEach(function(promo) {
+                list.push({id:promo._id, label:promo.label})
+            });
+            currentComponent.setState({getPromos : list});
+            })
+    )
+    .then(
+      fetch(window.location.protocol + '//' + window.location.hostname + ':3010/professeurs/')
+          .then((resp) => resp.json())
+          .then(function(data) {
+          var liste = [];
+          data.forEach(function(prof) {
+            liste.push({id:prof._id, nom:prof.utilisateur.nom, prenom:prof.utilisateur.prenom})
+          });
+          currentComponent.setState({getProfs : liste});
+          })
+  )
+    }
+    if (localStorage.getItem('user_role') !== null && localStorage.getItem('user_role') !== "administrateur" && localStorage.getItem('user_id') !== null) {
+      fetch(window.location.protocol + '//' + window.location.hostname + ':3010/cours/' + localStorage.getItem('user_role') + '/' + localStorage.getItem('user_id'))
+      .then((resp) => resp.json())
+      .then(function(data) {
+        console.log(data);
+        var list = [];
+        if (JSON.stringify(data) != '{}') {
+          data.forEach(function(cours) {
+            list.push(cours)
+          });
+        }        
+        console.log(list);
+        currentComponent.setState({getCours : list});
+      })
+      .then(
+          fetch(window.location.protocol + '//' + window.location.hostname + ':3010/classes/')
+              .then((resp) => resp.json())
+              .then(function(data) {
+              var list = [];
+              data.forEach(function(promo) {
+                  list.push({id:promo._id, label:promo.label})
+              });
+              console.log(list);
+              currentComponent.setState({getPromos : list});
+              })
+      )
+      .then(
+        fetch(window.location.protocol + '//' + window.location.hostname + ':3010/professeurs/')
+            .then((resp) => resp.json())
+            .then(function(data) {
+            var liste = [];
+            data.forEach(function(prof) {
+              liste.push({id:prof._id, nom:prof.utilisateur.nom, prenom:prof.utilisateur.prenom})
+            });
+            console.log(liste);
+            currentComponent.setState({getProfs : liste});
+            })
+    )
     }    
   }
 
-  handleClickOpen = (id) => {
-    this.setState({open : true});
-  };
+  handleUpdateClose = () => {
+    this.setState({openUpdate : false});
 
-  handleClose = () => {
-    this.setState({open : false});
+    this.setState({nom: ''});
+    this.setState({selectedDate: new Date()});
+    this.setState({selectedTimeS: new Date()});
+    this.setState({selectedTimeE: new Date()});
+    this.setState({salle: ''});
+    this.setState({promo: ''});
+    this.setState({prof : ''});
   };
 
   handleChange = event => {
-    this.setState({values : oldValues => ({
-      ...oldValues,
-      [event.target.name]: event.target.value,
-    })});
+    this.setState({promo : event.target.value});
+  };
+
+  handleProfChange = event => {
+    this.setState({prof : event.target.value});
   };
 
   handleDateChange = date => {
@@ -130,28 +207,141 @@ class TableMain extends Component {
     this.setState({selectedTimeE : time});
   };
 
+  handleUpdate(event) {
+      event.preventDefault();
+      let currentComponent = this.state;
+
+      fetch(window.location.protocol + '//' + window.location.hostname + ':3010/cours/' + this.state.id,{
+            method: 'PUT',
+            body: JSON.stringify({
+              nom : this.state.nom,
+              date : document.getElementById('date-picker-inline').value,
+              heureD : document.getElementById('time-picker-begin').value,
+              heureF : document.getElementById('time-picker-end').value,
+              salle : this.state.salle,
+              classe : this.state.promo,
+              professeur : this.state.prof
+        }),
+        headers: {"Content-Type": "application/json"}
+        })
+        .then(function(response){
+            console.log(response => response.json());
+            console.log('promo ' + currentComponent.promo);
+            console.log('prof  ' + currentComponent.prof);
+          //   return response => response.json()
+        })
+
+      this.setState({openUpdate : false});
+      //window.location.reload();
+  }
+
+  handleUpdateClickOpen = (id) => {
+      let currentComponent = this;
+      this.setState({id: id});
+
+      fetch(window.location.protocol + '//' + window.location.hostname + ':3010/cours/' + id)
+          .then((res) => res.json())
+          .then(function(cours) {
+            console.log(cours);
+            var date = cours.date.split("/");
+            date = date[1] + "/" + date[0] + "/" + date[2];
+              
+            currentComponent.setState({nom: cours.nom});
+            currentComponent.setState({selectedDate: new Date(date)});
+            currentComponent.setState({selectedTimeS: new Date(moment(date +' '+ cours.heureD).format())});
+            currentComponent.setState({selectedTimeE: new Date(moment(date +' '+ cours.heureF).format())});
+            currentComponent.setState({salle: cours.salle});
+            currentComponent.setState({promo: cours.classe});
+            currentComponent.setState({prof : cours.professeur._id});
+          })
+
+      this.setState({openUpdate : true});
+  };
+
+  handleDelete = (id) => {
+      fetch(window.location.protocol + '//' + window.location.hostname + ':3010/cours/'+id,{
+              method: 'DELETE',
+              headers: {"Content-Type": "application/json"}
+          })
+          .then(function(response){
+              console.log(response => response.json());
+              return response => response.json()
+          })
+      window.location.reload();
+  }
+
+  handleGeneratePDF = (id) => {
+    let doc = new jsPdf();
+
+    doc.setFont("times");
+    doc.setFontStyle("normal");
+    doc.setFontSize("32");
+    doc.text("Feuille de présence", 105, 20, null, null, "center");
+    doc.text("And a little bit more underneath it.", 105, 90, null, null, "center");
+
+    // fetch(window.location.protocol + '//' + window.location.hostname + ':3010/PDF/'+ id)
+    //   .then((res) => res.json())
+    //   .then(function(response){
+    //       console.log(response => response.json());
+    //       return response => response.json()
+    //   })
+    //window.location.reload();
+  }
+
   render(){
     const { classes } = this.props;
+    let gestion;
+
+    var promos = this.state.getPromos.map( (promo) => {
+      return (
+        <MenuItem key={promo.id} value={promo.id}>{promo.label}</MenuItem>
+      )
+    });
+
+    var profs = this.state.getProfs.map( (prof) => {
+      return (
+        <MenuItem key={prof.id} value={prof.id}>{prof.nom} {prof.prenom}</MenuItem>
+      )
+    });
+
+    if(localStorage.getItem('user_role') == "administrateur") {
+      {/* Modification possible si le user co est un admin */}
+      gestion = (idcours) => {
+        return (
+          <CardActions>
+            <Button size="small" color="primary" onClick={(id) => this.handleUpdateClickOpen(idcours)}>
+              Modifier
+            </Button>
+            <Button size="small" color="secondary" onClick={(id) => this.handleDelete(idcours)}>
+              Supprimer
+            </Button>
+            <Button size="small" color="secondary" onClick={(id) => this.handleGeneratePDF(idcours)}>
+              PDF
+            </Button>
+          </CardActions>
+        )
+      }
+    } else {
+      gestion = (id) => {
+      }
+    }
 
     var cours = this.state.getCours.map( (item, index) => {
       return (
-        <Grid key={item._id} container spacing={3} className={classes.row}>
+        <Grid key={item._id} container  className={classes.row}>
             <Grid item xs={2}></Grid>
             <Grid item md={8}>
               <Card className={classes.card} >
               <CardActionArea href={'/feuilleAppel/'+item._id} >
                   <CardContent>
                     <Grid container spacing={3}>
-                      <Grid item xs={3}>
+                      <Grid item xs={10}>
                         <Typography gutterBottom className={classes.typo} variant="h5" component="h2">
                           {item.nom}
                         </Typography>
                         <Typography variant="body2" color="textSecondary" className={classes.typo} component="p">
                           {item.professeur.utilisateur.prenom} {item.professeur.utilisateur.nom}
                           </Typography>
-                        </Grid>
-                      <Grid item xs={3}>
-                        
                       </Grid>
                     </Grid>
                     <Grid container spacing={3}>
@@ -183,18 +373,7 @@ class TableMain extends Component {
                     value={(item.presents.length / 20) * 100}
                     variant="determinate"
                   />
-                
-                {/* A n'afficher que si le user co est prof */}
-                {/*
-                <CardActions>
-                  <Button size="small" color="primary" onClick={this.handleClickOpen(item._id)}>
-                    Modifier
-                  </Button>
-                  <Button size="small" color="secondary">
-                    Supprimer
-                  </Button>
-                </CardActions>
-                */}
+                    {gestion(item._id)}
               </Card>
             </Grid>
             <Grid item xs={2}></Grid>
@@ -204,7 +383,7 @@ class TableMain extends Component {
 
     return (
       <div className={classes.root}>
-        <Grid container spacing={3}>
+        <Grid container spacing={0}>
 
           <CheckAuth />
           
@@ -213,8 +392,8 @@ class TableMain extends Component {
           <Dialog
             fullWidth={this.state.fullWidth}
             maxWidth={this.state.maxWidth}
-            open={this.state.open}
-            onClose={this.state.handleClose}
+            open={this.state.openUpdate}
+            onClose={this.state.handleUpdateClose}
             aria-labelledby="max-width-dialog-title"
           >
             
@@ -233,6 +412,8 @@ class TableMain extends Component {
                         label="Nom du cours"
                         type="name"
                         fullWidth
+                        value={this.state.nom}
+                        onChange={(ev)=>this.setState({nom:ev.target.value})}
                       />
                     </Grid>                  
                     
@@ -245,7 +426,7 @@ class TableMain extends Component {
                           id="date-picker-inline"
                           label="Date du cours"
                           value={this.state.selectedDate}
-                          onChange={this.state.handleDateChange}
+                          onChange={this.handleDateChange}
                           KeyboardButtonProps={{
                             'aria-label': 'change date',
                           }}
@@ -257,10 +438,10 @@ class TableMain extends Component {
                     <Grid item xs={12} md={6}>
                     <KeyboardTimePicker
                       margin="normal"
-                      id="time-picker"
+                      id="time-picker-begin"
                       label="Heure de début"
                       value={this.state.selectedTimeS}
-                      onChange={this.state.handleTimeChangeS}
+                      onChange={this.handleTimeChangeS}
                       KeyboardButtonProps={{
                         'aria-label': 'Modifier l\'heure',
                       }}
@@ -269,10 +450,10 @@ class TableMain extends Component {
                     <Grid item xs={12} md={6}>
                       <KeyboardTimePicker
                         margin="normal"
-                        id="time-picker"
+                        id="time-picker-end"
                         label="Heure de fin"
                         value={this.state.selectedTimeE}
-                        onChange={this.state.handleTimeChangeE}
+                        onChange={this.handleTimeChangeE}
                         KeyboardButtonProps={{
                           'aria-label': 'Modifier l\'heure',
                         }}
@@ -289,38 +470,53 @@ class TableMain extends Component {
                         label="Salle"
                         type="name"
                         fullWidth
+                        value={this.state.salle}
+                        onChange={(ev)=>this.setState({salle:ev.target.value})}
                       />
                     </Grid>
                     <Grid item xs={12} md={6}>
                       <FormControl className={classes.formControl}>
                         <InputLabel htmlFor="selectPromo">Promotion</InputLabel>
                         <Select
-                          value={this.state.values.promo}
+                          value={this.state.promo}
                           fullWidth
-                          onChange={this.state.handleChange}
+                          onChange={this.handleChange}
                           label="Promotion"
                           inputProps={{
                             name: 'promo',
                             id: 'selectPromo',
                           }}
                         >
-                          <MenuItem value="l3miaa">L3MIAA</MenuItem>
-                          <MenuItem value="m1miaa">M1MIAA</MenuItem>
-                          <MenuItem value="m2miaa">M2MIAA</MenuItem>
-                          <MenuItem value="l3miai">L3MIAI</MenuItem>
-                          <MenuItem value="m1miai">M1MIAI</MenuItem>
-                          <MenuItem value="m2miai">M2MIAI</MenuItem>
+                          {promos}
                         </Select>
                       </FormControl>
                     </Grid>
+                    <Grid item xs={12} md={6}>
+                      <FormControl className={classes.formControl}>
+                        <InputLabel htmlFor="selectProf">Professeur</InputLabel>
+                        <Select
+                          value={this.state.prof}
+                          fullWidth
+                          onChange={this.handleProfChange}
+                          label="Professeur"
+                          inputProps={{
+                            name: 'prof',
+                            id: 'selectProf',
+                          }}
+                        >
+                          {profs}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+            
                   </Grid>
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button onClick={this.state.handleClose} color="primary">
+              <Button onClick={this.handleUpdate} color="primary">
                 Modifier le cours
               </Button>
-              <Button onClick={this.state.handleClose} color="secondary">
+              <Button onClick={this.handleUpdateClose} color="secondary">
                 Fermer
               </Button>
             </DialogActions>

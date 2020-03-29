@@ -11,8 +11,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import MoreIcon from '@material-ui/icons/MoreVert';
+import Disconnect from '@material-ui/icons/PowerSettingsNew';
+import MenuIcon from '@material-ui/icons/Menu';
 import PeopleIcon from '@material-ui/icons/People';
+import Button from '@material-ui/core/Button';
+import  { Redirect } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
   grow: {
@@ -78,8 +81,15 @@ const useStyles = makeStyles(theme => ({
   },
   bigAvatar: {
     margin: 10,
-    width: 60,
-    height: 60,
+  },
+  disco: {
+    marginLeft: 5,
+  },
+  btnMenu: {
+    marginLeft:10,
+  },
+  btMobile: {
+    marginLeft: 15,
   }
 }));
 
@@ -108,6 +118,53 @@ export default function MenuBar() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const cours = () => {
+    window.location.replace(window.location.protocol + '//' + window.location.hostname + ':3000/cours');
+  }
+
+  const etudiants = () => {
+    this.props.history.push('/etudiants')
+  }
+
+  const profs = () => {
+    window.location.replace(window.location.protocol + '//' + window.location.hostname + ':3000/profs');
+  }
+
+  const promos = () => {
+    window.location.replace(window.location.protocol + '//' + window.location.hostname + ':3000/promos');
+  }
+
+  const admin = () => {
+    window.location.replace(window.location.protocol + '//' + window.location.hostname + ':3000/admin');
+  }
+
+  function AdminBar(props) {
+    const role = localStorage.getItem('user_role');
+    if (role === "administrateur") {
+      return <Button 
+              color="inherit" 
+              className={classes.btnMenu}
+              href='/admin'>
+                Administration</Button>;
+    }
+    else {
+      return <div></div>;
+    }
+  }
+
+  function AdminMenuBar(props) {
+    const role = localStorage.getItem('user_role');
+    if (role === "administrateur") {
+      return  <MenuItem onClick={admin}>
+                  <PeopleIcon />              
+                  <p className={classes.btMobile}>Administration</p>
+              </MenuItem>;
+    }
+    else {
+      return <div></div>;
+    }
+  }
+
   const disconnect = () => {
     console.log("disconnected");
     localStorage.setItem('user_id', null); 
@@ -117,24 +174,12 @@ export default function MenuBar() {
     window.location.reload();
   };
 
+  const myAccount = () => {
+    window.location.replace(window.location.protocol + '//' + window.location.hostname + ':3000/moncompte');
+  }
+
   const menuId = 'primary-search-account-menu';
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <Link href='/cours' ><MenuItem onClick={handleMenuClose}>Liste des cours</MenuItem></Link>
-      <Link href='/etudiants' ><MenuItem onClick={handleMenuClose}>Liste des étudiants</MenuItem></Link>
-      <Link href='/profs' ><MenuItem onClick={handleMenuClose}>Liste des professeurs</MenuItem></Link>
-      <Link href='/promos' ><MenuItem onClick={handleMenuClose}>Liste des promotions</MenuItem></Link>
-      <Link><MenuItem onClick={disconnect}>Déconnexion</MenuItem></Link>
-    </Menu>
-  );
+
 
   const mobileMenuId = 'primary-search-account-menu-mobile';
   const renderMobileMenu = (
@@ -147,22 +192,17 @@ export default function MenuBar() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-        <IconButton aria-label="" color="inherit">
-            <PeopleIcon />
-        </IconButton>
-        <p>Liste des cours</p>
+      <MenuItem onClick={cours}>
+          <PeopleIcon  />
+          <p className={classes.btMobile}>Liste des cours</p>
       </MenuItem>
+
+      <AdminMenuBar />
+      
       <MenuItem onClick={disconnect}>
-        <IconButton
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
           <AccountCircle />
-        </IconButton>
-        <p>Déconnexion</p>
+        
+          <p className={classes.btMobile}>Déconnexion</p>
       </MenuItem>
     </Menu>
   );
@@ -176,6 +216,11 @@ export default function MenuBar() {
             <Typography className={classes.title} variant="h6" noWrap>
                 WITO
             </Typography>
+
+          <div className={classes.sectionDesktop}>
+            <Button color="inherit" className={classes.btnMenu} href='/cours'>Liste des Cours</Button>
+            <AdminBar role={localStorage.getItem("user_role")} />
+          </div>
           
           <div className={classes.grow} />
           <div className={classes.search}>
@@ -198,10 +243,22 @@ export default function MenuBar() {
               aria-label="account of current user"
               aria-controls={menuId}
               aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
+              onClick={myAccount}
               color="inherit"
             >
               <AccountCircle />
+            </IconButton>
+
+            <IconButton
+              className={classes.disco}
+              edge="end"
+              aria-label="disconnect"
+              aria-controls={menuId}
+              aria-haspopup="true"
+              onClick={disconnect}
+              color="inherit"
+            >
+              <Disconnect />
             </IconButton>
           </div>
           <div className={classes.sectionMobile}>
@@ -212,13 +269,12 @@ export default function MenuBar() {
               onClick={handleMobileMenuOpen}
               color="inherit"
             >
-              <MoreIcon />
+              <MenuIcon />
             </IconButton>
           </div>
         </Toolbar>
       </AppBar>
       {renderMobileMenu}
-      {renderMenu}
     </div>
   );
 }

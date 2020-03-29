@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from './logo.png';
+import logo from './img/logo.png';
 import './App.css';
 import SignIn from "./Components/Login/Connexion"
 import {Switch, Route, BrowserRouter as Router } from 'react-router-dom';

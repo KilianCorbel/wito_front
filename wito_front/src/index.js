@@ -6,18 +6,21 @@ import * as serviceWorker from './serviceWorker';
 import SignIn from './Components/Login/Connexion';
 import SignUp from './Components/Login/Inscription';
 import truc from './Components/Main/MainWindow';
-import gestionCours from './Components/Main/GestionCours';
 import feuilleAppel from './Components/Main/FeuilleAppel';
 import GestionPromos from './Components/Main/GestionPromos';
 import GestionProfs from './Components/Main/GestionProfs';
 import GestionEtudiant from './Components/Main/GestionEtudiant';
 import signature from './Components/Main/Signature';
 import GestionEtudiants from './Components/Main/GestionEtudiant';
-//import ModalMain from './Components/ModalMain/ModalMain';
+import Administration from './Components/Main/Administration';
+import MonCompte from './Components/Main/MonCompte';
+import ValiderEtudiant from './Components/Main/ValiderEtudiant';
+import AccesRefuse from './Components/Main/AccesRefuse';
 
 const routing = (
     <Router>
       <div>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
         <Switch>
             <Route exact path="/" component={SignIn} />
             <Route path="/signup" component={SignUp} />
@@ -27,7 +30,10 @@ const routing = (
             <Route path='/promos' component={GestionPromos} />
             <Route path='/profs' component={GestionProfs} />
             <Route path='/etudiants' component={GestionEtudiants} />
-            />
+            <Route path='/admin' component={Administration} />
+            <Route path='/moncompte' component={MonCompte} />
+            <Route path='/validation' component={ValiderEtudiant} />
+            <Route path='/accesrefuse' component={AccesRefuse} />
         </Switch>
       </div>
     </Router>

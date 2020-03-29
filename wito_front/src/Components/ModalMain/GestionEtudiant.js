@@ -168,21 +168,20 @@ class GestionEtudiants extends Component {
 
     componentDidMount() {
         let currentComponent = this;
+        if (localStorage.getItem('user_role') !== "administrateur") {
+            window.location.replace(window.location.protocol + '//' + window.location.hostname + ':3000/cours');
+          }
 
         fetch(window.location.protocol + '//' + window.location.hostname + ':3010/etudiants/')
             .then((res) => res.json())
             .then(function(etudiants) {
                 console.log(etudiants);
-
-                
-
                 etudiants.forEach(function(etudiant) {
                     console.log(etudiant.classe);
                     if (!etudiant.classe) {
                         etudiant.classe = '';
                     }
                 })
-
                 currentComponent.setState({etudiants});
             })
             .then(
@@ -256,7 +255,7 @@ class GestionEtudiants extends Component {
         return (
             <div className={classes.root}>
                 <CheckAuth/>
-                <Grid container spacing={3}>
+                <Grid spacing={3}>
                     <Grid item xs={3}></Grid>
 
                     <Grid item xs={6}>
@@ -267,7 +266,6 @@ class GestionEtudiants extends Component {
                                         <TableCell>Nom</TableCell>
                                         <TableCell align="center">Prénom</TableCell>
                                         <TableCell align="center">Mail</TableCell>
-                                        <TableCell align="center">Mot de passe</TableCell>
                                         <TableCell align="center">Promotion</TableCell>
                                         <TableCell align="center">Actions</TableCell>
                                     </TableRow>
@@ -278,7 +276,6 @@ class GestionEtudiants extends Component {
                                             <TableCell component="th" scope="row">{row.utilisateur.nom}</TableCell>
                                             <TableCell align="center">{row.utilisateur.prenom}</TableCell>
                                             <TableCell align="center">{row.utilisateur.mail}</TableCell>
-                                            <TableCell align="center">{row.utilisateur.mdp}</TableCell>
                                             <TableCell align="center">{row.classe.label}</TableCell>
                                             <TableCell align="center">
                     
@@ -300,7 +297,7 @@ class GestionEtudiants extends Component {
                     <Grid item xs={3}></Grid>
                 </Grid>
 
-                <Grid container spacing={5}>
+                <Grid  spacing={5}>
                     <Grid item xs={3}></Grid>
                     <Grid item xs={6}>
                         <Button
@@ -362,7 +359,7 @@ class GestionEtudiants extends Component {
                                         <TextField
                                             id="mdp"
                                             label="Mot de passe"
-                                            type="mdp"
+                                            type="password"
                                             value={this.state.mdp} 
                                             onChange={(ev)=>this.setState({mdp:ev.target.value})}                                        
                                         />
@@ -432,7 +429,7 @@ class GestionEtudiants extends Component {
                                         <TextField
                                             id="mdp"
                                             label="Mot de passe"
-                                            type="mdp"
+                                            type="password"
                                             value={this.state.mdp} 
                                             onChange={(ev)=>this.setState({mdp:ev.target.value})}                                        
                                         />
