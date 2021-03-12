@@ -10,7 +10,7 @@
     "date-fns": "^2.11.0",
     "fg-loadcss": "^2.1.0",
     "html2canvas": "^1.0.0-rc.5",
-    "jspdf": "^1.5.3",
+    "jspdf": "^2.3.1",
     "material-tabs": "0.0.8",
     "mdbreact": "^4.25.4",
     "moment": "^2.24.0",
